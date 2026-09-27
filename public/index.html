@@ -76,37 +76,52 @@
       </div>
       <aside
         id="controls-panel"
-        class="glass"
-        aria-label="Masses and Positions"
+        aria-label="Lever Controls"
         hidden
       >
-        <div class="panel-heading">
-          <h2>Masses and Positions</h2>
-          <button id="close-controls" aria-label="Close Controls">×</button>
+        <div id="object-controls">
+          <section
+            id="panel-load"
+            class="control-card glass load"
+            aria-labelledby="heading-load"
+          ></section>
+          <section
+            id="panel-effort"
+            class="control-card glass effort"
+            aria-labelledby="heading-effort"
+          ></section>
         </div>
-        <div class="control-grid">
-          <section id="panel-load" class="load"></section>
-          <section id="panel-effort" class="effort"></section>
-          <section id="panel-fulcrum" class="fulcrum">
-            <h3>Fulcrum</h3>
-            <label for="fulcrum-position">Beam coordinate (mm)</label
-            ><input id="fulcrum-position" type="number" step="25" /><input
-              id="fulcrum-slider"
-              type="range"
+        <section
+          id="panel-fulcrum"
+          class="control-card glass fulcrum"
+          aria-labelledby="heading-fulcrum"
+        >
+          <div class="panel-heading">
+            <h2 id="heading-fulcrum">Fulcrum</h2>
+            <button id="close-controls" aria-label="Close All Controls">×</button>
+          </div>
+          <div class="fulcrum-value">
+            <label for="fulcrum-position">Beam Position (mm)</label>
+            <input
+              id="fulcrum-position"
+              type="number"
               step="25"
-              aria-label="Fulcrum Beam Coordinate"
+              aria-describedby="fulcrum-note"
             />
-            <p>
-              Negative is toward the beam’s marked left end. The fulcrum stays
-              between the two objects.
-            </p>
-            <p id="coordinates"></p>
-          </section>
-        </div>
-        <p class="control-note">
-          Arm lengths are measured from the fulcrum. Steps: 25 mm and 25 g. Each
-          arm stays at least 75 mm long. Use Swap Positions to exchange sides.
-        </p>
+          </div>
+          <input
+            id="fulcrum-slider"
+            type="range"
+            step="25"
+            aria-label="Fulcrum Beam Coordinate"
+            aria-describedby="fulcrum-note"
+          />
+          <p id="fulcrum-note" class="sr-only">
+            Negative is toward the beam’s marked left end. The fulcrum stays
+            between the two objects, at least 75 mm from each.
+          </p>
+          <p id="coordinates" class="sr-only"></p>
+        </section>
       </aside>
       <footer>
         <section id="math-panel" aria-label="Live Lever Math">
@@ -164,6 +179,15 @@
           Swap twice to return.
         </li>
       </ol>
+      <p>
+        <b>Controls:</b> the gold Load and teal Effort panels follow their
+        objects’ beam positions when swapped. Orbiting the camera does not
+        exchange panels. On a narrow screen, the controls share a bottom dock;
+        close it to return to the math. Arm lengths are measured from the
+        fulcrum, with a minimum of 75 mm. Masses and distances use 25 g and
+        25 mm steps. Negative fulcrum coordinates are toward the beam’s marked
+        left end. The fulcrum stays between the objects.
+      </p>
       <p>
         <b>Keyboard:</b> Tab to a role label, then use left/right arrows to move
         across the screen. Up/down changes Load or Effort mass. Sliders, number

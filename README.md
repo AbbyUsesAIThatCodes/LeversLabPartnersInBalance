@@ -13,7 +13,13 @@ See the [Roadmap](docs/ROADMAP.md).
 ## Explore
 
 - **Controls** opens number boxes, sliders, and halve/double buttons for each
-  object's mass and arm length, plus the fulcrum's beam coordinate.
+  object's mass and arm length. The gold **Load** panel starts left, the teal
+  **Effort** panel starts right, and both follow their objects when swapped.
+  The fulcrum has one shared strip. Camera orbit never exchanges the panels.
+  Phone and portrait-tablet layouts use a scrollable bottom dock; closing it
+  restores the previous math visibility. **Show Math** switches back directly.
+  Escape or **Hide Controls** closes all controls and returns focus to the
+  toggle. See the [Control Layout Review](docs/CONTROL-LAYOUT.md).
 - Drag an object, the fulcrum, or a floating role label. The fulcrum always stays
   between the objects. Tab to a label and use left/right arrows to move across
   the screen; up/down changes that object's mass.
