@@ -81,10 +81,12 @@ Exact source commits and adapted components are recorded in
 [Provenance](docs/PROVENANCE.md), with licenses in
 [Third-Party Notices](THIRD_PARTY_NOTICES.md).
 
-Changes are delivered as PRs for review before merging. This core implementation
-adds no deployment workflow and does not publish or modify either source game.
-Classroom release verification and publishing belong to Issue #3; classroom
-virtualization belongs to Issue #4.
+Changes are delivered as PRs for review before merging. After the Pages workflow
+is merged, changes to `main` run the model checks, build the game, and publish
+`dist/` through GitHub Actions. PR builds never deploy. Follow the
+[GitHub Pages Setup Guide](docs/DEPLOYMENT.md) for the initial settings and run.
+Neither source game is modified or deployed by this workflow. Classroom release
+verification remains in Issue #3; classroom virtualization belongs to Issue #4.
 
 All scripts, fonts, and visuals are bundled locally. No accounts, tracking,
 student data, or runtime CDN requests are used. This app saves its arrangement,
