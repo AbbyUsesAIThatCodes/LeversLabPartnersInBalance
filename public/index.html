@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#dfe6d9" />
+    <title>Levers: Load, Effort, and Distance</title>
+    <link rel="icon" href="./favicon.svg" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main id="app">
+      <div id="top">
+        <header>
+          <div class="brand">
+            <span aria-hidden="true">⚖</span>
+            <div>
+              <b>Levers: Load, Effort, and Distance</b
+              ><small>Predict. Release. Explain. · v0.1.0</small>
+            </div>
+          </div>
+          <div class="actions">
+            <button
+              id="controls-toggle"
+              aria-expanded="false"
+              aria-controls="controls-panel"
+            >
+              Controls</button
+            ><button
+              id="math-toggle"
+              aria-expanded="true"
+              aria-controls="math-panel"
+            >
+              Hide Math</button
+            ><button id="help">Help</button
+            ><button id="fullscreen">Full Screen</button>
+          </div>
+        </header>
+        <nav class="tools" aria-label="Workbench Controls">
+          <output id="beam-status" aria-live="polite">Held Level</output
+          ><button id="hold" aria-pressed="true">Release</button
+          ><button id="swap">Swap Positions</button
+          ><button id="reset">Reset</button
+          ><label for="preset"
+            >Try
+            <select id="preset">
+              <option value="double">2× Effort Arm</option>
+              <option value="equal">Equal Arms</option>
+              <option value="offset">Off-Center Fulcrum</option>
+              <option value="custom" disabled>Your Arrangement</option>
+            </select></label
+          >
+          <div class="camera-controls">
+            <button id="side">Side View</button
+            ><button id="orbit">Orbit ↻</button
+            ><button id="fit">Fit View</button>
+          </div>
+        </nav>
+        <p class="hint">
+          Gold Load presses. Teal Effort pulls. Both forces point down.
+        </p>
+      </div>
+      <div id="stage">
+        <div id="scene"><p class="loading">Setting up your workbench…</p></div>
+        <div id="fallback" hidden>
+          <svg
+            id="fallback-svg"
+            viewBox="0 0 800 430"
+            role="img"
+            aria-label="Lever diagram showing the load above the beam and effort hanging below"
+          ></svg>
+          <p>Diagram View · use Controls to change masses and distances.</p>
+        </div>
+        <svg id="leaders" aria-hidden="true"></svg>
+        <div id="tags"></div>
+      </div>
+      <aside
+        id="controls-panel"
+        class="glass"
+        aria-label="Masses and Positions"
+        hidden
+      >
+        <div class="panel-heading">
+          <h2>Masses and Positions</h2>
+          <button id="close-controls" aria-label="Close Controls">×</button>
+        </div>
+        <div class="control-grid">
+          <section id="panel-load" class="load"></section>
+          <section id="panel-effort" class="effort"></section>
+          <section id="panel-fulcrum" class="fulcrum">
+            <h3>Fulcrum</h3>
+            <label for="fulcrum-position">Beam coordinate (mm)</label
+            ><input id="fulcrum-position" type="number" step="25" /><input
+              id="fulcrum-slider"
+              type="range"
+              step="25"
+              aria-label="Fulcrum Beam Coordinate"
+            />
+            <p>
+              Negative is toward the beam’s marked left end. The fulcrum stays
+              between the two objects.
+            </p>
+            <p id="coordinates"></p>
+          </section>
+        </div>
+        <p class="control-note">
+          Arm lengths are measured from the fulcrum. Steps: 25 mm and 25 g. Each
+          arm stays at least 75 mm long. Use Swap Positions to exchange sides.
+        </p>
+      </aside>
+      <footer>
+        <section id="math-panel" aria-label="Live Lever Math">
+          <div class="math-topline">
+            <div class="math-tabs" role="tablist" aria-label="Math View">
+              <button
+                id="tab-balance"
+                role="tab"
+                aria-selected="true"
+                aria-controls="balance-math"
+              >
+                Balance & Advantage</button
+              ><button
+                id="tab-force"
+                role="tab"
+                aria-selected="false"
+                aria-controls="force-math"
+                tabindex="-1"
+              >
+                Grams → Newtons
+              </button>
+            </div>
+            <button id="model-help" class="model-note">Ideal Lever</button>
+          </div>
+          <div
+            id="balance-math"
+            role="tabpanel"
+            aria-labelledby="tab-balance"
+          ></div>
+          <div
+            id="force-math"
+            role="tabpanel"
+            aria-labelledby="tab-force"
+            hidden
+          ></div>
+        </section>
+      </footer>
+    </main>
+    <dialog id="help-dialog" aria-labelledby="help-title">
+      <button class="dialog-close corner" aria-label="Close Help">×</button>
+      <h2 id="help-title">More Distance. Less Effort.</h2>
+      <ol>
+        <li>
+          Use <b>Controls</b> to change either mass or its distance from the
+          fulcrum. Drag the gold Load, teal Effort, purple Fulcrum, or their
+          labels along the beam.
+        </li>
+        <li>
+          <b>Hold Level</b> and <b>Hide Math</b> let you predict. Release to see
+          which side goes down, then reveal the calculation.
+        </li>
+        <li>
+          <b>Swap Positions</b> exchanges exact beam coordinates. Each object
+          keeps its own mass, color, shape, and role. The fulcrum stays still.
+          Swap twice to return.
+        </li>
+      </ol>
+      <p>
+        <b>Keyboard:</b> Tab to a role label, then use left/right arrows to move
+        across the screen. Up/down changes Load or Effort mass. Sliders, number
+        boxes, and ½/2× buttons are also available. Drag the background to
+        orbit; scroll or pinch to zoom. Side View and Fit View restore useful
+        views.
+      </p>
+      <p>
+        <b>Forces and motion:</b> the gold Load presses on its supported tray;
+        the teal hanging Effort pulls through its cord. Both applied forces
+        point down, even when an object moves up. These descriptions fit this
+        apparatus, not every possible lever.
+      </p>
+      <p>
+        <b>Ideal model:</b> only the two labeled masses count. The beam, tray,
+        cord, and attachments are massless; the pivot is ideal. The load is
+        constrained in a level, self-leveling holder so it cannot tip or slide.
+        Both vertical force lines pass through their labeled points on the beam
+        axis, with no extra torque from decorative offsets.
+      </p>
+      <p>
+        <b>Distance and motion:</b> arms run along the beam from the fulcrum to
+        each force point. When tilted, both horizontal moment arms shrink by
+        cos(angle), so the balance ratio stays the same. The math panel shows
+        turning effects at level. Motion uses an illustrative point-mass inertia
+        and damping, limited to ±12°; it is not a calibrated acceleration
+        simulation.
+      </p>
+      <label class="check-label"
+        ><input id="reduced" type="checkbox" /> Reduce Animation</label
+      ><button class="primary dialog-close">Back to the Workbench</button>
+    </dialog>
+    <div id="tooltip" role="tooltip" hidden></div>
+    <div id="toast" role="status"></div>
+    <div id="announcement" class="sr-only" aria-live="polite"></div>
+    <noscript>This game needs JavaScript enabled.</noscript>
+    <script type="module" src="./assets/app.js"></script>
+  </body>
+</html>

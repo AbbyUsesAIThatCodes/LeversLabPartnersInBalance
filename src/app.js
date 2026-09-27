@@ -1,0 +1,472 @@
+import { LeverScene } from "./scene.js";
+import {
+  ROLES,
+  OBJECTS,
+  DEFAULT,
+  PRESETS,
+  STORAGE_KEY,
+  arm,
+  massKey,
+  move,
+  step,
+  setMass,
+  setDistance,
+  distanceBounds,
+  positionBounds,
+  swapPositions,
+  measures,
+  valid,
+  restore,
+  restingAngle,
+  advance,
+} from "./model.js";
+import { fmt, tip, unit, renderMath, installTooltips } from "./math.js";
+const $ = (s) => document.querySelector(s),
+  $$ = (s) => [...document.querySelectorAll(s)],
+  cap = (s) => s[0].toUpperCase() + s.slice(1);
+const colors = { load: "#89500b", effort: "#176b61", fulcrum: "#714896" };
+let saved;
+try {
+  saved = localStorage.getItem(STORAGE_KEY);
+} catch {}
+let { state, held, showMath, reduced } = restore(saved);
+reduced ||= matchMedia("(prefers-reduced-motion: reduce)").matches;
+let scene = null,
+  ready = false,
+  fallback = false,
+  selected = "load",
+  fallbackMotion = { angle: 0, velocity: 0 },
+  fallbackTime = null;
+function save() {
+  try {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ state, held, showMath, reduced }),
+    );
+  } catch {}
+}
+function notice(message) {
+  $("#toast").textContent = message;
+  $("#toast").classList.add("show");
+  clearTimeout(notice.timer);
+  notice.timer = setTimeout(() => $("#toast").classList.remove("show"), 3500);
+}
+for (const role of OBJECTS) {
+  const name = cap(role);
+  $(`#panel-${role}`).innerHTML =
+    `<h3>${name}</h3><label for="mass-${role}">Mass</label><div class="numeric"><input id="mass-${role}" type="number" min="25" max="1000" step="25" aria-label="${name} Mass in Grams">${unit("g")}</div><input id="mass-slider-${role}" type="range" min="25" max="1000" step="25" aria-label="${name} Mass"><div class="quick-actions"><button data-scale="${role},mass,0.5" aria-label="Halve ${name} Mass">÷ 2</button><button data-scale="${role},mass,2" aria-label="Double ${name} Mass">× 2</button></div><label for="distance-${role}">Distance From Fulcrum</label><div class="numeric"><input id="distance-${role}" type="number" step="25" aria-label="${name} Arm in Millimeters">${unit("mm")}</div><input id="distance-slider-${role}" type="range" step="25" aria-label="${name} Arm"><div class="quick-actions"><button data-scale="${role},distance,0.5" aria-label="Halve ${name} Arm">÷ 2</button><button data-scale="${role},distance,2" aria-label="Double ${name} Arm">× 2</button></div><p id="force-${role}"></p>`;
+}
+for (const role of ROLES) {
+  const tag = document.createElement("button");
+  tag.className = `part-tag ${role}`;
+  tag.dataset.tag = role;
+  tag.dataset.select = role;
+  tag.setAttribute("aria-label", `Select or Drag ${cap(role)}`);
+  $("#tags").append(tag);
+  tag.addEventListener("click", () => select(role));
+  tag.addEventListener("pointerdown", (e) => {
+    if (ready) scene.beginDrag(e, role);
+  });
+  tag.addEventListener("keydown", (e) => {
+    if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) {
+      e.preventDefault();
+      keyboardStep(role, e.key);
+    }
+  });
+}
+function select(role) {
+  selected = role;
+  if (ready) scene.select(role);
+  renderSelection();
+}
+function renderSelection() {
+  for (const role of ROLES)
+    $(`[data-tag="${role}"]`).setAttribute(
+      "aria-pressed",
+      String(selected === role),
+    );
+}
+function setState(next) {
+  if (!valid(next)) return;
+  state = { ...next };
+  fallbackMotion = { angle: 0, velocity: 0 };
+  fallbackTime = null;
+  if (ready) scene.setState(state);
+  render();
+  save();
+}
+function keyboardStep(role, key) {
+  select(role);
+  if (key === "ArrowLeft" || key === "ArrowRight")
+    setState(
+      step(
+        state,
+        role,
+        (key === "ArrowRight" ? 1 : -1) * (ready ? scene.screenSign() : 1),
+      ),
+    );
+  else if (role !== "fulcrum")
+    setState(
+      setMass(
+        state,
+        role,
+        state[massKey(role)] + (key === "ArrowUp" ? 25 : -25),
+      ),
+    );
+}
+function render() {
+  $("#preset").value =
+    Object.entries(PRESETS).find(([, s]) =>
+      Object.keys(DEFAULT).every((k) => s[k] === state[k]),
+    )?.[0] || "custom";
+  for (const role of OBJECTS) {
+    const [min, max] = distanceBounds(state, role);
+    for (const prefix of ["mass", "mass-slider"]) {
+      const input = $(`#${prefix}-${role}`);
+      input.value = state[massKey(role)];
+      input.setAttribute("aria-valuetext", `${state[massKey(role)]} grams`);
+    }
+    for (const prefix of ["distance", "distance-slider"]) {
+      const input = $(`#${prefix}-${role}`);
+      input.min = min;
+      input.max = max;
+      input.value = arm(state, role);
+      input.setAttribute(
+        "aria-valuetext",
+        `${arm(state, role)} millimeters from the fulcrum`,
+      );
+    }
+    $(`#force-${role}`).textContent =
+      `Downward force: ${fmt(measures(state)[role + "Force"])} N`;
+    $(`[data-tag="${role}"]`).innerHTML =
+      `<span class="tag-title">${cap(role)} <span class="tag-mass">· ${state[massKey(role)]} g</span></span><small>${arm(state, role)} mm from fulcrum</small><small class="force-caption">↓ ${role === "load" ? "Pressing Load" : "Pulling Effort"}</small>`;
+  }
+  const [min, max] = positionBounds(state, "fulcrum");
+  for (const id of ["fulcrum-position", "fulcrum-slider"]) {
+    const input = $("#" + id);
+    input.min = min;
+    input.max = max;
+    input.value = state.fulcrum;
+    input.setAttribute(
+      "aria-valuetext",
+      `${state.fulcrum} millimeters on the beam`,
+    );
+  }
+  $('[data-tag="fulcrum"]').innerHTML =
+    `Fulcrum<small>Movable Pivot</small><small class="force-caption">Between both objects</small>`;
+  $("#coordinates").textContent =
+    `Beam coordinates: Load ${state.load} mm · Fulcrum ${state.fulcrum} mm · Effort ${state.effort} mm.`;
+  $("#hold").textContent = held ? "Release" : "Hold Level";
+  $("#hold").setAttribute("aria-pressed", String(held));
+  $("#math-panel").hidden = !showMath;
+  $("#math-toggle").textContent = showMath ? "Hide Math" : "Show Math";
+  $("#math-toggle").setAttribute("aria-expanded", String(showMath));
+  $("#app").dataset.held = String(held);
+  for (const role of ROLES)
+    $(`[data-tag="${role}"]`).dataset.coordinate = state[role];
+  hideTip?.();
+  renderMath(state);
+  renderSelection();
+  updateStatus();
+  if (fallback) drawFallback();
+  if (ready) scene.dirty = true;
+}
+function updateStatus(isHeld = held) {
+  const direction = measures(state).direction;
+  const status = isHeld
+    ? "Held Level"
+    : direction === "balance"
+      ? "Balanced"
+      : `${cap(direction)} Side Down`;
+  if ($("#beam-status").textContent !== status)
+    $("#beam-status").textContent = status;
+  $("#beam-status").classList.toggle(
+    "balanced",
+    direction === "balance" && !isHeld,
+  );
+}
+function onFrame({ positions, angle, held: isHeld }) {
+  updateStatus(isHeld);
+  $("#app").dataset.angle = angle;
+  if (!positions.load) return;
+  const top = $("#top").getBoundingClientRect().bottom;
+  const bottom = showMath
+    ? $("#math-panel").getBoundingClientRect().top
+    : innerHeight - 12;
+  const parts = [...ROLES].sort((a, b) => positions[a].x - positions[b].x);
+  const tags = parts.map((p) => $(`[data-tag="${p}"]`));
+  const widths = tags.map((t) => t.getBoundingClientRect().width),
+    heights = tags.map((t) => t.getBoundingClientRect().height);
+  const xs = parts.map((p, i) =>
+    Math.max(
+      widths[i] / 2 + 10,
+      Math.min(innerWidth - widths[i] / 2 - 10, positions[p].x),
+    ),
+  );
+  for (let i = 1; i < 3; i++)
+    xs[i] = Math.max(xs[i], xs[i - 1] + (widths[i - 1] + widths[i]) / 2 + 8);
+  if (xs[2] + widths[2] / 2 > innerWidth - 10) {
+    xs[2] = innerWidth - 10 - widths[2] / 2;
+    for (let i = 1; i >= 0; i--)
+      xs[i] = Math.min(xs[i], xs[i + 1] - (widths[i] + widths[i + 1]) / 2 - 8);
+  }
+  const maxHeight = Math.max(...heights);
+  const y = Math.max(
+    top + maxHeight + 8,
+    Math.min(
+      bottom - 12,
+      Math.min(...ROLES.map((p) => positions[p + "top"] ?? positions[p].y)) -
+        25,
+    ),
+  );
+  $("#leaders").innerHTML = parts
+    .map((role, i) => {
+      const point = positions[role];
+      tags[i].style.left = `${xs[i]}px`;
+      tags[i].style.top = `${y}px`;
+      return `<path d="M${xs[i]} ${y + 2}L${point.x} ${point.y}" stroke="${colors[role]}" stroke-width="1.5" fill="none" opacity=".7"/><circle data-point="${role}" cx="${point.x}" cy="${point.y}" r="4" fill="${colors[role]}" stroke="#fffcef"/>`;
+    })
+    .join("");
+}
+function drawFallback() {
+  const angle = fallbackMotion.angle,
+    scale = 0.96,
+    px = 400 + state.fulcrum * scale;
+  const point = (x) => ({
+    x: px + (x - state.fulcrum) * Math.cos(angle) * scale,
+    y: 195 - (x - state.fulcrum) * Math.sin(angle) * scale,
+  });
+  const ends = [point(-317.5), point(317.5)];
+  $("#fallback-svg").innerHTML =
+    `<defs>${OBJECTS.map((p) => `<marker id="arrow-${p}" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6Z" fill="${colors[p]}"/></marker>`).join("")}</defs><path d="M${px - 18} 360L${px} 195L${px + 18} 360Z" fill="${colors.fulcrum}"/><path d="M${ends[0].x} ${ends[0].y}L${ends[1].x} ${ends[1].y}" stroke="#839a94" stroke-width="12"/>${OBJECTS.map(
+      (role) => {
+        const p = point(state[role]),
+          size = Math.cbrt(state[massKey(role)] / 100),
+          gold = role === "load";
+        return `<g data-object="${role}" data-coordinate="${state[role]}"><path d="M${p.x} ${p.y}v${gold ? -22 : 32}" stroke="#927449" stroke-width="4"/>${gold ? `<rect x="${p.x - 28}" y="${p.y - 26}" width="56" height="5" fill="#a38649"/><rect x="${p.x - size * 10}" y="${p.y - 26 - size * 18}" width="${size * 20}" height="${size * 18}" fill="#bf8630" stroke="#89500b"/>` : `<rect x="${p.x - size * 12}" y="${p.y + 32}" width="${size * 24}" height="${size * 16}" rx="6" fill="#257e73"/>`}<path data-force="${role}" d="M${p.x + 34} ${p.y - 38}v30" stroke="${colors[role]}" stroke-width="3" marker-end="url(#arrow-${role})"/><text x="${p.x}" y="${p.y - 80}" text-anchor="middle" fill="${colors[role]}" font-size="21" font-weight="bold">${cap(role)} · ${state[massKey(role)]} g</text><text x="${p.x}" y="${p.y - 59}" text-anchor="middle" fill="${colors[role]}" font-size="18">${arm(state, role)} mm</text></g>`;
+      },
+    ).join(
+      "",
+    )}<text x="${px}" y="386" text-anchor="middle" font-size="21" fill="${colors.fulcrum}">Fulcrum · ${state.fulcrum} mm</text>`;
+  $("#app").dataset.angle = angle;
+  updateStatus();
+}
+function fallbackFrame(time) {
+  if (!fallback) return;
+  const dt = fallbackTime === null ? 0 : (time - fallbackTime) / 1000;
+  fallbackTime = time;
+  const old = fallbackMotion.angle;
+  if (held || $("dialog[open]")) fallbackMotion = { angle: 0, velocity: 0 };
+  else if (reduced)
+    fallbackMotion = { angle: restingAngle(state), velocity: 0 };
+  else fallbackMotion = advance(state, fallbackMotion, dt);
+  if (old !== fallbackMotion.angle) drawFallback();
+  requestAnimationFrame(fallbackFrame);
+}
+function holdScene() {
+  if (ready) scene.setHeld(held || !!$("dialog[open]"));
+  if (held) fallbackMotion = { angle: 0, velocity: 0 };
+  if (fallback) drawFallback();
+}
+function showControls(show) {
+  $("#controls-panel").hidden = !show;
+  $("#controls-toggle").setAttribute("aria-expanded", String(show));
+}
+for (const role of OBJECTS)
+  for (const kind of ["mass", "distance"])
+    for (const slider of [false, true]) {
+      const input = $(`#${kind}${slider ? "-slider" : ""}-${role}`);
+      input.addEventListener(slider ? "input" : "change", () => {
+        if (input.value === "" || !Number.isFinite(Number(input.value))) {
+          notice("Enter a number; the previous value is kept.");
+          render();
+          return;
+        }
+        const wanted = Number(input.value),
+          next =
+            kind === "mass"
+              ? setMass(state, role, wanted)
+              : setDistance(state, role, wanted);
+        const actual = kind === "mass" ? next[massKey(role)] : arm(next, role);
+        if (actual !== wanted)
+          notice(
+            `Adjusted to ${actual} ${kind === "mass" ? "g" : "mm"} within the available 25-unit steps and safe range.`,
+          );
+        setState(next);
+      });
+    }
+for (const id of ["fulcrum-position", "fulcrum-slider"])
+  $("#" + id).addEventListener(
+    id.endsWith("slider") ? "input" : "change",
+    () => {
+      const wanted = $("#" + id).value,
+        next = move(state, "fulcrum", wanted);
+      if (wanted === "" || Number(wanted) !== next.fulcrum)
+        notice(
+          "The fulcrum snaps to 25 mm steps and stays at least 75 mm from each object.",
+        );
+      setState(next);
+    },
+  );
+for (const b of $$("[data-scale]"))
+  b.addEventListener("click", () => {
+    const [role, kind, factor] = b.dataset.scale.split(","),
+      wanted =
+        (kind === "mass" ? state[massKey(role)] : arm(state, role)) *
+        Number(factor);
+    const next =
+        kind === "mass"
+          ? setMass(state, role, wanted)
+          : setDistance(state, role, wanted),
+      actual = kind === "mass" ? next[massKey(role)] : arm(next, role);
+    if (actual !== wanted)
+      notice(
+        `The result snaps to ${actual} ${kind === "mass" ? "g" : "mm"} within the available steps and range.`,
+      );
+    setState(next);
+  });
+$("#swap").addEventListener("click", () => {
+  scene?.finishDrag();
+  setState(swapPositions(state));
+  $("#announcement").textContent =
+    `Positions exchanged. Load keeps ${state.loadMass} grams; Effort keeps ${state.effortMass} grams.`;
+});
+$("#hold").addEventListener("click", () => {
+  held = !held;
+  holdScene();
+  render();
+  save();
+});
+$("#math-toggle").addEventListener("click", () => {
+  showMath = !showMath;
+  render();
+  save();
+});
+function switchTab(name) {
+  for (const tab of ["balance", "force"]) {
+    const active = tab === name,
+      b = $("#tab-" + tab);
+    b.setAttribute("aria-selected", String(active));
+    b.tabIndex = active ? 0 : -1;
+    $("#" + tab + "-math").hidden = !active;
+  }
+  if (ready) scene.dirty = true;
+}
+for (const name of ["balance", "force"]) {
+  $("#tab-" + name).addEventListener("click", () => switchTab(name));
+  $("#tab-" + name).addEventListener("keydown", (e) => {
+    if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
+      e.preventDefault();
+      const other = name === "balance" ? "force" : "balance";
+      switchTab(other);
+      $("#tab-" + other).focus();
+    }
+  });
+}
+$("#preset").addEventListener("change", () => {
+  if (PRESETS[$("#preset").value]) setState(PRESETS[$("#preset").value]);
+});
+$("#reset").addEventListener("click", () => {
+  held = true;
+  holdScene();
+  setState(DEFAULT);
+  select("load");
+  if (ready) scene.resetCamera();
+});
+$("#controls-toggle").addEventListener("click", () =>
+  showControls($("#controls-panel").hidden),
+);
+$("#close-controls").addEventListener("click", () => {
+  showControls(false);
+  $("#controls-toggle").focus();
+});
+for (const [id, method] of [
+  ["side", "sideCamera"],
+  ["fit", "resetCamera"],
+  ["orbit", "turn"],
+])
+  $("#" + id).addEventListener("click", () => {
+    if (ready) scene[method]();
+  });
+for (const id of ["help", "model-help"])
+  $("#" + id).addEventListener("click", () => {
+    $("#help-dialog").showModal();
+    holdScene();
+  });
+for (const b of $$(".dialog-close"))
+  b.addEventListener("click", () => $("#help-dialog").close());
+$("#help-dialog").addEventListener("close", holdScene);
+$("#reduced").checked = reduced;
+$("#reduced").addEventListener("change", () => {
+  reduced = $("#reduced").checked;
+  if (ready) {
+    scene.reduced = reduced;
+    scene.level();
+  }
+  fallbackMotion = { angle: 0, velocity: 0 };
+  save();
+});
+$("#fullscreen").addEventListener("click", async () => {
+  try {
+    if (document.fullscreenElement) await document.exitFullscreen();
+    else await document.documentElement.requestFullscreen();
+  } catch {
+    notice("Full screen is unavailable in this browser.");
+  }
+});
+if (!document.fullscreenEnabled) $("#fullscreen").hidden = true;
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !$("#controls-panel").hidden) {
+    showControls(false);
+    $("#controls-toggle").focus();
+  }
+});
+new ResizeObserver(() => {
+  $("#app").style.setProperty(
+    "--toolbar-bottom",
+    `${$("#top").getBoundingClientRect().bottom}px`,
+  );
+  if (ready) scene.dirty = true;
+}).observe($("#top"));
+new ResizeObserver(() => {
+  if (ready) scene.dirty = true;
+}).observe($("#math-panel"));
+const hideTip = installTooltips();
+function unavailable() {
+  if (fallback) return;
+  ready = false;
+  fallback = true;
+  if (scene) scene.active = false;
+  $("#scene").hidden = true;
+  $("#tags").hidden = true;
+  $("#leaders").hidden = true;
+  $("#fallback").hidden = false;
+  $$(".camera-controls button").forEach((b) => (b.disabled = true));
+  $("#app").dataset.ready = "fallback";
+  drawFallback();
+  requestAnimationFrame(fallbackFrame);
+}
+render();
+try {
+  scene = new LeverScene($("#scene"), {
+    onChange: setState,
+    onSelect: (role) => {
+      selected = role;
+      renderSelection();
+    },
+    onFrame,
+    onNotice: notice,
+    onUnavailable: unavailable,
+    onStep: keyboardStep,
+  });
+  await scene.init();
+  ready = true;
+  scene.reduced = reduced;
+  scene.setHeld(held);
+  scene.setState(state);
+  scene.select(selected);
+  $("#app").dataset.ready = "true";
+} catch (error) {
+  console.warn("3D unavailable; using diagram.", error.message);
+  unavailable();
+}
