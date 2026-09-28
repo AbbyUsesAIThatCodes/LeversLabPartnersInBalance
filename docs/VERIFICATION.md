@@ -40,6 +40,12 @@ The tests use Chromium software WebGL, not classroom hardware.
 
 ## Visual Review
 
+Issue #9 adds [Compact Menus and Tooltip Review](TOOLTIPS.md), with current
+laptop/projector comparisons, a 1024×768 touch viewport, keyboard/touch tooltip
+examples, and the diagram fallback. The shared tooltip browser checks cover
+focus, hover, pinning, dismissal, persistent accessible descriptions, scrolling,
+and help interactions that leave the apparatus unchanged.
+
 Reviewed desktop and phone screenshots, short landscape, controls, rear view,
 required swap/release, no-WebGL diagram, and extreme arrangements at both tilt
 stops. Review found and corrected clipped phone label text and a raised load
