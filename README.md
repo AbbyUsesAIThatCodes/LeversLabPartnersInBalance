@@ -32,8 +32,11 @@ See the [Roadmap](docs/ROADMAP.md).
   dragging. Grabbing or releasing alone does not level the beam. Equal turning
   effects can balance at an existing tilt; **Hold Level** brings it to horizontal.
 - **Balance & Advantage** compares mass × distance, IMA, and required effort mass.
-  **Grams → Newtons** expands SI conversions. Focus, tap, or hover on dotted math
-  terms for definitions. The actual force ratio equals IMA only at ideal balance.
+  **Grams → Newtons** expands SI conversions. Hover or focus dotted terms and
+  **?** buttons for explanations. Click/tap to keep help open; repeat, press
+  Escape, or tap elsewhere to dismiss. **Help** still opens the complete guide.
+  The actual force ratio equals IMA only at ideal balance. See the
+  [Compact Menus and Tooltip Review](docs/TOOLTIPS.md).
 - Orbit/zoom freely, or use **Side View** and **Fit View**. Panels are overlays;
   opening them never resizes the full-window 3D viewport.
 - If WebGL is unavailable or lost, the diagram, math, presets, swap, hold/release,

@@ -3,6 +3,7 @@ import { spawn } from "node:child_process";
 import { mkdir } from "node:fs/promises";
 import assert from "node:assert/strict";
 import { verifyBeamMotion } from "./beam-motion-browser.mjs";
+import { verifyTooltips } from "./tooltips-browser.mjs";
 import {
   DEFAULT,
   PRESETS,
@@ -251,15 +252,15 @@ try {
   await page.screenshot({ path: "artifacts/balanced.png" });
   await controls(true);
   assert.equal(await page.locator("#mass-load").evaluate((e) => e === document.activeElement), true, "opening controls focuses the first role");
-  await page.getByRole("button", { name: "Double Load Arm", exact: true }).focus();
+  await page.getByRole("button", { name: "Load Force and Motion Help", exact: true }).focus();
   await page.keyboard.press("Tab");
-  assert.equal(await page.locator("#mass-effort").evaluate((e) => e === document.activeElement), true, "Tab follows visible role order");
+  assert.equal(await page.getByRole("button", { name: "Effort Help", exact: true }).evaluate((e) => e === document.activeElement), true, "Tab follows visible role order");
   await page.locator("#swap").click();
   assert.deepEqual(await snapshot(), swapPositions(DEFAULT));
   assert.equal(await page.locator("#swap").evaluate((e) => e === document.activeElement), true, "swapping keeps focus on its trigger");
-  await page.getByRole("button", { name: "Double Effort Arm", exact: true }).focus();
+  await page.getByRole("button", { name: "Effort Force and Motion Help", exact: true }).focus();
   await page.keyboard.press("Tab");
-  assert.equal(await page.locator("#mass-load").evaluate((e) => e === document.activeElement), true, "swapped keyboard order follows the panels");
+  assert.equal(await page.getByRole("button", { name: "Load Help", exact: true }).evaluate((e) => e === document.activeElement), true, "swapped keyboard order follows the panels");
   assert.equal(await page.locator("#mass-load").getAttribute("aria-label"), "Load Mass in Grams");
   const roleColors = await page.locator("#object-controls > section").evaluateAll((nodes) => Object.fromEntries(nodes.map((n) => [n.id, getComputedStyle(n).borderTopColor])));
   await page.locator("#orbit").click();
@@ -699,6 +700,7 @@ try {
     "invalid saved ordering is rejected",
   );
   await verifyBeamMotion(browser, url, watch);
+  await verifyTooltips(browser, url, watch);
   assert.deepEqual(errors, [], "no uncaught page errors");
   assert.deepEqual(external, [], "all assets stay local");
   console.log(

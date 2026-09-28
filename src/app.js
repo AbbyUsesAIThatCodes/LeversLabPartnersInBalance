@@ -20,7 +20,7 @@ import {
   restingAngle,
   advance,
 } from "./model.js";
-import { fmt, tip, unit, renderMath, installTooltips } from "./math.js";
+import { fmt, helpTip, setTip, describeTooltips, renderMath, installTooltips } from "./math.js";
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)],
   cap = (s) => s[0].toUpperCase() + s.slice(1);
@@ -57,8 +57,18 @@ function notice(message) {
 for (const role of OBJECTS) {
   const name = cap(role);
   $(`#panel-${role}`).innerHTML =
-    `<h2 id="heading-${role}">${name}</h2><label for="mass-${role}">Mass</label><div class="numeric"><input id="mass-${role}" type="number" min="25" max="1000" step="25" aria-label="${name} Mass in Grams">${unit("g")}</div><input id="mass-slider-${role}" type="range" min="25" max="1000" step="25" aria-label="${name} Mass"><div class="quick-actions"><button data-scale="${role},mass,0.5" aria-label="Halve ${name} Mass">÷ 2</button><button data-scale="${role},mass,2" aria-label="Double ${name} Mass">× 2</button></div><label for="distance-${role}">Distance From Fulcrum</label><div class="numeric"><input id="distance-${role}" type="number" step="25" aria-label="${name} Arm in Millimeters">${unit("mm")}</div><input id="distance-slider-${role}" type="range" step="25" aria-label="${name} Arm"><div class="quick-actions"><button data-scale="${role},distance,0.5" aria-label="Halve ${name} Arm">÷ 2</button><button data-scale="${role},distance,2" aria-label="Double ${name} Arm">× 2</button></div><p id="force-${role}"></p>`;
+    `<div class="role-heading"><h2 id="heading-${role}">${name}</h2>${helpTip(role, name)}</div>
+    <div class="quantity-heading"><label for="mass-${role}">Mass (g)</label>${helpTip("g", `${name} Mass Units`)}</div>
+    <div class="quantity-row"><input id="mass-${role}" type="number" min="25" max="1000" step="25" aria-label="${name} Mass in Grams"><div class="quick-actions"><button data-scale="${role},mass,0.5" aria-label="Halve ${name} Mass">÷ 2</button><button data-scale="${role},mass,2" aria-label="Double ${name} Mass">× 2</button></div></div>
+    <input id="mass-slider-${role}" type="range" min="25" max="1000" step="25" aria-label="${name} Mass">
+    <div class="quantity-heading"><label for="distance-${role}">Distance From Fulcrum (mm)</label>${helpTip("arm", `${name} Arm Length`)}</div>
+    <div class="quantity-row"><input id="distance-${role}" type="number" step="25" aria-label="${name} Arm in Millimeters"><div class="quick-actions"><button data-scale="${role},distance,0.5" aria-label="Halve ${name} Arm">÷ 2</button><button data-scale="${role},distance,2" aria-label="Double ${name} Arm">× 2</button></div></div>
+    <input id="distance-slider-${role}" type="range" step="25" aria-label="${name} Arm">
+    <p class="force-reading"><span id="force-${role}"></span> ${helpTip("motion", `${name} Force and Motion`)}</p>`;
 }
+// Help is separate from input labels and drag targets, so opening it cannot
+// activate a neighboring control or begin an apparatus drag.
+for (const [id, key] of [["model-help", "model"], ["workbench-help", "controls"], ["forces-help", "motion"], ["fulcrum-help", "coordinate"]]) setTip($("#" + id), key);
 function orderControls() {
   // Beam coordinates, never the camera or swap count, own the panel order.
   // Move the existing nodes so keyboard order follows the visible arrangement.
@@ -152,7 +162,7 @@ function render() {
     $(`#force-${role}`).textContent =
       `Downward force: ${fmt(measures(state)[role + "Force"])} N`;
     $(`[data-tag="${role}"]`).innerHTML =
-      `<span class="tag-title">${cap(role)} <span class="tag-mass">· ${state[massKey(role)]} g</span></span><small>${arm(state, role)} mm from fulcrum</small><small class="force-caption">↓ ${role === "load" ? "Pressing Load" : "Pulling Effort"}</small>`;
+      `<span class="tag-title">${cap(role)} <span class="tag-mass">· ${state[massKey(role)]} g</span></span><small>${arm(state, role)} mm from fulcrum</small>`;
   }
   const [min, max] = positionBounds(state, "fulcrum");
   for (const id of ["fulcrum-position", "fulcrum-slider"]) {
@@ -166,7 +176,7 @@ function render() {
     );
   }
   $('[data-tag="fulcrum"]').innerHTML =
-    `Fulcrum<small>Movable Pivot</small><small class="force-caption">Between both objects</small>`;
+    `Fulcrum<small>${state.fulcrum} mm on beam</small>`;
   $("#coordinates").textContent =
     `Beam coordinates: Load ${state.load} mm · Fulcrum ${state.fulcrum} mm · Effort ${state.effort} mm.`;
   $("#hold").textContent = held ? "Release" : "Hold Level";
@@ -177,6 +187,7 @@ function render() {
     $(`[data-tag="${role}"]`).dataset.coordinate = state[role];
   hideTip?.();
   renderMath(state);
+  describeTooltips();
   renderSelection();
   updateStatus();
   if (fallback) drawFallback();
@@ -403,6 +414,7 @@ $("#math-toggle").addEventListener("click", () => {
   save();
 });
 function switchTab(name) {
+  hideTip();
   for (const tab of ["balance", "force"]) {
     const active = tab === name,
       b = $("#tab-" + tab);
@@ -447,11 +459,11 @@ for (const [id, method] of [
   $("#" + id).addEventListener("click", () => {
     if (ready) scene[method]();
   });
-for (const id of ["help", "model-help"])
-  $("#" + id).addEventListener("click", () => {
-    $("#help-dialog").showModal();
-    holdScene();
-  });
+$("#help").addEventListener("click", () => {
+  hideTip();
+  $("#help-dialog").showModal();
+  holdScene();
+});
 for (const b of $$(".dialog-close"))
   b.addEventListener("click", () => $("#help-dialog").close());
 $("#help-dialog").addEventListener("close", holdScene);
