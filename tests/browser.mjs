@@ -67,7 +67,7 @@ try {
     await p.evaluate(() => document.fonts.ready);
   }
   async function snapshot(p = page) {
-    return p.evaluate(() => ({
+    const state = await p.evaluate(() => ({
       load: Number(
         document.querySelector('[data-tag="load"]').dataset.coordinate,
       ),
@@ -78,6 +78,65 @@ try {
       loadMass: Number(document.querySelector("#mass-load").value),
       effortMass: Number(document.querySelector("#mass-effort").value),
     }));
+    assert.deepEqual(
+      await p.locator("#object-controls > section").evaluateAll((nodes) => nodes.map((n) => n.id)),
+      state.load < state.effort ? ["panel-load", "panel-effort"] : ["panel-effort", "panel-load"],
+      "panel DOM and keyboard order follow actual beam coordinates",
+    );
+    for (const role of ["load", "effort"])
+      assert.equal(Number(await p.locator(`#distance-${role}`).inputValue()), Math.abs(state[role] - state.fulcrum));
+    return state;
+  }
+  async function controlLayout(p = page) {
+    await controls(true, p);
+    await p.waitForTimeout(80);
+    const data = await p.evaluate(() => {
+      const rect = (e) => {
+        const r = e.getBoundingClientRect();
+        return { x: r.x, y: r.y, right: r.right, bottom: r.bottom, width: r.width, height: r.height };
+      };
+      const dock = document.querySelector("#controls-panel");
+      const cards = [...document.querySelectorAll("#object-controls > section")];
+      return {
+        width: innerWidth, height: innerHeight, dock: rect(dock),
+        top: rect(document.querySelector("#top")),
+        cards: cards.map((e) => ({...rect(e), scroll: e.scrollWidth, inner: e.clientWidth})),
+        tags: [...document.querySelectorAll("#tags:not([hidden]) .part-tag")].map(rect),
+        shared: rect(document.querySelector("#panel-fulcrum")),
+        compact: matchMedia("(max-width: 900px) and (min-height: 501px), (max-width: 700px)").matches,
+        mathHidden: document.querySelector("#math-panel").hidden,
+        centerTarget: !!document.elementFromPoint(innerWidth / 2, (rect(document.querySelector("#top")).bottom + rect(dock).y) / 2)?.closest("#stage"),
+      };
+    });
+    assert.ok(data.cards[0].right <= data.cards[1].x, "panels read left to right in DOM order");
+    for (const r of data.cards) {
+      assert.ok(r.x >= 0 && r.right <= data.width, "cards fit viewport width");
+      assert.ok(r.scroll <= r.inner + 1, "no horizontal overflow within cards");
+    }
+    assert.ok(data.shared.y >= data.top.bottom && data.shared.bottom <= data.height, "shared fulcrum stays on screen below toolbar");
+    if (data.compact) {
+      assert.ok(data.mathHidden, "dock temporarily replaces math");
+      assert.ok(data.dock.y - data.top.bottom >= 150, "compact controls leave an interaction area above");
+      assert.ok(data.centerTarget, "compact scene remains interactive above the dock");
+    } else {
+      assert.ok(data.cards[1].x - data.cards[0].right >= data.width * 0.4, "side panels leave a wide central view");
+      for (const tag of data.tags) {
+        assert.ok(tag.x >= data.cards[0].right && tag.right <= data.cards[1].x, "floating labels clear side panels");
+        assert.ok(tag.bottom <= data.shared.y || tag.y >= data.shared.bottom, "floating labels clear shared fulcrum controls");
+      }
+    }
+    // Number fields, ranges, and shortcuts must remain reachable by scrolling.
+    for (const selector of ["#distance-load", "#distance-slider-effort", '[data-scale="load,distance,2"]', "#fulcrum-position"]) {
+      const input = p.locator(selector);
+      await input.scrollIntoViewIfNeeded();
+      assert.ok(await input.isVisible());
+      await input.focus();
+      assert.equal(await input.evaluate((e) => e === document.activeElement), true);
+      assert.equal(await input.evaluate((e) => {
+        const r = e.getBoundingClientRect();
+        return document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2) === e;
+      }), true, "focused controls are not covered by another overlay");
+    }
   }
   async function controls(show, p = page) {
     const hidden = await p.locator("#controls-panel").isHidden();
@@ -154,6 +213,40 @@ try {
   assert.equal(await page.locator("#effort-product").innerText(), "20,000");
   assert.equal(await page.locator("#ima-result").innerText(), "2×");
   await page.screenshot({ path: "artifacts/balanced.png" });
+  await controls(true);
+  assert.equal(await page.locator("#mass-load").evaluate((e) => e === document.activeElement), true, "opening controls focuses the first role");
+  await page.getByRole("button", { name: "Double Load Arm", exact: true }).focus();
+  await page.keyboard.press("Tab");
+  assert.equal(await page.locator("#mass-effort").evaluate((e) => e === document.activeElement), true, "Tab follows visible role order");
+  await page.locator("#swap").click();
+  assert.deepEqual(await snapshot(), swapPositions(DEFAULT));
+  assert.equal(await page.locator("#swap").evaluate((e) => e === document.activeElement), true, "swapping keeps focus on its trigger");
+  await page.getByRole("button", { name: "Double Effort Arm", exact: true }).focus();
+  await page.keyboard.press("Tab");
+  assert.equal(await page.locator("#mass-load").evaluate((e) => e === document.activeElement), true, "swapped keyboard order follows the panels");
+  assert.equal(await page.locator("#mass-load").getAttribute("aria-label"), "Load Mass in Grams");
+  const roleColors = await page.locator("#object-controls > section").evaluateAll((nodes) => Object.fromEntries(nodes.map((n) => [n.id, getComputedStyle(n).borderTopColor])));
+  await page.locator("#orbit").click();
+  await page.locator("#orbit").click();
+  assert.deepEqual(await snapshot(), swapPositions(DEFAULT), "rear camera view cannot exchange controls");
+  await page.locator("#swap").click();
+  assert.deepEqual(await snapshot(), DEFAULT);
+  assert.deepEqual(await page.locator("#object-controls > section").evaluateAll((nodes) => Object.fromEntries(nodes.map((n) => [n.id, getComputedStyle(n).borderTopColor]))), roleColors, "role colors survive swaps");
+  await page.locator("#mass-load").focus();
+  await page.keyboard.press("Escape");
+  assert.equal(await page.locator("#controls-panel").isHidden(), true);
+  assert.equal(await page.locator("#controls-toggle").evaluate((e) => e === document.activeElement), true, "closing returns focus to Controls");
+  await controls(true);
+  await page.locator("#help").click();
+  await page.keyboard.press("Escape");
+  assert.equal(await page.locator("#controls-panel").isVisible(), true, "Escape in Help does not close underlying controls");
+  await page.locator("#close-controls").click();
+  assert.equal(await page.locator("#controls-toggle").getAttribute("aria-expanded"), "false");
+  for (const preset of ["equal", "offset", "double"]) {
+    await page.locator("#preset").selectOption(preset);
+    assert.deepEqual(await snapshot(), PRESETS[preset]);
+  }
+  await page.locator("#reset").click();
   await page.locator("#side").click();
   await page.locator("#swap").click();
   assert.deepEqual(await snapshot(), swapPositions(DEFAULT));
@@ -362,6 +455,8 @@ try {
   await page.screenshot({ path: "artifacts/rear-view.png" });
   for (const [width, height] of [
     [1024, 768],
+    [768, 1024],
+    [360, 800],
     [390, 844],
     [844, 390],
     [1366, 768],
@@ -375,6 +470,7 @@ try {
     }
     await layout();
     await controls(true);
+    await controlLayout();
     assert.deepEqual(await page.locator("canvas").boundingBox(), {
       x: 0,
       y: 0,
@@ -385,6 +481,13 @@ try {
       path: `artifacts/controls-${width}x${height}.png`,
     });
     await controls(false);
+    if ((width <= 900 && height > 500) || width <= 700) {
+      assert.equal(await page.locator("#math-panel").isVisible(), true, "closing the dock restores math visibility");
+      await controls(true);
+      await page.locator("#math-toggle").click();
+      assert.equal(await page.locator("#controls-panel").isHidden(), true, "Show Math closes the compact dock");
+      assert.equal(await page.locator("#math-panel").isVisible(), true);
+    }
     await page.screenshot({
       path: `artifacts/viewport-${width}x${height}.png`,
     });
@@ -458,6 +561,30 @@ try {
   );
   await setNumber("fulcrum-position", 0, fallback);
   assert.ok(valid(await snapshot(fallback)));
+  await fallback.setViewportSize({ width: 390, height: 844 });
+  await controlLayout(fallback);
+  // Touch buttons and range tracks use the same role-specific controls.
+  const touch = await browser.newPage({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+  watch(touch);
+  await touch.goto(url);
+  await ready(touch);
+  await touch.locator("#controls-toggle").tap();
+  await touch.getByRole("button", { name: "Double Load Mass", exact: true }).tap();
+  assert.equal((await snapshot(touch)).loadMass, 400);
+  await touch.getByRole("button", { name: "Halve Effort Mass", exact: true }).tap();
+  assert.equal((await snapshot(touch)).effortMass, 50);
+  await touch.locator("#distance-slider-effort").tap();
+  const touchState = await snapshot(touch);
+  assert.ok(valid(touchState));
+  await touch.locator("#swap").tap();
+  assert.deepEqual(await snapshot(touch), swapPositions(touchState));
+  await touch.locator("#close-controls").tap();
+  assert.equal(await touch.locator("#math-panel").isVisible(), true);
+  await touch.locator("#math-toggle").tap();
+  await touch.locator("#controls-toggle").tap();
+  await touch.locator("#close-controls").tap();
+  assert.equal(await touch.locator("#math-panel").isHidden(), true, "dock preserves an intentionally hidden math panel");
+  await touch.close();
   const invalid = await browser.newPage();
   watch(invalid);
   await invalid.addInitScript(

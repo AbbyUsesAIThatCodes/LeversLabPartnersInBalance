@@ -25,6 +25,9 @@ const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)],
   cap = (s) => s[0].toUpperCase() + s.slice(1);
 const colors = { load: "#89500b", effort: "#176b61", fulcrum: "#714896" };
+const compactViewport = matchMedia(
+  "(max-width: 900px) and (min-height: 501px), (max-width: 700px)",
+);
 let saved;
 try {
   saved = localStorage.getItem(STORAGE_KEY);
@@ -54,7 +57,18 @@ function notice(message) {
 for (const role of OBJECTS) {
   const name = cap(role);
   $(`#panel-${role}`).innerHTML =
-    `<h3>${name}</h3><label for="mass-${role}">Mass</label><div class="numeric"><input id="mass-${role}" type="number" min="25" max="1000" step="25" aria-label="${name} Mass in Grams">${unit("g")}</div><input id="mass-slider-${role}" type="range" min="25" max="1000" step="25" aria-label="${name} Mass"><div class="quick-actions"><button data-scale="${role},mass,0.5" aria-label="Halve ${name} Mass">÷ 2</button><button data-scale="${role},mass,2" aria-label="Double ${name} Mass">× 2</button></div><label for="distance-${role}">Distance From Fulcrum</label><div class="numeric"><input id="distance-${role}" type="number" step="25" aria-label="${name} Arm in Millimeters">${unit("mm")}</div><input id="distance-slider-${role}" type="range" step="25" aria-label="${name} Arm"><div class="quick-actions"><button data-scale="${role},distance,0.5" aria-label="Halve ${name} Arm">÷ 2</button><button data-scale="${role},distance,2" aria-label="Double ${name} Arm">× 2</button></div><p id="force-${role}"></p>`;
+    `<h2 id="heading-${role}">${name}</h2><label for="mass-${role}">Mass</label><div class="numeric"><input id="mass-${role}" type="number" min="25" max="1000" step="25" aria-label="${name} Mass in Grams">${unit("g")}</div><input id="mass-slider-${role}" type="range" min="25" max="1000" step="25" aria-label="${name} Mass"><div class="quick-actions"><button data-scale="${role},mass,0.5" aria-label="Halve ${name} Mass">÷ 2</button><button data-scale="${role},mass,2" aria-label="Double ${name} Mass">× 2</button></div><label for="distance-${role}">Distance From Fulcrum</label><div class="numeric"><input id="distance-${role}" type="number" step="25" aria-label="${name} Arm in Millimeters">${unit("mm")}</div><input id="distance-slider-${role}" type="range" step="25" aria-label="${name} Arm"><div class="quick-actions"><button data-scale="${role},distance,0.5" aria-label="Halve ${name} Arm">÷ 2</button><button data-scale="${role},distance,2" aria-label="Double ${name} Arm">× 2</button></div><p id="force-${role}"></p>`;
+}
+function orderControls() {
+  // Beam coordinates, never the camera or swap count, own the panel order.
+  // Move the existing nodes so keyboard order follows the visible arrangement.
+  const container = $("#object-controls");
+  const first = $(`#panel-${state.load < state.effort ? "load" : "effort"}`);
+  if (container.firstElementChild !== first) {
+    const focused = document.activeElement;
+    container.prepend(first);
+    if (container.contains(focused)) focused.focus({ preventScroll: true });
+  }
 }
 for (const role of ROLES) {
   const tag = document.createElement("button");
@@ -115,6 +129,7 @@ function keyboardStep(role, key) {
     );
 }
 function render() {
+  orderControls();
   $("#preset").value =
     Object.entries(PRESETS).find(([, s]) =>
       Object.keys(DEFAULT).every((k) => s[k] === state[k]),
@@ -158,9 +173,7 @@ function render() {
     `Beam coordinates: Load ${state.load} mm · Fulcrum ${state.fulcrum} mm · Effort ${state.effort} mm.`;
   $("#hold").textContent = held ? "Release" : "Hold Level";
   $("#hold").setAttribute("aria-pressed", String(held));
-  $("#math-panel").hidden = !showMath;
-  $("#math-toggle").textContent = showMath ? "Hide Math" : "Show Math";
-  $("#math-toggle").setAttribute("aria-expanded", String(showMath));
+  syncPanelVisibility();
   $("#app").dataset.held = String(held);
   for (const role of ROLES)
     $(`[data-tag="${role}"]`).dataset.coordinate = state[role];
@@ -189,24 +202,39 @@ function onFrame({ positions, angle, held: isHeld }) {
   updateStatus(isHeld);
   $("#app").dataset.angle = angle;
   if (!positions.load) return;
-  const top = $("#top").getBoundingClientRect().bottom;
-  const bottom = showMath
-    ? $("#math-panel").getBoundingClientRect().top
-    : innerHeight - 12;
+  const compactControls = !$("#controls-panel").hidden && compactViewport.matches;
+  const sharedControlsAbove =
+    !$("#controls-panel").hidden && !compactControls && innerHeight > 500;
+  const top = Math.max(
+    $("#top").getBoundingClientRect().bottom,
+    sharedControlsAbove ? $("#panel-fulcrum").getBoundingClientRect().bottom : 0,
+  );
+  const bottom = compactControls
+    ? $("#controls-panel").getBoundingClientRect().top
+    : showMath
+      ? $("#math-panel").getBoundingClientRect().top
+      : innerHeight - 12;
   const parts = [...ROLES].sort((a, b) => positions[a].x - positions[b].x);
   const tags = parts.map((p) => $(`[data-tag="${p}"]`));
   const widths = tags.map((t) => t.getBoundingClientRect().width),
     heights = tags.map((t) => t.getBoundingClientRect().height);
+  const sideControls = !$("#controls-panel").hidden && !compactControls;
+  const left = sideControls
+    ? $("#object-controls").firstElementChild.getBoundingClientRect().right + 8
+    : 10;
+  const right = sideControls
+    ? $("#object-controls").lastElementChild.getBoundingClientRect().left - 8
+    : innerWidth - 10;
   const xs = parts.map((p, i) =>
     Math.max(
-      widths[i] / 2 + 10,
-      Math.min(innerWidth - widths[i] / 2 - 10, positions[p].x),
+      left + widths[i] / 2,
+      Math.min(right - widths[i] / 2, positions[p].x),
     ),
   );
   for (let i = 1; i < 3; i++)
     xs[i] = Math.max(xs[i], xs[i - 1] + (widths[i - 1] + widths[i]) / 2 + 8);
-  if (xs[2] + widths[2] / 2 > innerWidth - 10) {
-    xs[2] = innerWidth - 10 - widths[2] / 2;
+  if (xs[2] + widths[2] / 2 > right) {
+    xs[2] = right - widths[2] / 2;
     for (let i = 1; i >= 0; i--)
       xs[i] = Math.min(xs[i], xs[i + 1] - (widths[i] + widths[i + 1]) / 2 - 8);
   }
@@ -268,9 +296,29 @@ function holdScene() {
   if (held) fallbackMotion = { angle: 0, velocity: 0 };
   if (fallback) drawFallback();
 }
+function syncPanelVisibility() {
+  const visible =
+    showMath && !(!$("#controls-panel").hidden && compactViewport.matches);
+  $("#math-panel").hidden = !visible;
+  $("#math-toggle").textContent = visible ? "Hide Math" : "Show Math";
+  $("#math-toggle").setAttribute("aria-expanded", String(visible));
+}
+compactViewport.addEventListener("change", () => {
+  syncPanelVisibility();
+  if (ready) scene.dirty = true;
+});
 function showControls(show) {
   $("#controls-panel").hidden = !show;
+  $("#app").classList.toggle("controls-open", show);
   $("#controls-toggle").setAttribute("aria-expanded", String(show));
+  $("#controls-toggle").textContent = show ? "Hide Controls" : "Controls";
+  syncPanelVisibility();
+  hideTip();
+  if (show) {
+    for (const panel of $$("#object-controls, .control-card")) panel.scrollTop = 0;
+    $("#object-controls input").focus({ preventScroll: true });
+  } else $("#controls-toggle").focus({ preventScroll: true });
+  if (ready) scene.dirty = true;
 }
 for (const role of OBJECTS)
   for (const kind of ["mass", "distance"])
@@ -329,7 +377,7 @@ $("#swap").addEventListener("click", () => {
   scene?.finishDrag();
   setState(swapPositions(state));
   $("#announcement").textContent =
-    `Positions exchanged. Load keeps ${state.loadMass} grams; Effort keeps ${state.effortMass} grams.`;
+    `Positions and control panels exchanged. ${state.load < state.effort ? "Load controls left; Effort controls right" : "Effort controls left; Load controls right"}. Load keeps ${state.loadMass} grams; Effort keeps ${state.effortMass} grams.`;
 });
 $("#hold").addEventListener("click", () => {
   held = !held;
@@ -338,7 +386,11 @@ $("#hold").addEventListener("click", () => {
   save();
 });
 $("#math-toggle").addEventListener("click", () => {
-  showMath = !showMath;
+  if (compactViewport.matches && !$("#controls-panel").hidden) {
+    showControls(false);
+    $("#math-toggle").focus();
+    showMath = true;
+  } else showMath = !showMath;
   render();
   save();
 });
@@ -378,7 +430,6 @@ $("#controls-toggle").addEventListener("click", () =>
 );
 $("#close-controls").addEventListener("click", () => {
   showControls(false);
-  $("#controls-toggle").focus();
 });
 for (const [id, method] of [
   ["side", "sideCamera"],
@@ -416,9 +467,13 @@ $("#fullscreen").addEventListener("click", async () => {
 });
 if (!document.fullscreenEnabled) $("#fullscreen").hidden = true;
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && !$("#controls-panel").hidden) {
+  if (
+    e.key === "Escape" &&
+    !$("#controls-panel").hidden &&
+    !$("dialog[open]") &&
+    $("#tooltip").hidden
+  ) {
     showControls(false);
-    $("#controls-toggle").focus();
   }
 });
 new ResizeObserver(() => {
@@ -429,6 +484,10 @@ new ResizeObserver(() => {
   if (ready) scene.dirty = true;
 }).observe($("#top"));
 new ResizeObserver(() => {
+  $("#app").style.setProperty(
+    "--math-height",
+    `${$("#math-panel").getBoundingClientRect().height}px`,
+  );
   if (ready) scene.dirty = true;
 }).observe($("#math-panel"));
 const hideTip = installTooltips();
