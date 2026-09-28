@@ -10,10 +10,10 @@ or repository dependency was introduced for that workaround.
 
 | Check                  | Result and Coverage                                                                                                                                                                                                                                                                                                          |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `npm test`             | Seven tests pass. Enumerates all 1,360 legal coordinate arrangements and exercises constrained moves, keyboard steps, distances, masses, swaps, restore, and finite motion.                                                                                                                                                  |
+| `npm test`             | Eight tests pass. Enumerates all 1,360 legal coordinate arrangements and exercises constrained moves, keyboard steps, distances, masses, swaps, restore, and finite motion.                                                                                                                                                  |
 | Required example       | 200 g × 100 mm = 100 g × 200 mm; IMA 2. After swap: 40,000 vs. 10,000 g·mm; IMA 0.5; the Load side descends.                                                                                                                                                                                                                 |
 | Off-center swap        | Exact coordinates exchange; fulcrum and masses remain fixed. Two swaps restore the full role-coordinate state.                                                                                                                                                                                                               |
-| Actual mesh checks     | Persistent mesh identity and color; 96 extreme mass/position/tilt combinations; tray contact; weights clear support; beam/attachments clear the desk; vertical force lines and downward arrows.                                                                                                                              |
+| Actual mesh checks     | Persistent mesh identity and color; 1,600 distinct mass/position/tilt combinations; direct rail contact; crate rotates with beam; weights clear support and desk; vertical Effort and arrows; point-load torque agrees with rendered axis anchors.                                                                                                                              |
 | `npm run build`        | Self-contained static build passes, with bundled JavaScript, local fonts, and retained licenses.                                                                                                                                                                                                                             |
 | `npm run test:browser` | Passes under software WebGL. Live model/UI/SVG/save consistency, held and released swaps, motion reset, load-side descent, numeric/slider/halve/double/keyboard/drag constraints, drag cancellation, actual fulcrum raycasting, presets, reset, tabs, tooltips, rounding/range explanations, persistence, and invalid saves. |
 | Overlay/layout checks  | 1366×768, 1024×768, 390×844, 844×390; separate readable labels including four-digit masses; stable full-window canvas and projected coordinates when panels toggle; orbit/rear view and both extreme tilt directions.                                                                                                        |
@@ -28,7 +28,11 @@ stops. Review found and corrected clipped phone label text and a raised load
 hidden by a label; the viewport-based fit now reserves more vertical clearance.
 The fallback instruction line also stays above the math panel.
 
-Representative screenshots from the automated run:
+Historical screenshots below show the original core apparatus. For the current
+seated crate, see the before/after comparisons and additional geometry/browser
+checks in [Load Contact Review](LOAD-CONTACT.md).
+
+Original core screenshots:
 
 - [Balanced Default](screenshots/balanced.png)
 - [Swapped and Released](screenshots/swapped-released.png)

@@ -1,7 +1,8 @@
 import * as THREE from "three";
 import { massKey } from "./model.js";
 export const HEIGHT = 9,
-  SCALE = 25;
+  SCALE = 25,
+  BEAM_TOP = 0.42;
 export const COLORS = Object.freeze({
   effort: 0x257e73,
   fulcrum: 0x7952a0,
@@ -9,8 +10,8 @@ export const COLORS = Object.freeze({
 });
 
 // ThreeKindsOfLevers rail and support, with role-owned attachments.
-// Both force anchors are on the beam axis. Attachments stay vertical about them,
-// so decorative height does not introduce an extra horizontal lever arm.
+// Ideal point loads act at the labeled beam-axis anchors. The seated crate is
+// their visual representation, not a simulated rigid-body center of mass.
 export function createApparatus() {
   const moving = new THREE.Group(),
     base = new THREE.Group(),
@@ -19,6 +20,7 @@ export function createApparatus() {
     pickable = [],
     attachments = {},
     weights = {},
+    forceFrames = {},
     arrows = {};
   moving.name = "moving-apparatus";
   base.name = "fulcrum-support";
@@ -86,7 +88,8 @@ export function createApparatus() {
     );
     cap.rotation.x = Math.PI / 2;
   }
-  for (const y of [-0.34, 0.34]) block(beam, 25.3, 0.16, 1.7, steel, 0, y, 0);
+  for (const y of [-BEAM_TOP + 0.08, BEAM_TOP - 0.08])
+    block(beam, 25.3, 0.16, 1.7, steel, 0, y, 0);
   for (let x = -12; x <= 12; x++) block(beam, 0.15, 0.52, 1.6, steel, x, 0, 0);
   for (const x of [-12.7, 12.7]) block(beam, 0.24, 0.9, 1.85, brass, x, 0, 0);
   for (let i = -12; i <= 12; i++)
@@ -119,13 +122,8 @@ export function createApparatus() {
     anchor.add(weight);
     weights[role] = weight;
     if (role === "load") {
-      cylinder(anchor, 0.12, 0.85, brass, 0, 0.425, 0, role, "tray-stem");
-      block(anchor, 2.6, 0.18, 2.6, brass, 0, 0.9, 0, role, "load-tray");
-      for (const x of [-1.23, 1.23])
-        block(anchor, 0.14, 0.28, 2.6, brass, x, 1.05, 0, role, "tray-rim");
-      for (const z of [-1.23, 1.23])
-        block(anchor, 2.32, 0.28, 0.14, brass, 0, 1.05, z, role, "tray-rim");
-      // The crate's bottom is y=0 locally; tray contact is invariant as it scales.
+      // Bottom at local y=0: scale about the contact plane, then seat on the rail.
+      // It is fixed to its selected beam position (no sliding/tipping model).
       block(
         weight,
         0.9,
@@ -197,7 +195,12 @@ export function createApparatus() {
       0.32,
     );
     arrow.name = `${role}-downward-force`;
-    anchor.add(arrow);
+    // Force frames stay vertical independently of the crate's beam rotation.
+    const forceFrame = new THREE.Group();
+    forceFrame.name = `${role}-force-frame`;
+    moving.add(forceFrame);
+    forceFrame.add(arrow);
+    forceFrames[role] = forceFrame;
     arrows[role] = arrow;
   }
   function update(state, angle) {
@@ -210,9 +213,11 @@ export function createApparatus() {
       const anchor = attachments[role],
         size = Math.cbrt(state[massKey(role)] / 100);
       anchor.position.set((state[role] - state.fulcrum) / SCALE, 0, 0);
-      anchor.rotation.z = -angle;
+      anchor.rotation.z = role === "load" ? 0 : -angle;
       weights[role].scale.setScalar(size);
-      weights[role].position.y = role === "load" ? 0.99 : -1.6;
+      weights[role].position.y = role === "load" ? BEAM_TOP : -1.6;
+      forceFrames[role].position.copy(anchor.position);
+      forceFrames[role].rotation.z = -angle;
       arrows[role].position.y = role === "load" ? 3.6 : -0.3;
     }
     moving.updateMatrixWorld(true);

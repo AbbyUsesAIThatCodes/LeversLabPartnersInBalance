@@ -1,6 +1,6 @@
 # Levers: Load, Effort, and Distance
 
-An independent classroom lever game: a **gold Load** presses on a supported tray,
+An independent classroom lever game: a **gold Load** sits on and tilts with the beam,
 and a **teal Effort** hangs below the beam. Change either mass, change either arm,
 move the purple fulcrum, predict the result, and release the beam.
 
@@ -72,12 +72,15 @@ Screenshots from browser checks go to ignored `artifacts/`.
 | Arm lengths             | Derived from coordinates; 75–425 mm, depending on the current fulcrum and side |
 | Beam motion             | ±12°, with illustrative damping                                                |
 
-The taller support, stable tray, and bounds keep the maximum masses above the
-work surface at both stops. The tray stays level and the load stays in contact.
+The support and bounds keep the maximum masses above the work surface at both
+stops. The crate rests directly on the rail and tilts with it; the Effort and
+both downward force arrows stay vertical. The crate represents a point load at
+its labeled beam-axis coordinate, not a full rigid-body center-of-mass model.
 The only modeled masses are the labeled Load and Effort. The beam and attachments
 are ideal and massless; the pivot is ideal. Read
 [Model and Teaching Notes](docs/MODEL-AND-TEACHING.md) for support assumptions,
 force application points, torque, and motion limitations.
+See the [Load Contact Review](docs/LOAD-CONTACT.md) for Issue #8 comparisons.
 
 ## Independent Identity and Review
 

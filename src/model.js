@@ -133,7 +133,8 @@ export function measures(state) {
     forceRatio: loadForce / effortForce,
   };
 }
-// Vertical forces at labeled application points. Positive rotation raises +x.
+// Ideal vertical point loads at labeled beam-axis points, not mesh centers of
+// mass (including the seated crate's height). Positive rotation raises +x.
 export function torque(state, angle = 0) {
   return (
     ((-(
