@@ -4,7 +4,7 @@
 
 The Load is the gold crate; the Effort is the teal hanging weight. These roles
 stay attached to the objects when they exchange sides. In this apparatus, the
-load presses through its tray and the effort pulls through its cord. Both
+load rests directly on the beam and the effort pulls through its cord. Both
 applied forces are downward. A force arrow is not a motion arrow.
 
 Beam coordinates are signed millimeters in the apparatus's coordinate system.
@@ -42,19 +42,28 @@ This is an exact exchange, not a mirror around either zero or the fulcrum.
 
 ## Ideal Apparatus
 
-Only the labeled masses contribute to static balance. The beam, tray, cord,
+Only the labeled masses contribute to static balance. The beam, cord,
 carriages, and support are ideal and massless. The pivot has no static friction.
-The gold crate sits in a constrained self-leveling tray. The tray stays
-horizontal, keeps contact under the crate, and prevents sliding or tipping.
-It is an idealized teaching mechanism, not a construction specification.
+The gold crate's base rests directly on the top rail. It scales about its base,
+rotates with the beam, and stays fixed at its selected position. Sliding and
+independent tipping are constrained, without a raised holder or visible restraint.
+The teal Effort counter-rotates to hang vertically. This is an idealized teaching
+representation, not a construction specification.
 
-The force anchors are on the beam axis at the labeled coordinates. Each
-attachment counter-rotates about that anchor: the crate's center is directly
-above its anchor and the effort's center is directly below its anchor, in world
-coordinates, throughout the permitted tilt. Thus the meshes' vertical offsets
-add no horizontal moment-arm offset. Decorative force arrows are offset toward
-the viewer for legibility; they communicate direction, not a different force
-application point. The guide-line dots identify the modeled application points.
+**The crate represents an ideal downward point load at its labeled beam-axis
+coordinate. Its rendered center of mass is not the modeled force point.** A real
+rigid crate fixed above a tilted beam has an additional horizontal center-of-mass
+offset and turning effect; this model deliberately omits that effect. It does
+not simulate contact forces or claim physical equivalence to that full crate.
+The effort is likewise a point load at its labeled beam-axis coordinate.
+At level, both rendered centers align horizontally with their modeled points,
+preserving the intended level-balance experiments.
+
+Both force arrows stay vertically downward independently of crate rotation.
+Decorative arrows are offset toward the viewer in 3D (rightward in the diagram)
+for legibility; they communicate direction, not a different application point.
+The guide-line dots in 3D and colored axis dots in the diagram identify the
+modeled application points. Both renderers use this same point-load model.
 
 For angle θ, both horizontal moment arms are the labeled arm times cos(θ).
 Signed net torque is `−Σ(mass × (objectX − fulcrumX)) × g × cos(θ)` in SI units.
@@ -64,16 +73,18 @@ The math panel intentionally reports torques at level.
 ## Motion and Clearance
 
 Motion is illustrative: the model uses point-mass rotational inertia at the
-labeled arms and exponential damping. It does not compute real tray or hanging
+labeled arms and exponential damping. It does not compute real crate or hanging
 body inertia, transient contact forces, pendulum swing, or calibrated elapsed
 motion. There is no artificial imbalance threshold. Travel stops at ±12°.
 Reduced Animation jumps to the appropriate stop (or level if balanced).
 
-The pivot sits 225 mm above the ideal desk in the visual scale. Object centers
-stay within ±250 mm along the beam; minimum arm length is 75 mm, maximum 425 mm.
+The pivot sits 225 mm above the ideal desk in the visual scale. Labeled object
+positions stay within ±250 mm along the beam; minimum arm length is 75 mm,
+maximum 425 mm.
 These limits allow the largest 1,000 g objects at both stops without desk
-intersections. The crate fits inside a constant-size tray at all masses. The
-beam's end margin keeps attachments on the apparatus.
+intersections. The crate base stays on the top rail at all supported masses and
+angles, including after swaps; the largest crate slightly overhangs the rail's
+width. The beam's end margin keeps the whole crate footprint within its length.
 
 Editing resets angle and velocity while preserving the user's hold/release
 setting. Dragging temporarily levels the beam, then a released arrangement

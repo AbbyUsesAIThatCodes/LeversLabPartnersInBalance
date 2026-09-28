@@ -24,7 +24,7 @@ const tips = {
   ima: "Ideal mechanical advantage (IMA) is effort-arm distance divided by load-arm distance. It describes the advantage provided by the lever’s shape.",
   effort:
     "Effort is the input force used to balance or move the load. In this lab one hanging weight supplies that force.",
-  load: "Load is the force you want the lever to balance or move. The gold crate supplies it through its supported tray.",
+  load: "Load is the force you want the lever to balance or move. The gold crate rests on the beam and tilts with it. This ideal model applies its downward force at the labeled beam-axis point; it does not simulate the crate’s full center of mass.",
   fulcrum:
     "The fulcrum is the movable pivot. Measure each arm along the beam from its center to the labeled force point.",
   balance:

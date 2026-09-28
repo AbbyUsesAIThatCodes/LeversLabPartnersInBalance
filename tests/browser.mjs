@@ -87,6 +87,41 @@ try {
       assert.equal(Number(await p.locator(`#distance-${role}`).inputValue()), Math.abs(state[role] - state.fulcrum));
     return state;
   }
+  async function diagramGeometry(p) {
+    const geometry = await p.evaluate(() => {
+      const svg = document.querySelector("#fallback-svg");
+      const world = (node, x, y) => {
+        const matrix = svg.getCTM().inverse().multiply(node.getCTM());
+        const p = new DOMPoint(x, y).matrixTransform(matrix);
+        return { x: p.x, y: p.y };
+      };
+      const beam = svg.querySelector("[data-beam]");
+      const start = beam.getPointAtLength(0), end = beam.getPointAtLength(beam.getTotalLength());
+      const crate = svg.querySelector("[data-crate]"), rect = crate.getBBox();
+      return {
+        beam: [start, end].map((p) => world(beam, p.x, p.y)),
+        base: [rect.x, rect.x + rect.width].map((x) => world(crate, x, rect.y + rect.height)),
+        forces: [...svg.querySelectorAll("[data-force]")].map((node) => {
+          const a = node.getPointAtLength(0), b = node.getPointAtLength(node.getTotalLength());
+          return [world(node, a.x, a.y), world(node, b.x, b.y)];
+        }),
+        effort: (() => {
+          const node = svg.querySelector('[data-body="effort"] rect'), r = node.getBBox();
+          return [world(node, r.x, r.y), world(node, r.x, r.y + r.height)];
+        })(),
+      };
+    });
+    const [a, b] = geometry.beam;
+    const length = Math.hypot(b.x - a.x, b.y - a.y);
+    for (const p of geometry.base) {
+      const distance = ((p.x - a.x) * -(b.y - a.y) + (p.y - a.y) * (b.x - a.x)) / length;
+      assert.ok(Math.abs(distance + 6) < 1e-3, "both crate base edges touch the tilted beam's top edge");
+    }
+    for (const [start, end] of [...geometry.forces, geometry.effort]) {
+      assert.ok(Math.abs(end.x - start.x) < 1e-3, "forces and hanging Effort stay vertical");
+      assert.ok(end.y > start.y, "forces point downward");
+    }
+  }
   async function controlLayout(p = page) {
     await controls(true, p);
     await p.waitForTimeout(80);
@@ -374,6 +409,18 @@ try {
     "true",
   );
   assert.ok((await snapshot()).fulcrum > 0, "actual 3D fulcrum is draggable");
+  // Pick and drag the seated crate itself, away from the label and beam.
+  await page.locator("#reset").click();
+  await page.locator("#side").click();
+  const cratePoint = await page.locator('[data-point="load"]').evaluate((e) => ({
+    x: Number(e.getAttribute("cx")), y: Number(e.getAttribute("cy")) - 16,
+  }));
+  await page.mouse.move(cratePoint.x, cratePoint.y);
+  await page.mouse.down();
+  await page.mouse.move(cratePoint.x - 65, cratePoint.y, { steps: 5 });
+  await page.mouse.up();
+  assert.equal(await page.locator('[data-tag="load"]').getAttribute("aria-pressed"), "true");
+  assert.ok((await snapshot()).load < DEFAULT.load, "actual seated crate is draggable");
   // Panel content, tabs, and predictions cannot resize or reframe the scene.
   await page.locator("#reset").click();
   await page.locator("#fit").click();
@@ -524,6 +571,7 @@ try {
   });
   await fallback.goto(url);
   await ready(fallback, "fallback");
+  await diagramGeometry(fallback);
   await fallback.locator("#swap").click();
   assert.deepEqual(await snapshot(fallback), swapPositions(DEFAULT));
   assert.equal(
@@ -537,6 +585,7 @@ try {
   await fallback.waitForFunction(
     () => Number(document.querySelector("#app").dataset.angle) < -0.1,
   );
+  await diagramGeometry(fallback);
   await setNumber("mass-effort", 400, fallback);
   await controls(false, fallback);
   assert.equal(await fallback.locator("#beam-status").innerText(), "Balanced");
@@ -547,6 +596,42 @@ try {
     "diagram instructions clear the math panel",
   );
   await fallback.screenshot({ path: "artifacts/fallback.png" });
+  // Minimum and maximum crate sizes at level and both travel stops, with an
+  // off-center fulcrum and a closest-permitted arm. No storage or WebGL required.
+  await fallback.locator("#reset").click();
+  await setNumber("distance-load", 250, fallback);
+  await setNumber("distance-effort", 250, fallback);
+  await setNumber("fulcrum-position", -175, fallback);
+  await setNumber("mass-load", 1000, fallback);
+  await setNumber("mass-effort", 25, fallback);
+  await controls(false, fallback);
+  await fallback.locator("#help").click();
+  await fallback.locator("#reduced").check();
+  await fallback.getByRole("button", { name: "Back to the Workbench" }).click();
+  await diagramGeometry(fallback);
+  await fallback.locator("#hold").click();
+  await fallback.waitForFunction(() => Number(document.querySelector("#app").dataset.angle) > 0.2);
+  await diagramGeometry(fallback);
+  const beforeDiagramSwap = await snapshot(fallback);
+  await fallback.locator("#swap").click();
+  await fallback.waitForFunction(() => Number(document.querySelector("#app").dataset.angle) < -0.2);
+  await diagramGeometry(fallback);
+  await fallback.locator("#swap").click();
+  assert.deepEqual(await snapshot(fallback), beforeDiagramSwap);
+  await setNumber("mass-load", 25, fallback);
+  await controls(false, fallback);
+  await fallback.locator("#hold").click();
+  await diagramGeometry(fallback);
+  await fallback.locator("#hold").click();
+  await fallback.waitForFunction(() => Number(document.querySelector("#app").dataset.angle) < -0.2);
+  await diagramGeometry(fallback);
+  await fallback.locator("#swap").click();
+  await fallback.waitForFunction(() => Number(document.querySelector("#app").dataset.angle) < -0.2);
+  await diagramGeometry(fallback);
+  await setNumber("fulcrum-position", 175, fallback);
+  await controls(false, fallback);
+  await fallback.waitForFunction(() => Number(document.querySelector("#app").dataset.angle) > 0.2);
+  await diagramGeometry(fallback);
   await fallback.locator("#reset").click();
   assert.deepEqual(
     await snapshot(fallback),
