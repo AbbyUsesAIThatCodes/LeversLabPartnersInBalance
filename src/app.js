@@ -103,8 +103,6 @@ function renderSelection() {
 function setState(next) {
   if (!valid(next)) return;
   state = { ...next };
-  fallbackMotion = { angle: 0, velocity: 0 };
-  fallbackTime = null;
   if (ready) scene.setState(state);
   render();
   save();
@@ -289,15 +287,20 @@ function fallbackFrame(time) {
   const dt = fallbackTime === null ? 0 : (time - fallbackTime) / 1000;
   fallbackTime = time;
   const old = fallbackMotion.angle;
-  if (held || $("dialog[open]")) fallbackMotion = { angle: 0, velocity: 0 };
-  else if (reduced)
-    fallbackMotion = { angle: restingAngle(state), velocity: 0 };
-  else fallbackMotion = advance(state, fallbackMotion, dt);
+  if (held) fallbackMotion = { angle: 0, velocity: 0 };
+  else if (!$("dialog[open]")) {
+    if (reduced)
+      fallbackMotion = { angle: restingAngle(state, fallbackMotion.angle), velocity: 0 };
+    else fallbackMotion = advance(state, fallbackMotion, dt);
+  }
   if (old !== fallbackMotion.angle) drawFallback();
   requestAnimationFrame(fallbackFrame);
 }
 function holdScene() {
-  if (ready) scene.setHeld(held || !!$("dialog[open]"));
+  if (ready) {
+    scene.setHeld(held);
+    scene.paused = !!$("dialog[open]");
+  }
   if (held) fallbackMotion = { angle: 0, velocity: 0 };
   if (fallback) drawFallback();
 }
@@ -455,11 +458,7 @@ $("#help-dialog").addEventListener("close", holdScene);
 $("#reduced").checked = reduced;
 $("#reduced").addEventListener("change", () => {
   reduced = $("#reduced").checked;
-  if (ready) {
-    scene.reduced = reduced;
-    scene.level();
-  }
-  fallbackMotion = { angle: 0, velocity: 0 };
+  if (ready) scene.reduced = reduced;
   save();
 });
 $("#fullscreen").addEventListener("click", async () => {
@@ -500,7 +499,10 @@ function unavailable() {
   if (fallback) return;
   ready = false;
   fallback = true;
-  if (scene) scene.active = false;
+  if (scene) {
+    scene.active = false;
+    fallbackMotion = { ...scene.motion };
+  }
   $("#scene").hidden = true;
   $("#tags").hidden = true;
   $("#leaders").hidden = true;

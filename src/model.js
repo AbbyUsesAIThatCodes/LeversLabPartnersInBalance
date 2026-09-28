@@ -146,8 +146,9 @@ export function torque(state, angle = 0) {
       Math.cos(angle) || 0
   );
 }
-export function restingAngle(state) {
-  return Math.sign(torque(state)) * STOP;
+export function restingAngle(state, currentAngle = 0) {
+  // Equal turning effects balance at any existing tilt in this ideal model.
+  return Math.sign(torque(state)) * STOP || currentAngle;
 }
 export function advance(state, motion, seconds) {
   if (!Number.isFinite(seconds) || seconds <= 0) return { ...motion };
