@@ -505,7 +505,13 @@ $("#help").addEventListener("click", () => {
   holdScene();
 });
 for (const b of $$(".dialog-close"))
-  b.addEventListener("click", () => $("#help-dialog").close());
+  b.addEventListener("click", () => {
+    $("#help-dialog").close();
+    // Some browsers queue the native close event after the next animation
+    // task. Resume immediately for button closes; the close listener below
+    // still handles Escape and other native dialog dismissal paths.
+    holdScene();
+  });
 $("#help-dialog").addEventListener("close", holdScene);
 $("#reduced").checked = reduced;
 $("#reduced").addEventListener("change", () => {
