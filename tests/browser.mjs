@@ -3,6 +3,7 @@ import { spawn } from "node:child_process";
 import { mkdir } from "node:fs/promises";
 import assert from "node:assert/strict";
 import { verifyBeamMotion } from "./beam-motion-browser.mjs";
+import { verifyFraming } from "./framing-browser.mjs";
 import { verifyTooltips } from "./tooltips-browser.mjs";
 import {
   DEFAULT,
@@ -699,6 +700,7 @@ try {
     DEFAULT,
     "invalid saved ordering is rejected",
   );
+  await verifyFraming(browser, url, watch);
   await verifyBeamMotion(browser, url, watch);
   await verifyTooltips(browser, url, watch);
   assert.deepEqual(errors, [], "no uncaught page errors");

@@ -38,7 +38,9 @@ See the [Roadmap](docs/ROADMAP.md).
   The actual force ratio equals IMA only at ideal balance. See the
   [Compact Menus and Tooltip Review](docs/TOOLTIPS.md).
 - Orbit/zoom freely, or use **Side View** and **Fit View**. Panels are overlays;
-  opening them never resizes the full-window 3D viewport.
+  opening them never resizes the full-window 3D viewport or resets your camera.
+  Presets fit the current arrangement through its full travel, with space for
+  labels and overlays. See the [Camera Framing Review](docs/CAMERA-FRAMING.md).
 - If WebGL is unavailable or lost, the diagram, math, presets, swap, hold/release,
   and numeric controls still work. Storage failure does not prevent use.
 

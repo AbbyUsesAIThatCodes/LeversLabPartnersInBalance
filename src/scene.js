@@ -2,6 +2,8 @@ import * as THREE from "three";
 import { WorkshopScene } from "./workshop.js";
 import {
   ROLES,
+  DEFAULT,
+  STOP,
   move,
   step,
   measures,
@@ -93,6 +95,7 @@ export class LeverScene extends WorkshopScene {
         const bounds = new THREE.Box3().setFromObject(
           this.apparatus.weights[role],
         );
+        bounds.union(new THREE.Box3().setFromObject(this.apparatus.arrows[role]));
         const corners = [];
         for (const x of [bounds.min.x, bounds.max.x])
           for (const y of [bounds.min.y, bounds.max.y])
@@ -123,33 +126,95 @@ export class LeverScene extends WorkshopScene {
       held: this.held,
     });
   }
-  resetCamera() {
-    const short = this.host.clientHeight <= 500,
-      wide = !short && this.host.clientWidth / this.host.clientHeight > 1.2,
-      center = short || wide ? 8 : 6.5;
-    const fit =
-      Math.max(1, 1.45 / (this.host.clientWidth / this.host.clientHeight)) *
-      (short ? 1.3 : 1);
-    this.controls.target.set(0, center, 0);
-    this.camera.position.set(
-      10 * fit,
-      center + 14 * fit,
-      (wide ? 60 : 47) * fit,
-    );
-    this.controls.maxDistance = Math.max(75, 60 * fit);
+  // Fit the moving apparatus, including force arrows, through its full travel.
+  // The camera target remains low on the support; a projection offset places
+  // the assembly in the clear area without resizing the full-window canvas.
+  fitCamera(side = false) {
+    const w = this.host.clientWidth, h = this.host.clientHeight;
+    const area = this.callbacks.viewBounds?.() || {
+      left: 10, right: w - 10, top: 90, bottom: h - 20,
+    };
+    const apparatus = this.apparatus || createApparatus();
+    const points = [];
+    for (const angle of [-STOP, 0, STOP]) {
+      apparatus.update(this.state || DEFAULT, angle);
+      for (const root of [apparatus.moving, apparatus.base]) root.traverse((object) => {
+        if (!object.geometry) return;
+        object.geometry.computeBoundingBox();
+        const box = object.geometry.boundingBox;
+        for (const x of [box.min.x, box.max.x])
+          for (const y of [box.min.y, box.max.y])
+            for (const z of [box.min.z, box.max.z])
+              points.push(new THREE.Vector3(x, y, z).applyMatrix4(object.matrixWorld));
+      });
+    }
+    if (this.apparatus) apparatus.update(this.state, this.motion.angle);
+    else for (const root of [apparatus.moving, apparatus.base]) root.traverse((object) => {
+      object.geometry?.dispose();
+      object.material?.dispose();
+    });
+    this.camera.clearViewOffset();
+    this.controls.target.set(0, 5.8, 0);
+    const direction = new THREE.Vector3(side ? 0 : 6, side ? 2 : 28, 51).normalize();
+    const boundsAt = (distance) => {
+      this.camera.position.copy(this.controls.target).addScaledVector(direction, distance);
+      this.camera.lookAt(this.controls.target);
+      this.camera.updateMatrixWorld(true);
+      const projected = points.map((p) => this.project(p));
+      return {
+        left: Math.min(...projected.map((p) => p.x)),
+        right: Math.max(...projected.map((p) => p.x)),
+        top: Math.min(...projected.map((p) => p.y)),
+        bottom: Math.max(...projected.map((p) => p.y)),
+      };
+    };
+    let near = this.controls.minDistance, far = 2048;
+    for (let i = 0; i < 24; i++) {
+      const distance = (near + far) / 2, b = boundsAt(distance);
+      if (b.right - b.left > area.right - area.left ||
+          b.bottom - b.top > area.bottom - area.top) near = distance;
+      else far = distance;
+    }
+    const b = boundsAt(far);
+    this.controls.maxDistance = Math.max(75, far * 2);
+    this.camera.far = Math.max(220, far * 3);
+    this.camera.setViewOffset(w, h,
+      (b.left + b.right - area.left - area.right) / 2,
+      (b.top + b.bottom - area.top - area.bottom) / 2, w, h);
+    // Clear any unfinished orbit/zoom damping before applying a preset.
+    const damping = this.controls.enableDamping;
+    this.controls.enableDamping = false;
     this.controls.update();
+    boundsAt(far);
+    this.controls.update();
+    this.controls.enableDamping = damping;
+    this.fittedSide = side;
+    this.fitDistance = far;
     this.draw();
   }
+  resetCamera() {
+    this.fitCamera(false);
+  }
   sideCamera() {
-    const short = this.host.clientHeight <= 500,
-      wide = !short && this.host.clientWidth / this.host.clientHeight > 1.2,
-      center = short || wide ? 8 : 6.5;
-    const fit =
-      Math.max(1, 1.45 / (this.host.clientWidth / this.host.clientHeight)) *
-      (short ? 1.3 : 1);
-    this.controls.target.set(0, center, 0);
-    this.camera.position.set(0, center + 0.1, (wide ? 62 : 49) * fit);
-    this.controls.update();
+    this.fitCamera(true);
+  }
+  resize(reset = false) {
+    const w = this.host.clientWidth, h = this.host.clientHeight;
+    if (!w || !h) return;
+    if (!reset && this.lastSize?.w === w && this.lastSize?.h === h) return;
+    const offset = this.camera.position.clone().sub(this.controls.target);
+    const zoom = this.fitDistance ? offset.length() / this.fitDistance : 1;
+    this.renderer.setSize(w, h, false);
+    this.camera.aspect = w / h;
+    this.camera.updateProjectionMatrix();
+    this.fitCamera(this.fittedSide);
+    if (!reset && this.lastSize) {
+      // A real window/fullscreen resize preserves orbit and relative zoom.
+      this.camera.position.copy(this.controls.target)
+        .add(offset.normalize().multiplyScalar(this.fitDistance * zoom));
+      this.controls.update();
+    }
+    this.lastSize = { w, h };
     this.draw();
   }
   screenSign() {

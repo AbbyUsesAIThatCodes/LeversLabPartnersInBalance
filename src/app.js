@@ -207,6 +207,46 @@ function updateStatus(isHeld = held) {
     direction === "balance" && !isHeld,
   );
 }
+// Reserve the overlays even while hidden: toggling them must never reframe
+// a student's camera. Read their real CSS dimensions rather than duplicating
+// responsive breakpoints and card sizes in the scene.
+function viewBounds() {
+  const app = $("#app"), controls = $("#controls-panel"), math = $("#math-panel");
+  const controlsHidden = controls.hidden, mathHidden = math.hidden;
+  const controlsOpen = app.classList.contains("controls-open");
+  const mathHeight = app.style.getPropertyValue("--math-height");
+  const toolbarBottom = app.style.getPropertyValue("--toolbar-bottom");
+  try {
+    controls.hidden = math.hidden = false;
+    app.classList.remove("controls-open");
+    const mathRect = math.getBoundingClientRect();
+    app.style.setProperty("--math-height", `${mathRect.height}px`);
+    const compact = compactViewport.matches;
+    const toolbar = $("#top").getBoundingClientRect();
+    app.style.setProperty("--toolbar-bottom", `${toolbar.bottom}px`);
+    const shared = $("#panel-fulcrum").getBoundingClientRect();
+    const cards = [...$("#object-controls").children].map((e) => e.getBoundingClientRect());
+    const top = Math.max(toolbar.bottom, !compact && innerHeight > 500 ? shared.bottom : 0);
+    const bottom = Math.min(mathRect.top,
+      compact ? controls.getBoundingClientRect().top : innerHeight <= 500 ? shared.top : innerHeight);
+    const labelHeight = Math.max(...$$(".part-tag").map((e) => e.getBoundingClientRect().height));
+    return {
+      left: compact ? 14 : cards[0].right + 14,
+      right: compact ? innerWidth - 14 : cards[1].left - 14,
+      top: top + labelHeight + 18,
+      bottom: bottom - 14,
+    };
+  } finally {
+    controls.hidden = controlsHidden;
+    math.hidden = mathHidden;
+    app.classList.toggle("controls-open", controlsOpen);
+    if (mathHeight) app.style.setProperty("--math-height", mathHeight);
+    else app.style.removeProperty("--math-height");
+    if (toolbarBottom) app.style.setProperty("--toolbar-bottom", toolbarBottom);
+    else app.style.removeProperty("--toolbar-bottom");
+  }
+}
+
 function onFrame({ positions, angle, held: isHeld }) {
   updateStatus(isHeld);
   $("#app").dataset.angle = angle;
@@ -533,6 +573,7 @@ try {
       renderSelection();
     },
     onFrame,
+    viewBounds,
     onNotice: notice,
     onUnavailable: unavailable,
     onStep: keyboardStep,
@@ -543,6 +584,8 @@ try {
   scene.setHeld(held);
   scene.setState(state);
   scene.select(selected);
+  await document.fonts.ready;
+  scene.resetCamera();
   $("#app").dataset.ready = "true";
 } catch (error) {
   console.warn("3D unavailable; using diagram.", error.message);
