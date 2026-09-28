@@ -10,15 +10,33 @@ or repository dependency was introduced for that workaround.
 
 | Check                  | Result and Coverage                                                                                                                                                                                                                                                                                                          |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `npm test`             | Eight tests pass. Enumerates all 1,360 legal coordinate arrangements and exercises constrained moves, keyboard steps, distances, masses, swaps, restore, and finite motion.                                                                                                                                                  |
+| `npm test`             | Eleven tests pass. Enumerates all 1,360 legal coordinate arrangements and exercises constrained moves, keyboard steps, distances, masses, swaps, restore, and finite motion.                                                                                                                                                  |
 | Required example       | 200 g × 100 mm = 100 g × 200 mm; IMA 2. After swap: 40,000 vs. 10,000 g·mm; IMA 0.5; the Load side descends.                                                                                                                                                                                                                 |
 | Off-center swap        | Exact coordinates exchange; fulcrum and masses remain fixed. Two swaps restore the full role-coordinate state.                                                                                                                                                                                                               |
 | Actual mesh checks     | Persistent mesh identity and color; 1,600 distinct mass/position/tilt combinations; direct rail contact; crate rotates with beam; weights clear support and desk; vertical Effort and arrows; point-load torque agrees with rendered axis anchors.                                                                                                                              |
 | `npm run build`        | Self-contained static build passes, with bundled JavaScript, local fonts, and retained licenses.                                                                                                                                                                                                                             |
-| `npm run test:browser` | Passes under software WebGL. Live model/UI/SVG/save consistency, held and released swaps, motion reset, load-side descent, numeric/slider/halve/double/keyboard/drag constraints, drag cancellation, actual fulcrum raycasting, presets, reset, tabs, tooltips, rounding/range explanations, persistence, and invalid saves. |
+| `npm run test:browser` | Passes under software WebGL. Live model/UI/SVG/save consistency, held and released swaps, continuous motion, load-side descent, numeric/slider/halve/double/keyboard/drag constraints, drag cancellation, actual fulcrum raycasting, presets, reset, tabs, tooltips, rounding/range explanations, persistence, and invalid saves. |
 | Overlay/layout checks  | 1366×768, 1024×768, 390×844, 844×390; separate readable labels including four-digit masses; stable full-window canvas and projected coordinates when panels toggle; orbit/rear view and both extreme tilt directions.                                                                                                        |
 | Degraded access        | WebGL context loss and startup without WebGL or localStorage. Diagram, math, mass/fulcrum inputs, reset, presets, swap, and release remain usable.                                                                                                                                                                           |
 | Runtime isolation      | No uncaught page errors and no external runtime asset requests in the browser checks; root and repository-prefix hosting both work.                                                                                                                                                                                          |
+
+## Issue #13: Continuous Beam Motion
+
+The scene regressions reproduced the original resets before the fix. They now
+check all three roles at rest and in motion, state edits, cancellation, continued
+physics during grabs, held edits, and Help pauses. The normal `npm test` command
+runs these checks, including in the PR workflow.
+
+The browser suite includes a controlled-clock desktop check for both object
+arrangements: grabbing/releasing each label preserves tilt and status; moving
+Load, Effort, or Fulcrum reverses the beam while still dragging; Escape,
+pointer cancellation, and blur restore coordinates without leveling. It also
+checks the no-WebGL diagram, slider edits, balanced tilt, Help, Reduced Animation,
+Hold/Release, Reset, and motion preservation on WebGL loss. Clock control catches
+an immediate level reset even if a subsequent frame would hide it.
+
+Reduced Animation still intentionally skips the animated transition to a stop.
+The tests use Chromium software WebGL, not classroom hardware.
 
 ## Visual Review
 

@@ -28,7 +28,6 @@ export class LeverScene extends WorkshopScene {
   }
   setState(state) {
     this.state = { ...state };
-    this.motion = { angle: 0, velocity: 0 };
     if (!this.apparatus) {
       this.scene.remove(this.moving, this.base);
       this.apparatus = createApparatus();
@@ -36,7 +35,7 @@ export class LeverScene extends WorkshopScene {
       Object.assign(this, { moving, base, meshes, pickable });
       this.scene.add(moving, base);
     }
-    this.apparatus.update(state, 0);
+    this.apparatus.update(state, this.motion.angle);
     this.highlight(this.hovered);
     this.dirty = true;
     this.draw();
@@ -65,10 +64,14 @@ export class LeverScene extends WorkshopScene {
     this.frameTime = time;
     const old = this.motion.angle;
     if (this.state) {
-      if (this.held || this.drag) this.motion = { angle: 0, velocity: 0 };
-      else if (this.reduced)
-        this.motion = { angle: restingAngle(this.state), velocity: 0 };
-      else this.motion = advance(this.state, this.motion, dt);
+      if (this.held) this.motion = { angle: 0, velocity: 0 };
+      else if (!this.paused) {
+        if (this.reduced)
+          this.motion = {
+            angle: restingAngle(this.state, this.motion.angle), velocity: 0,
+          };
+        else this.motion = advance(this.state, this.motion, dt);
+      }
     }
     const changed = this.drag ? false : this.controls.update();
     if (changed || this.dirty || old !== this.motion.angle) this.draw();
@@ -117,7 +120,7 @@ export class LeverScene extends WorkshopScene {
       positions: this.screenPositions(),
       angle: this.motion.angle,
       direction: this.state ? measures(this.state).direction : "balance",
-      held: this.held || !!this.drag,
+      held: this.held,
     });
   }
   resetCamera() {
@@ -158,8 +161,16 @@ export class LeverScene extends WorkshopScene {
   beginDrag(event, part, kind = "position") {
     if (event.button !== 0 || !event.isPrimary || !this.state) return false;
     this.select(part);
-    const a = this.project(new THREE.Vector3(-10, HEIGHT, 0)),
-      b = this.project(new THREE.Vector3(10, HEIGHT, 0));
+    // Weights slide along the tilted beam; the support moves horizontally.
+    // Freeze this screen-space basis for the gesture so beam motion cannot
+    // move a stationary pointer's requested coordinate.
+    const angle = part === "fulcrum" ? 0 : this.motion.angle;
+    const point = (offset) => this.project(new THREE.Vector3(
+      this.state.fulcrum / SCALE + offset * Math.cos(angle),
+      HEIGHT + offset * Math.sin(angle),
+      0,
+    ));
+    const a = point(-10), b = point(10);
     const dx = b.x - a.x,
       dy = b.y - a.y,
       denom = dx * dx + dy * dy;
@@ -185,7 +196,6 @@ export class LeverScene extends WorkshopScene {
     };
     this.controls.enabled = false;
     this.drag.target.setPointerCapture?.(event.pointerId);
-    this.motion = { angle: 0, velocity: 0 };
     this.dirty = true;
     this.callbacks.onDrag?.();
     return true;

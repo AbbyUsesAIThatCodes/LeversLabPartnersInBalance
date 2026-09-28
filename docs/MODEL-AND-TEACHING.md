@@ -76,7 +76,9 @@ Motion is illustrative: the model uses point-mass rotational inertia at the
 labeled arms and exponential damping. It does not compute real crate or hanging
 body inertia, transient contact forces, pendulum swing, or calibrated elapsed
 motion. There is no artificial imbalance threshold. Travel stops at ±12°.
-Reduced Animation jumps to the appropriate stop (or level if balanced).
+Reduced Animation jumps to the appropriate stop when unbalanced; at balance it
+keeps the current tilt and stops motion. Equal turning effects balance at any
+angle within the stops in this ideal model, not only at level.
 
 The pivot sits 225 mm above the ideal desk in the visual scale. Labeled object
 positions stay within ±250 mm along the beam; minimum arm length is 75 mm,
@@ -86,12 +88,19 @@ intersections. The crate base stays on the top rail at all supported masses and
 angles, including after swaps; the largest crate slightly overhangs the rail's
 width. The beam's end margin keeps the whole crate footprint within its length.
 
-Editing resets angle and velocity while preserving the user's hold/release
-setting. Dragging temporarily levels the beam, then a released arrangement
-responds to its new turning effects. Escape, pointer cancellation, or window
-blur restores the arrangement at the start of the drag. Reset returns to the
-balanced default and holds it for prediction. Swapping twice restores masses
-and coordinates, not historical transient motion.
+Editing preserves angle and angular velocity along with the user's hold/release
+setting. A released beam continues responding to the current turning effects
+throughout a drag. Grabbing and releasing alone do not alter the motion. Weight
+drags follow the beam's projected direction at grab time; the fulcrum follows
+its horizontal support path. That direction stays fixed for the gesture so
+beam motion cannot change a stationary pointer's requested coordinate.
+
+Escape, pointer cancellation, or window blur restores the arrangement at the
+start of the drag without rewinding its motion. Hold Level clears angle and
+velocity and keeps the beam horizontal during edits. Reset returns to the
+balanced default and enables Hold for prediction. Swapping twice restores
+masses and coordinates, not historical transient motion. Help pauses in place
+and resumes on close. Losing WebGL carries the current motion into the diagram.
 
 ## Access and Saved State
 

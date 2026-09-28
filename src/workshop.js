@@ -15,6 +15,7 @@ export class WorkshopScene {
     this.dirty = true;
     this.motion = { angle: 0, velocity: 0 };
     this.held = false;
+    this.paused = false;
     this.reduced = false;
     this.drag = null;
     this.selected = null;
@@ -284,10 +285,6 @@ export class WorkshopScene {
   setHeld(held) {
     this.held = held;
     if (held) this.motion = { angle: 0, velocity: 0 };
-    this.dirty = true;
-  }
-  level() {
-    this.motion = { angle: 0, velocity: 0 };
     this.dirty = true;
   }
   select(part) {

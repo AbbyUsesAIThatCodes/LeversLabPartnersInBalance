@@ -2,6 +2,7 @@ import { chromium } from "playwright";
 import { spawn } from "node:child_process";
 import { mkdir } from "node:fs/promises";
 import assert from "node:assert/strict";
+import { verifyBeamMotion } from "./beam-motion-browser.mjs";
 import {
   DEFAULT,
   PRESETS,
@@ -306,13 +307,15 @@ try {
     "visible load moves down",
   );
   await page.screenshot({ path: "artifacts/swapped-released.png" });
+  await page.waitForFunction(() => Number(document.querySelector("#app").dataset.angle) < -0.209);
+  const beforeSwapAngle = Number(await page.locator("#app").getAttribute("data-angle"));
   await page.locator("#swap").click();
   assert.deepEqual(await snapshot(), DEFAULT);
   assert.equal(await page.locator("#app").getAttribute("data-held"), "false");
   assert.equal(
     Number(await page.locator("#app").getAttribute("data-angle")),
-    0,
-    "swap clears stale angle and velocity",
+    beforeSwapAngle,
+    "a balanced swap preserves the existing settled tilt",
   );
   await page.locator("#preset").selectOption("offset");
   const off = await snapshot();
@@ -695,6 +698,7 @@ try {
     DEFAULT,
     "invalid saved ordering is rejected",
   );
+  await verifyBeamMotion(browser, url, watch);
   assert.deepEqual(errors, [], "no uncaught page errors");
   assert.deepEqual(external, [], "all assets stay local");
   console.log(

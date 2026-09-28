@@ -28,7 +28,9 @@ See the [Roadmap](docs/ROADMAP.md).
   lengths exchange. Swap twice to return to the original arrangement.
 - **Hold Level** and **Hide Math** support predictions. Release tests the current
   turning effects. A held arrangement stays held after swapping; a released
-  arrangement responds to the new balance. Every edit clears old tilt/velocity.
+  arrangement responds from its current tilt and motion, including while
+  dragging. Grabbing or releasing alone does not level the beam. Equal turning
+  effects can balance at an existing tilt; **Hold Level** brings it to horizontal.
 - **Balance & Advantage** compares mass × distance, IMA, and required effort mass.
   **Grams → Newtons** expands SI conversions. Focus, tap, or hover on dotted math
   terms for definitions. The actual force ratio equals IMA only at ideal balance.
