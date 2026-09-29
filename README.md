@@ -89,8 +89,8 @@ Screenshots from browser checks go to ignored `artifacts/`.
 | Beam motion             | ±12°, with illustrative damping                                                |
 
 The support and bounds keep the maximum masses above the work surface at both
-stops. The crate rests directly on the rail and tilts with it; the Effort and
-both downward force arrows stay vertical. The crate represents a point load at
+stops. The crate rests directly on the rail and tilts with it; the Effort stays
+vertical. The crate represents a point load at
 its labeled beam-axis coordinate, not a full rigid-body center-of-mass model.
 The modeled masses are the labeled Load and Effort plus a fixed 250 g pointer
 bob 125 mm below the axle when level. The beam, pointer rod, and other attachments

@@ -20,7 +20,8 @@ attribution is retained in the third-party notices.
   lever-class selector, automatic class detection, or role selector.
 - `swapPositions` exchanges coordinates without changing role identity or mass.
 - Persistent procedural meshes replace the old load cylinder/effort ring with a
-  supported gold crate and teal hanging weight. Both force arrows point down.
+  supported gold crate and teal hanging weight. Decorative force arrows were
+  later removed from both renderers; the labeled application points remain.
 - The fulcrum moves; torque uses signed displacement from its current position.
   Quantitative integration replaces the predetermined lift animation.
 - Title, package, served path, saved-state key, README, roadmap, and tests belong

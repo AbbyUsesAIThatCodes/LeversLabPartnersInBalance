@@ -3,6 +3,10 @@
 Implements [Issue #10](https://github.com/AbbyUsesAIThatCodes/LeversLoadEffortDistance/issues/10)
 on top of the merged control layout, seated Load, and compact tooltip work.
 
+This review preserves the original implementation and screenshots. Decorative
+force arrows were subsequently removed; current framing and label clearance
+use the remaining apparatus geometry.
+
 ## Framing and Interaction
 
 The orbit target is lowered from 8 to 5.8 scene units in the classroom layout.
