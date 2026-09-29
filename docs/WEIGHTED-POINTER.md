@@ -8,7 +8,8 @@ beam's angle, velocity, and held/released setting. No edit resets the beam.
 
 - Brass rod and purple-faced bob rotate with the beam, in front of the support.
 - Fixed bob: 250 g, with its center 125 mm below the current axle at level.
-- A stationary alignment mark follows the support as the fulcrum moves.
+- A stationary alignment mark sits on a small steel plate and bracket attached
+  to the front upright, following the support as the fulcrum moves.
 - Exact load/effort equality settles level from either stop. The status reads
   **Settling…** until angle and angular speed are both below 0.1° and 0.1°/s.
 - Unequal products always identify the stronger side, even while crossing level.

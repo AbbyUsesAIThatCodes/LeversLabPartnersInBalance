@@ -112,8 +112,11 @@ export function createApparatus() {
   bob.rotation.x = Math.PI / 2;
   const face = cylinder(pointer, 0.36, 0.035, COLORS.fulcrum, 0, -pointerLength, 2.37, null, "pointer-face");
   face.rotation.x = Math.PI / 2;
-  // Stationary alignment mark follows the support; the pointer follows rotation.
-  block(base, 0.1, 0.7, 0.16, brass, 0, HEIGHT - pointerLength - 1, 2.2, null, "pointer-zero-mark");
+  // Mount the stationary mark on the front upright, below the bob's full sweep.
+  const zeroY = HEIGHT - pointerLength - 1;
+  block(base, 0.24, 0.22, 0.65, steel, 0, zeroY, 1.8, null, "pointer-zero-bracket");
+  block(base, 0.55, 0.82, 0.1, steel, 0, zeroY, 2.1, null, "pointer-zero-plate");
+  block(base, 0.1, 0.7, 0.16, brass, 0, zeroY, 2.2, null, "pointer-zero-mark");
   for (const role of ["load", "effort"]) {
     const anchor = new THREE.Group();
     anchor.name = `${role}-attachment`;
