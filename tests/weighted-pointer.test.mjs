@@ -52,7 +52,7 @@ test("pointer geometry follows the movable pivot and its torque matches the rend
     const bounds = new THREE.Box3().setFromObject(a.pointer);
     assert.ok(bounds.min.y > 0, "pointer clears the desk");
     for (const role of ["load", "effort"]) assert.ok(!bounds.intersectsBox(new THREE.Box3().setFromObject(a.weights[role])), "pointer clears the masses");
-    close(a.base.getObjectByName("pointer-zero-mark").getWorldPosition(new THREE.Vector3()).x, fulcrum / SCALE);
+    close(a.base.getWorldPosition(new THREE.Vector3()).x, fulcrum / SCALE);
     assert.ok(!a.pickable.includes(bob), "pointer is apparatus, not a third student-controlled weight");
   }
 });
