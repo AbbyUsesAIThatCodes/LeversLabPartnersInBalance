@@ -19,9 +19,7 @@ export function createApparatus() {
   const meshes = [],
     pickable = [],
     attachments = {},
-    weights = {},
-    forceFrames = {},
-    arrows = {};
+    weights = {};
   moving.name = "moving-apparatus";
   base.name = "fulcrum-support";
   beam.name = "beam";
@@ -199,22 +197,6 @@ export function createApparatus() {
       for (const y of [0, -0.55])
         cylinder(weight, 0.53, 0.08, brass, 0, y, 0, role, "weight-rim");
     }
-    const arrow = new THREE.ArrowHelper(
-      new THREE.Vector3(0, -1, 0),
-      new THREE.Vector3(0, 0, 1.9),
-      1.9,
-      role === "load" ? 0x89500b : 0x094e4a,
-      0.45,
-      0.32,
-    );
-    arrow.name = `${role}-downward-force`;
-    // Force frames stay vertical independently of the crate's beam rotation.
-    const forceFrame = new THREE.Group();
-    forceFrame.name = `${role}-force-frame`;
-    moving.add(forceFrame);
-    forceFrame.add(arrow);
-    forceFrames[role] = forceFrame;
-    arrows[role] = arrow;
   }
   function update(state, angle) {
     const pivot = state.fulcrum / SCALE;
@@ -229,9 +211,6 @@ export function createApparatus() {
       anchor.rotation.z = role === "load" ? 0 : -angle;
       weights[role].scale.setScalar(size);
       weights[role].position.y = role === "load" ? BEAM_TOP : -1.6;
-      forceFrames[role].position.copy(anchor.position);
-      forceFrames[role].rotation.z = -angle;
-      arrows[role].position.y = role === "load" ? 3.6 : -0.3;
     }
     moving.updateMatrixWorld(true);
     base.updateMatrixWorld(true);
@@ -245,7 +224,6 @@ export function createApparatus() {
     pickable,
     attachments,
     weights,
-    arrows,
     update,
   };
 }

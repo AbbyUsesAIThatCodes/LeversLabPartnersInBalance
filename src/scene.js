@@ -95,7 +95,6 @@ export class LeverScene extends WorkshopScene {
         const bounds = new THREE.Box3().setFromObject(
           this.apparatus.weights[role],
         );
-        bounds.union(new THREE.Box3().setFromObject(this.apparatus.arrows[role]));
         const corners = [];
         for (const x of [bounds.min.x, bounds.max.x])
           for (const y of [bounds.min.y, bounds.max.y])
@@ -127,7 +126,7 @@ export class LeverScene extends WorkshopScene {
       held: this.held,
     });
   }
-  // Fit the moving apparatus, including force arrows, through its full travel.
+  // Fit the moving apparatus through its full travel.
   // The camera target remains low on the support; a projection offset places
   // the assembly in the clear area without resizing the full-window canvas.
   fitCamera(side = false) {

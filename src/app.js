@@ -315,7 +315,7 @@ function drawFallback() {
   const pointerX = px + pointerLength * Math.sin(angle);
   const pointerY = 195 + pointerLength * Math.cos(angle);
   $("#fallback-svg").innerHTML =
-    `<defs>${OBJECTS.map((p) => `<marker id="arrow-${p}" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6Z" fill="${colors[p]}"/></marker>`).join("")}</defs><path d="M${px - 18} 360L${px} 195L${px + 18} 360Z" fill="${colors.fulcrum}"/><path data-beam d="M${ends[0].x} ${ends[0].y}L${ends[1].x} ${ends[1].y}" stroke="#839a94" stroke-width="12"/>${OBJECTS.map(
+    `<path d="M${px - 18} 360L${px} 195L${px + 18} 360Z" fill="${colors.fulcrum}"/><path data-beam d="M${ends[0].x} ${ends[0].y}L${ends[1].x} ${ends[1].y}" stroke="#839a94" stroke-width="12"/>${OBJECTS.map(
       (role) => {
         const p = point(state[role]),
           size = Math.cbrt(state[massKey(role)] / 100),
@@ -325,7 +325,7 @@ function drawFallback() {
         const body = gold
           ? `<g data-body="load" transform="translate(${p.x} ${p.y}) rotate(${-angle * 180 / Math.PI})"><rect data-crate x="${-size * 10}" y="${-6 - size * 18}" width="${size * 20}" height="${size * 18}" fill="#bf8630"/><path d="M${-size * 10} ${-6 - size * 14}h${size * 20}M${-size * 10} ${-6 - size * 4}h${size * 20}" stroke="#e9ba61" stroke-width="2"/></g>`
           : `<g data-body="effort"><path d="M${p.x} ${p.y}v32" stroke="#927449" stroke-width="4"/><rect x="${p.x - size * 12}" y="${p.y + 32}" width="${size * 24}" height="${size * 16}" rx="6" fill="#257e73"/></g>`;
-        return `<g data-object="${role}" data-coordinate="${state[role]}">${body}<circle data-application-point="${role}" cx="${p.x}" cy="${p.y}" r="3" fill="${colors[role]}"/><path data-force="${role}" d="M${p.x + 34} ${p.y - 38}v30" stroke="${colors[role]}" stroke-width="3" marker-end="url(#arrow-${role})"/><text x="${p.x}" y="${p.y - 80}" text-anchor="middle" fill="${colors[role]}" font-size="21" font-weight="bold">${cap(role)} · ${state[massKey(role)]} g</text><text x="${p.x}" y="${p.y - 59}" text-anchor="middle" fill="${colors[role]}" font-size="18">${arm(state, role)} mm</text></g>`;
+        return `<g data-object="${role}" data-coordinate="${state[role]}">${body}<circle data-application-point="${role}" cx="${p.x}" cy="${p.y}" r="3" fill="${colors[role]}"/><text x="${p.x}" y="${p.y - 80}" text-anchor="middle" fill="${colors[role]}" font-size="21" font-weight="bold">${cap(role)} · ${state[massKey(role)]} g</text><text x="${p.x}" y="${p.y - 59}" text-anchor="middle" fill="${colors[role]}" font-size="18">${arm(state, role)} mm</text></g>`;
       },
     ).join(
       "",

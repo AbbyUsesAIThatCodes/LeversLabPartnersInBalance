@@ -58,11 +58,6 @@ test("seated crate contact, clearance and beam-axis point-load torque survive ma
                 const w = box(a.weights[role]);
                 for (const support of a.base.children)
                   assert.ok(!w.intersectsBox(box(support)), "weight clears fulcrum");
-                const direction = new THREE.Vector3(0, 1, 0).applyQuaternion(rotation(a.arrows[role]));
-                close(direction.x, 0);
-                close(direction.y, -1);
-                close(direction.z, 0);
-                close(point(a.arrows[role]).x, anchor.x);
                 if (role === "effort") {
                   close(w.getCenter(new THREE.Vector3()).x, anchor.x);
                   close(rotation(a.weights.effort).angleTo(new THREE.Quaternion()), 0);

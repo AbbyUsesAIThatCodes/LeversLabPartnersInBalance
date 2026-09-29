@@ -4,6 +4,9 @@ Implements [Issue #8](https://github.com/AbbyUsesAIThatCodes/LeversLoadEffortDis
 Verified September 27, 2026 using Node.js 24.19.0, Playwright 1.58.2, and
 Chromium 153.0.8010.0 with software WebGL.
 
+This historical review includes decorative force arrows that were subsequently
+removed from both views. The crate contact and point-load model remain current.
+
 ## Geometry and Teaching Representation
 
 The gold crate sits directly on the top rail. Its local bottom is the scale

@@ -104,10 +104,6 @@ try {
       return {
         beam: [start, end].map((p) => world(beam, p.x, p.y)),
         base: [rect.x, rect.x + rect.width].map((x) => world(crate, x, rect.y + rect.height)),
-        forces: [...svg.querySelectorAll("[data-force]")].map((node) => {
-          const a = node.getPointAtLength(0), b = node.getPointAtLength(node.getTotalLength());
-          return [world(node, a.x, a.y), world(node, b.x, b.y)];
-        }),
         effort: (() => {
           const node = svg.querySelector('[data-body="effort"] rect'), r = node.getBBox();
           return [world(node, r.x, r.y), world(node, r.x, r.y + r.height)];
@@ -120,10 +116,9 @@ try {
       const distance = ((p.x - a.x) * -(b.y - a.y) + (p.y - a.y) * (b.x - a.x)) / length;
       assert.ok(Math.abs(distance + 6) < 1e-3, "both crate base edges touch the tilted beam's top edge");
     }
-    for (const [start, end] of [...geometry.forces, geometry.effort]) {
-      assert.ok(Math.abs(end.x - start.x) < 1e-3, "forces and hanging Effort stay vertical");
-      assert.ok(end.y > start.y, "forces point downward");
-    }
+    const [start, end] = geometry.effort;
+    assert.ok(Math.abs(end.x - start.x) < 1e-3, "hanging Effort stays vertical");
+    assert.ok(end.y > start.y, "hanging Effort extends downward");
   }
   async function controlLayout(p = page) {
     await controls(true, p);

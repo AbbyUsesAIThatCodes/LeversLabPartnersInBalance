@@ -5,7 +5,7 @@
 The Load is the gold crate; the Effort is the teal hanging weight. These roles
 stay attached to the objects when they exchange sides. In this apparatus, the
 load rests directly on the beam and the effort pulls through its cord. Both
-applied forces are downward. A force arrow is not a motion arrow.
+applied forces are downward; the controls report their magnitudes in newtons.
 
 Beam coordinates are signed millimeters in the apparatus's coordinate system.
 The UI reports each arm as the absolute difference between an object's
@@ -61,9 +61,7 @@ The effort is likewise a point load at its labeled beam-axis coordinate.
 At level, both rendered centers align horizontally with their modeled points,
 preserving the intended level-balance experiments.
 
-Both force arrows stay vertically downward independently of crate rotation.
-Decorative arrows are offset toward the viewer in 3D (rightward in the diagram)
-for legibility; they communicate direction, not a different application point.
+The decorative downward-force arrows have been removed from both views.
 The guide-line dots in 3D and colored axis dots in the diagram identify the
 modeled application points. Both renderers use this same point-load model.
 
