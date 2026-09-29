@@ -9,7 +9,8 @@ Version **0.1.0** implements the integrated core in
 It still needs the classroom readiness work in
 [Issue #3](https://github.com/AbbyUsesAIThatCodes/LeversLoadEffortDistance/issues/3).
 See the [Roadmap](docs/ROADMAP.md). Review builds identify the existing
-**Integrated Core** milestone with a full build ID beneath the game title.
+**Integrated Core** milestone with a full build ID retained in the page source,
+build manifest, and report. The designation is hidden from the game interface.
 See [Build Identity](docs/BUILD_IDENTITY.md) for the release record and inventory.
 
 ## Explore

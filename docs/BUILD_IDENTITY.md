@@ -34,6 +34,15 @@ build inputs, target, CI built commit, and PR head where available. Console,
 HTML, manifest, report, and artifact name are derived from that same object.
 Retesting, downloading, or deploying an existing artifact keeps its identity.
 
+### On-Screen Display Exception
+
+At the owner's request on September 29, 2026, this game's full build designation
+stays hidden for a cleaner classroom interface. Keep `#build-identity` hidden
+without reserving layout space; do not restore a visible badge or overlay.
+The complete ID remains in the page source, manifest, report, build console,
+and artifact name. This overrides the standing prominent-display requirement
+for this game only; all other build identity requirements still apply.
+
 ## Identifier Location Inventory
 
 | Surface | Location and Mechanism | Verification | Status |
@@ -45,7 +54,7 @@ Retesting, downloading, or deploying an existing artifact keeps its identity.
 | CI Console and Summary | `.github/workflows/pages.yml`; generated report | Same manifest and `GITHUB_STEP_SUMMARY` | Implemented |
 | Distribution Directory | `artifacts/builds/<full-ID>/` | `scripts/verify-build.mjs` | Implemented |
 | Downloadable CI Artifact | Review Build upload, named with full ID | Workflow artifact name | Implemented |
-| Game Label | `public/index.html` / `#build-identity`, below title | Browser verifies full text, visibility, wrapping | Implemented |
+| Hidden Game Metadata | `public/index.html` / `#build-identity`, with `hidden` | Browser verifies full text, hidden state, and no layout box | Implemented; owner-approved display exception |
 | Manifest and Current Report | Distribution `build-manifest.json`, `BUILD_REPORT.md`; `artifacts/current-build.json` | Consistency verifier | Implemented |
 | README and Roadmap | Links to this contract and generated report locations | Review | Implemented |
 | PR Handoff | PR description and `.github/pull_request_template.md` | Exact review ID plus verification results | Implemented |

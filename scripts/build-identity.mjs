@@ -90,7 +90,7 @@ export async function createIdentity() {
 }
 
 export async function reportIdentity(manifest, output) {
-  const report = `# Build Report\n\nBuild: \`${manifest.id}\`\n\n- Status: ${manifest.status}\n- Built At (UTC): ${manifest.builtAt}\n- Source: ${manifest.source.sha}\n- Dirty Sources: ${manifest.source.dirty}\n- Input SHA-256: ${manifest.source.fingerprint}\n- PR Head: ${manifest.source.prHead || "Local or Main"}\n- Target: ${manifest.target}\n\nThe manifest, game label, build console, and enclosing artifact directory share this identity. Test and deploy this artifact without rebuilding to preserve its identifier.\n`;
+  const report = `# Build Report\n\nBuild: \`${manifest.id}\`\n\n- Status: ${manifest.status}\n- Built At (UTC): ${manifest.builtAt}\n- Source: ${manifest.source.sha}\n- Dirty Sources: ${manifest.source.dirty}\n- Input SHA-256: ${manifest.source.fingerprint}\n- PR Head: ${manifest.source.prHead || "Local or Main"}\n- Target: ${manifest.target}\n\nThe manifest, hidden page metadata, build console, and enclosing artifact directory share this identity. Test and deploy this artifact without rebuilding to preserve its identifier.\n`;
   await writeFile(path.join(output, "BUILD_REPORT.md"), report);
   if (process.env.GITHUB_STEP_SUMMARY) await appendFile(process.env.GITHUB_STEP_SUMMARY, report);
   if (process.env.GITHUB_OUTPUT) await appendFile(process.env.GITHUB_OUTPUT, `build_id=${manifest.id}\nbuild_path=${output}\n`);
