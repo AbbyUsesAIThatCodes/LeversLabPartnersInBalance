@@ -38,9 +38,9 @@ try {
     const input = (id, value) => page.locator(id).evaluate((e, value) => { e.value = String(value); e.dispatchEvent(new Event("change", { bubbles: true })); }, value);
     const angle = () => page.locator("#app").evaluate(e => Number(e.dataset.angle));
     const status = () => page.locator("#beam-status").innerText();
-    assert.equal(await page.locator("#build-identity").innerText(), manifest.id);
-    const identity = await page.locator("#build-identity").boundingBox();
-    assert.ok(identity.y >= 0 && identity.y + identity.height < 150 && identity.x >= 0 && identity.x + identity.width <= 1366);
+    assert.equal(await page.locator("#build-identity").textContent(), manifest.id);
+    assert.equal(await page.locator("#build-identity").isHidden(), true);
+    assert.equal(await page.locator("#build-identity").boundingBox(), null);
     if (mode === "true") await click("#side");
     await click("#controls-toggle");
     await click("#hold");
@@ -82,6 +82,6 @@ try {
   }
   await verifyBeamMotion(browser, url, watch);
   assert.deepEqual(errors, []);
-  await writeFile("artifacts/weighted-pointer/verification.json", JSON.stringify({ buildId: manifest.id, passed: true, checks: ["reported arrangement", "settling status", "smallest imbalance", "WebGL and SVG", "laptop and projector", "continuous drags and cancellations", "Hold and Help", "reduced animation", "WebGL loss", "visible build identity"] }, null, 2));
+  await writeFile("artifacts/weighted-pointer/verification.json", JSON.stringify({ buildId: manifest.id, passed: true, checks: ["reported arrangement", "settling status", "smallest imbalance", "WebGL and SVG", "laptop and projector", "continuous drags and cancellations", "Hold and Help", "reduced animation", "WebGL loss", "preserved hidden build identity"] }, null, 2));
   console.log(`PASS: weighted pointer browser review ${manifest.id}`);
 } finally { await browser?.close(); server.kill(); }
