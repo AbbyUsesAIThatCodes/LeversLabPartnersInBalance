@@ -7,12 +7,13 @@ const reviews={
  'notebook-review':['verification.json','free-play.png','challenge-laptop.png','challenge-projector.png','challenge-portrait.png','report-preview.png'],
  'full-packet-review':['verification.json','solo-complete-backup.json','solo-complete-work.html','pair-complete-backup.json','pair-complete-work.html','solo-design-sketch.png','pair-design-sketch.png','solo-report-design.png','pair-report-design.png'],
  'recovery-review':['verification.json'],
+ 'correctness-review':['verification.json'],
  'weighted-pointer':['verification.json'],
 };
 for(const folder of Object.keys(reviews)){
  const result=JSON.parse(await readFile(path.join('artifacts',folder,'verification.json'),'utf8'));
  if((result.build??result.buildId)!==manifest.id)throw new Error(folder+' did not verify this exact build');
- if(result.passed===false||result.errors?.length||result.external?.length||result.runs?.some(r=>r.errors.length||r.external.length||r.completedRows!==68))throw new Error(folder+' has incomplete verification');
+ if(result.passed===false||result.errors?.length||result.external?.length||result.runs?.some(r=>r.errors?.length||r.external?.length||r.passed===false||(folder==='full-packet-review'&&r.completedRows!==68)))throw new Error(folder+' has incomplete verification');
 }
 await mkdir(path.dirname(destination),{recursive:true});await mkdir(destination);await cp(source,destination,{recursive:true});
 for(const [folder,files]of Object.entries(reviews)){

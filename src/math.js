@@ -94,7 +94,7 @@ export function renderMath(state) {
       "",
     )}<div><h2>Force Ratio ${helpTip("shortcut", "Mass Shortcut")}</h2><p>${tip("Load force ÷ effort force", "ratio")} ${equalSign(m.forceRatio, 3)} <b id="force-ratio">${fmt(m.forceRatio, 3)}</b></p><p>${tip("IMA", "ima")} ${equalSign(m.ima, 3)} <b>${fmt(m.ima, 3)}</b></p><p class="ratio-feedback"><b>${balanced ? "Balanced: ratios match." : "Unbalanced: ratios differ."}</b></p><p class="math-help-row">${tip("Torque at Level", "torque")} · ${tip("Rounding", "approx")}</p></div></div>`;
 }
-export function installTooltips() {
+export function installTooltips(onShow = () => {}) {
   let target = null, originalDescription = null, timer;
   let pinned = false, hovered = null, overBox = false;
   const box = $("#tooltip");
@@ -124,6 +124,7 @@ export function installTooltips() {
     box.style.maxWidth = `${Math.max(1, Math.min(325, (viewport?.width || innerWidth) - 24))}px`;
     box.style.maxHeight = `${Math.max(1, (viewport?.height || innerHeight) - 24)}px`;
     box.hidden = false;
+    onShow(t.getAttribute('aria-label') || t.textContent || t.dataset.tip);
     const r = t.getBoundingClientRect(), b = box.getBoundingClientRect();
     const left = (viewport?.offsetLeft || 0) + 12;
     const top = (viewport?.offsetTop || 0) + 12;

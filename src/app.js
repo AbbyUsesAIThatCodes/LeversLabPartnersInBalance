@@ -459,6 +459,7 @@ $("#math-toggle").addEventListener("click", () => {
     $("#math-toggle").focus();
     showMath = true;
   } else showMath = !showMath;
+  if (showMath) learning?.supportViewed('math', 'Workbench Math');
   render();
   save();
 });
@@ -488,6 +489,7 @@ $("#preset").addEventListener("change", () => {
   if (PRESETS[$("#preset").value]) setState(PRESETS[$("#preset").value]);
 });
 $("#reset").addEventListener("click", () => {
+  learning?.resetting();
   held = true;
   holdScene();
   setState(DEFAULT);
@@ -513,6 +515,7 @@ $('#controls-toggle').addEventListener('click', () => {
   if (!$('#controls-panel').hidden) learning?.recordAction('controls-opened');
 });
 $("#help").addEventListener("click", () => {
+  learning?.supportViewed('help', 'General Help');
   hideTip();
   $("#help-dialog").showModal();
   holdScene();
@@ -565,7 +568,7 @@ new ResizeObserver(() => {
   );
   if (ready) scene.dirty = true;
 }).observe($("#math-panel"));
-const hideTip = installTooltips();
+const hideTip = installTooltips(resource => learning?.supportViewed('tooltip', resource));
 function unavailable() {
   if (fallback) return;
   ready = false;

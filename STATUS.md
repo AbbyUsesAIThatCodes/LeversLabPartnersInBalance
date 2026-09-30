@@ -2,6 +2,11 @@
 
 ## Saved Review Checkpoint
 
+Build 007 is on hold for student use. Independent review reproduced five
+state-transition and validation defects after the normal complete walkthroughs.
+Fixes and dedicated regressions are in progress; the previous passing coverage
+records below do not establish correctness for those edge cases.
+
 The complete required R06 scope is implemented: Part 1 Q1-Q8, Part 2 Q9-Q14,
 66 question subparts plus Intro and Routine, and Learn T0-T12. Optional A-E is
 excluded. Free Play retains the original room, controls, physics, and fallback.

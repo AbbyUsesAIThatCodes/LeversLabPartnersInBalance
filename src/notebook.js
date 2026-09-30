@@ -20,11 +20,16 @@ export function response(book,id,key,value,owner='shared',recordHistory=true) {
  book.answers[id][owner][key]=clone(value);
  if(recordHistory)book.history.push({id,key,owner,value:clone(value),previous:clone(previous),at:stamp(),driver:book.team.driver});
  // Editing evidence invalidates only this latest check, not historical checks.
- delete book.checks[id];book.updatedAt=stamp();
+ invalidateChecks(book,[id]);book.updatedAt=stamp();
 }
+export function invalidateChecks(book,ids,reason='Evidence changed. Save & Check again.') {
+ for(const id of ids)if(book.checks[id])book.checks[id]={status:'Needs Recheck',complete:false,failures:[],missing:[reason],review:[],at:stamp()};
+}
+export const sameState=(a,b)=>!!a&&!!b&&Object.keys(DEFAULT).every(k=>a[k]===b[k]);
 export function event(book,type,detail={}){book.events.push({type,at:stamp(),part:book.part,driver:book.team.driver,...clone(detail)});book.updatedAt=stamp();}
 export function rotate(book) {if(book.team.mode!=='pair')return;book.team.driver=book.team.driver==='A'?'B':'A';book.team.rotationStarted=stamp();event(book,'roles-swapped',{driver:book.team.driver});}
-export function visitLesson(book,id,from=null){book.visits.push({lesson:id,from,at:stamp(),driver:book.team.driver});book.lesson=id;book.returnTo=from;book.mode='learn';}
+export function supportViewed(book,source,resource,from=book.mode==='challenge'?book.part:book.returnTo){event(book,'support-viewed',{source,resource,from:from??null,mode:book.mode,learners:learners(book).map(l=>l.id)});}
+export function visitLesson(book,id,from=null){book.visits.push({lesson:id,from,at:stamp(),driver:book.team.driver});supportViewed(book,'lesson',id,from);book.lesson=id;book.returnTo=from;book.mode='learn';}
 export function predictionReady(book,part) {
  if(!part.prediction)return true;
  const source=part.prediction===true?part:PART_BY_ID[part.prediction];
@@ -53,17 +58,19 @@ export function evaluatePart(book,part,workbench) {
   if(!state||!valid(state)||!workbench.held)failures.push('Prepare an allowed arrangement and hold it level.');
   else if(part.target&&!Object.keys(part.target).every(k=>state[k]===part.target[k]))failures.push('The setup does not yet match the requested controlled change.');
  }
- if(part.design&&state){
-  if(!valid(state)||state.fulcrum!==0||state.loadMass<2*state.effortMass)failures.push('The design needs legal coordinates, a centered fulcrum, and load mass at least twice effort mass.');
+ const t=latestTrial(book,part.trial?part.id:part.requiresTrial);
+ const designState=part.trial?t?.setup.state:state;
+ if(part.design&&designState){
+  if(!valid(designState)||designState.fulcrum!==0||designState.loadMass<2*designState.effortMass)failures.push('The recorded design needs legal coordinates, a centered fulcrum, and load mass at least twice effort mass.');
   if(part.setup){for(const [key,want] of Object.entries({loadMass:state.loadMass,effortMass:state.effortMass,loadArm:arm(state,'load'),effortArm:arm(state,'effort')})){if(Number(values.shared?.[key])!==want)failures.push('Recorded '+key+' must match your own setup.');}}
  }
- const t=latestTrial(book,part.trial?part.id:part.requiresTrial);
  if(part.trial||part.requiresTrial){
   if(!t)missing.push('A recorded, completed level-release trial.');
   else {
    const goal=part.goal??PART_BY_ID[part.requiresTrial]?.goal;
    if(goal&&t.result!==goal)failures.push('Your recorded trial has not met the target yet. Keep it as evidence and retry.');
    if(!t.settled)failures.push('Wait for the apparatus to settle before recording a result.');
+   if(part.trial&&(!sameState(state,t.setup.state)||book.trials.some(x=>x.part===part.id&&!x.completedAt)))missing.push('Release and record a completed trial for this current arrangement.');
    const observation=values.shared?.observation;
    if(observation&&observation!=={balance:'Level',load:'Load Side Down',effort:'Effort Side Down'}[t.result])failures.push('Your observation differs from the recorded apparatus result. Review the trial.');
    if(values.shared?.finalMass!==undefined&&Number(values.shared.finalMass)!==t.setup.state.effortMass)failures.push('Final mass must match the recorded trial.');
@@ -108,9 +115,17 @@ export function parseBackup(text){
  for(const t of b.trials)if(!obj(t)||!str(t.id,100)||!PART_BY_ID[t.part]?.trial||!wb(t.setup)||!['A','B'].includes(t.driver)||!str(t.startedAt,50)||!(t.result===null||['balance','load','effort'].includes(t.result))||typeof t.settled!=='boolean'||typeof t.interrupted!=='boolean'||!obj(t.predictions)||!Array.isArray(t.changes))fail();
  for(const t of b.trials){const p=PART_BY_ID[t.part],source=p.prediction===true?p.id:p.prediction;if(source?!answersValid(source,t.predictions):Object.keys(t.predictions).length)fail();if(t.completedAt!==null&&!str(t.completedAt,50))fail();if(t.settled&&(t.result!==measures(t.setup.state).direction||!t.completedAt))fail();for(const c of t.changes)if(!obj(c)||!wb(c.before)||!wb(c.after)||!str(c.at,50)||!['A','B'].includes(c.driver))fail();}
  for(const h of b.history){if(!obj(h)||!PART_BY_ID[h.id]||!str(h.key,100)||!str(h.at,50)||!['A','B'].includes(h.driver))fail();const f=PART_BY_ID[h.id].fields.find(f=>f.key===h.key);if(!f||!ownerValid(f,h.owner)||!fieldValue(f,h.value)||(h.previous!==''&&!fieldValue(f,h.previous)))fail();}
- for(const e of b.events)if(!obj(e)||!str(e.type,100)||!str(e.at,50)||!['A','B'].includes(e.driver))fail();
+ const checkValid=ch=>obj(ch)&&str(ch.status,100)&&typeof ch.complete==='boolean'&&str(ch.at,50)&&['failures','missing','review'].every(k=>Array.isArray(ch[k])&&ch[k].every(v=>str(v)));
+ for(const e of b.events){
+  if(!obj(e)||!str(e.type,100)||!str(e.at,50)||!['A','B'].includes(e.driver)||!PART_BY_ID[e.part])fail();
+  if(e.type==='part-checked'&&(!PART_BY_ID[e.id]||e.id!==e.part||!checkValid(e.check)||!wb(e.setup)||!answersValid(e.id,e.answers)))fail();
+  if(e.type==='control-change'&&(!valid(e.before)||!valid(e.after)||typeof e.held!=='boolean'))fail();
+  if(['trial-completed','trial-interrupted'].includes(e.type)&&(!str(e.trialId,100)||!b.trials.some(t=>t.id===e.trialId&&t.part===e.part)))fail();
+  if(e.type==='session-settings'&&(!obj(e.team)||!['solo','pair'].includes(e.team.mode)||!Array.isArray(e.team.learners)||e.team.learners.length!==2||e.team.learners.some((l,i)=>!obj(l)||l.id!==['A','B'][i]||!str(l.label,80))))fail();
+  if(e.type==='support-viewed'&&(!['lesson','help','tooltip','reference','math'].includes(e.source)||!str(e.resource,2000)||!(e.from===null||PART_BY_ID[e.from])||!['free','learn','challenge'].includes(e.mode)||!Array.isArray(e.learners)||!e.learners.length||e.learners.length>2||e.learners.some(id=>!['A','B'].includes(id))))fail();
+ }
  for(const v of b.visits)if(!obj(v)||!LESSONS.some(l=>l.id===v.lesson)||!(v.from===null||PART_BY_ID[v.from])||!str(v.at,50))fail();
- for(const [id,ch] of Object.entries(b.checks))if(!PART_BY_ID[id]||!obj(ch)||!str(ch.status,100)||typeof ch.complete!=='boolean'||['failures','missing','review'].some(k=>!Array.isArray(ch[k])||ch[k].some(v=>!str(v))))fail();
+ for(const [id,ch] of Object.entries(b.checks))if(!PART_BY_ID[id]||!checkValid(ch))fail();
  if(typeof b.coverage.Intro!=='boolean'||typeof b.coverage.Routine!=='boolean')fail();
  return b;
 }
