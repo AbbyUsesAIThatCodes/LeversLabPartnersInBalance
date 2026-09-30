@@ -2,10 +2,22 @@
 
 ## Saved Review Checkpoint
 
-Build 007 is on hold for student use. Independent review reproduced five
-state-transition and validation defects after the normal complete walkthroughs.
-Fixes and dedicated regressions are in progress; the previous passing coverage
-records below do not establish correctness for those edge cases.
+Build 007 is on hold for student use. The five reported defects are fixed in
+`03a1174448141d1d9f13c83546278f1c2c0fddb1`; build 009 passed 34 unit tests,
+dedicated regressions in both renderers, complete paired/solo 68-row flows,
+recovery, physics/control regression, and native report printing. Independent
+recheck remains pending. Library replacement is intentionally paused for the
+user's newly approved interface simplification.
+
+Latest approved scope: compact upper-left version with a real PR only when one
+exists; full build identity remains in artifacts, console, and export. Anonymous
+shared classwork replaces partner/session controls. Keep autosave/recovery and
+offer the final download after all packet evidence is recorded. Hide internal
+IDs and dropdown navigation; add Hide Notebook / Show Notebook, Question Index
+with lever icons, and Return To Question from Learn. Identify Parts uses an
+Effort-Load-Fulcrum sequence, all candidates cued equally, with a three-correct
+streak and keyboard access. Keep all 68 coverage rows, original/revised evidence,
+and honest teacher-review status for writing and sketches. No deployment.
 
 The complete required R06 scope is implemented: Part 1 Q1-Q8, Part 2 Q9-Q14,
 66 question subparts plus Intro and Routine, and Learn T0-T12. Optional A-E is
