@@ -8,8 +8,10 @@ implementation checkpoint follows it on the same local branch. Current unit run:
 individual prediction history, Q7-to-Q11 linkage, and report escaping.
 All 68 mapped rows (66 question subparts + Intro/Routine) and T0–T12 are defined
 in `src/curriculum.js`; this is an inventory, not full verification.
-The modes/notebook/UI/report are integrated but browser startup currently times
-out waiting for `#lab-navigation`. Diagnostic rerun is in progress. Do not call
+The modes/notebook/UI/report are integrated. Browser diagnostics found port 4187
+was occupied by a different existing game; the test accidentally reached it.
+The browser test now chooses an available ephemeral port. The corrected run is
+still pending. The existing service was not modified or stopped. Do not call
 this playable or complete until that is fixed and the Q1–Q4 browser slice passes.
 No review ZIP or screenshot delivery exists yet.
 

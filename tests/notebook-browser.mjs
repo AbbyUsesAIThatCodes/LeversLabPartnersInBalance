@@ -2,7 +2,10 @@ import {chromium} from 'playwright';
 import {spawn} from 'node:child_process';
 import {mkdir,writeFile,readFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
-const port=4187,origin=`http://127.0.0.1:${port}`,server=spawn(process.execPath,['scripts/serve.mjs'],{stdio:'ignore',env:{...process.env,PORT:String(port)}});
+import net from 'node:net';
+const probe=net.createServer();await new Promise(resolve=>probe.listen(0,'127.0.0.1',resolve));
+const port=probe.address().port;await new Promise(resolve=>probe.close(resolve));
+const origin=`http://127.0.0.1:${port}`,server=spawn(process.execPath,['scripts/serve.mjs'],{stdio:'ignore',env:{...process.env,PORT:String(port)}});
 let browser;const errors=[],external=[];
 try{
  for(let i=0;i<50;i++){try{if((await fetch(origin)).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}
