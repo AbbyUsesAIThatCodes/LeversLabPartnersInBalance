@@ -2,6 +2,25 @@
 
 ## Current Checkpoint
 
+Checkpoint at 2026-09-30 22:50 UTC: isolated baseline commit `237912e`;
+implementation checkpoint follows it on the same local branch. Current unit run:
+24/24 passing, including model bounds, concurrent build IDs, notebook validation,
+individual prediction history, Q7-to-Q11 linkage, and report escaping.
+All 68 mapped rows (66 question subparts + Intro/Routine) and T0–T12 are defined
+in `src/curriculum.js`; this is an inventory, not full verification.
+The modes/notebook/UI/report are integrated but browser startup currently times
+out waiting for `#lab-navigation`. Diagnostic rerun is in progress. Do not call
+this playable or complete until that is fixed and the Q1–Q4 browser slice passes.
+No review ZIP or screenshot delivery exists yet.
+
+Latest local build before the implementation commit:
+`0.1.0_Partners-In-Balance_local-1e3bd62e_build-002_20260930T224635Z_g237912e4a5db-dirty-b5e96dca_web`.
+Build is deliberately marked dirty; do not relabel it after committing.
+
+Exact next action: inspect browser startup diagnostics, fix the integration,
+rerun `node tests/notebook-browser.mjs`, inspect laptop/projector screenshots,
+then package that immutable artifact for the teacher's initial playtest.
+
 Local branch: `work/01-local-learning-foundation`. Source baseline:
 `AbbyUsesAIThatCodes/LeversLoadEffortDistance@9bfce52767e51ae728ffa9fec717264c554d026b`.
 Source is unchanged. This independent Git copy retains the complete source ancestry.

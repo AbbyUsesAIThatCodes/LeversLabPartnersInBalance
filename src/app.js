@@ -23,6 +23,8 @@ import {
   balanceStatus,
 } from "./model.js";
 import { fmt, helpTip, setTip, describeTooltips, renderMath, installTooltips } from "./math.js";
+import { mountLearning } from './learning.js';
+let learning = null;
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)],
   cap = (s) => s[0].toUpperCase() + s.slice(1);
@@ -112,12 +114,15 @@ function renderSelection() {
       String(selected === role),
     );
 }
-function setState(next) {
+function setState(next, system = false) {
   if (!valid(next)) return;
+  if (!system && learning?.allowChange(next) === false) return;
+  const previous = { ...state };
   state = { ...next };
   if (ready) scene.setState(state);
   render();
   save();
+  if (!system) learning?.changed(previous, state, held);
 }
 function keyboardStep(role, key) {
   select(role);
@@ -433,18 +438,22 @@ for (const b of $$("[data-scale]"))
     setState(next);
   });
 $("#swap").addEventListener("click", () => {
+  if (learning?.allowSwap() === false) return;
   scene?.finishDrag();
   setState(swapPositions(state));
   $("#announcement").textContent =
     `Positions and control panels exchanged. ${state.load < state.effort ? "Load controls left; Effort controls right" : "Effort controls left; Load controls right"}. Load keeps ${state.loadMass} grams; Effort keeps ${state.effortMass} grams.`;
 });
 $("#hold").addEventListener("click", () => {
+  if (held && learning?.beforeRelease() === false) return;
   held = !held;
   holdScene();
   render();
   save();
+  if (held) learning?.held(); else learning?.released();
 });
 $("#math-toggle").addEventListener("click", () => {
+  if (!showMath && learning?.allowMath() === false) return;
   if (compactViewport.matches && !$("#controls-panel").hidden) {
     showControls(false);
     $("#math-toggle").focus();
@@ -597,3 +606,16 @@ try {
   console.warn("3D unavailable; using diagram.", error.message);
   unavailable();
 }
+learning = mountLearning({
+  get: () => ({ state: { ...state }, held }),
+  motion: () => ({ ...(ready ? scene.motion : fallbackMotion) }),
+  change: next => setState(next),
+  load: value => { held = value.held; holdScene(); setState(value.state, true); },
+  hold: () => { held = true; holdScene(); render(); save(); },
+  toggleHold: () => $('#hold').click(),
+  math: visible => { showMath = visible; render(); save(); },
+  mathVisible: () => showMath,
+  swap: () => $('#swap').click(),
+  side: () => $('#side').click(),
+  notice,
+});
