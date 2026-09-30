@@ -3,7 +3,7 @@
 const n=(key,label,answer)=>({key,label,type:'number',answer});
 const c=(key,label,options,answer)=>({key,label,type:'select',options,answer});
 const r=(key,label)=>({key,label,type:'text',personal:true,review:true});
-const p=(key,label)=>({...r(key,label),review:false,prediction:true});
+const p=(key,label)=>({...r(key,label),type:key==='predictedMass'?'number':'text',review:false,prediction:true});
 const motion=(key='observation')=>c(key,'What Did You Observe?',['Level','Load Side Down','Effort Side Down']);
 const s=(lm,em,la,ea,f=0)=>({loadMass:lm,effortMass:em,load:f-la,effort:f+ea,fulcrum:f});
 const part=(id,title,lesson,fields=[],extra={})=>({id,title,lesson,fields,...extra});

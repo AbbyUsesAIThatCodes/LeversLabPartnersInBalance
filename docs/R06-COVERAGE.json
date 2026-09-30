@@ -1,0 +1,2060 @@
+{
+  "authority": "Owner-authored R06 Part 1 Q1–Q8 and Part 2 Q9–Q14; EES PR #78 bea8b69fe00fe989f418b985cb3f8005f0b4d41f",
+  "sourceGame": "9bfce52767e51ae728ffa9fec717264c554d026b",
+  "requiredRows": [
+    "Intro",
+    "Routine",
+    "Q1a",
+    "Q1b",
+    "Q1c",
+    "Q1d",
+    "Q2a",
+    "Q2b",
+    "Q2c",
+    "Q3a",
+    "Q3b",
+    "Q3c",
+    "Q3d",
+    "Q4a",
+    "Q4b",
+    "Q4c",
+    "Q4d",
+    "Q5a",
+    "Q5b",
+    "Q5c",
+    "Q5d",
+    "Q6a",
+    "Q6b",
+    "Q6c",
+    "Q7a",
+    "Q7b1",
+    "Q7b2",
+    "Q7b3",
+    "Q7b4",
+    "Q7c",
+    "Q7d",
+    "Q8a",
+    "Q8b1",
+    "Q8b2",
+    "Q8b3",
+    "Q8c",
+    "Q8d",
+    "Q8e",
+    "Q9a",
+    "Q9b",
+    "Q9c",
+    "Q9d",
+    "Q9e",
+    "Q10a",
+    "Q10b",
+    "Q10c",
+    "Q10d",
+    "Q10e",
+    "Q10f",
+    "Q11a",
+    "Q11b",
+    "Q11c",
+    "Q11d",
+    "Q12a",
+    "Q12b",
+    "Q12c",
+    "Q12d",
+    "Q12e",
+    "Q12f",
+    "Q13a",
+    "Q13b",
+    "Q13c",
+    "Q13d",
+    "Q14a",
+    "Q14b",
+    "Q14c",
+    "Q14d",
+    "Q14e"
+  ],
+  "excludes": "Optional A–E and proprietary publisher source files",
+  "specialRows": {
+    "Intro": "T0, T1, and T2 recorded practice",
+    "Routine": "T0 recorded practice or a held-level release record"
+  },
+  "rows": [
+    {
+      "id": "Q1a",
+      "page": "Part 1 · Page 1",
+      "title": "What We Lift",
+      "tutorial": "T1",
+      "fields": [
+        {
+          "key": "role",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q1b",
+      "page": "Part 1 · Page 1",
+      "title": "The Input Force",
+      "tutorial": "T1",
+      "fields": [
+        {
+          "key": "role",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q1c",
+      "page": "Part 1 · Page 1",
+      "title": "The Pivot",
+      "tutorial": "T1",
+      "fields": [
+        {
+          "key": "role",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q1d",
+      "page": "Part 1 · Page 1",
+      "title": "Sketch And Label The Lever",
+      "tutorial": "T1",
+      "fields": [
+        {
+          "key": "drawing",
+          "type": "sketch",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q2a",
+      "page": "Part 1 · Page 2",
+      "title": "Prepare The Unequal Arms",
+      "tutorial": "T2",
+      "fields": [],
+      "setup": true,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q2b",
+      "page": "Part 1 · Page 2",
+      "title": "Label Both Arm Distances",
+      "tutorial": "T2",
+      "fields": [
+        {
+          "key": "loadArm",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "effortArm",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q2c",
+      "page": "Part 1 · Page 2",
+      "title": "A Gap Or An Arm?",
+      "tutorial": "T2",
+      "fields": [
+        {
+          "key": "agree",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "start",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "end",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "reason",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q3a",
+      "page": "Part 1 · Page 2",
+      "title": "Move Only The Effort Inward",
+      "tutorial": "T3",
+      "fields": [],
+      "setup": true,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q3b",
+      "page": "Part 1 · Page 2",
+      "title": "Predict Before Testing",
+      "tutorial": "T3",
+      "fields": [
+        {
+          "key": "prediction",
+          "type": "text",
+          "individual": true,
+          "prediction": true,
+          "teacherReview": false,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q3c",
+      "page": "Part 1 · Page 2",
+      "title": "Release And Record",
+      "tutorial": "T3",
+      "fields": [
+        {
+          "key": "observation",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "notes",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": true,
+      "predictionSource": "Q3b",
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q3d",
+      "page": "Part 1 · Page 2",
+      "title": "What Is Equal?",
+      "tutorial": "T3",
+      "fields": [
+        {
+          "key": "mass",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "arm",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "reason",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q4a",
+      "page": "Part 1 · Page 3",
+      "title": "Double The Load Mass",
+      "tutorial": "T3",
+      "fields": [],
+      "setup": true,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q4b",
+      "page": "Part 1 · Page 3",
+      "title": "Predict Before Testing",
+      "tutorial": "T3",
+      "fields": [
+        {
+          "key": "prediction",
+          "type": "text",
+          "individual": true,
+          "prediction": true,
+          "teacherReview": false,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q4c",
+      "page": "Part 1 · Page 3",
+      "title": "Test The Heavier Load",
+      "tutorial": "T3",
+      "fields": [
+        {
+          "key": "observation",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "notes",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": true,
+      "predictionSource": "Q4b",
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q4d",
+      "page": "Part 1 · Page 3",
+      "title": "Record The Controlled Change",
+      "tutorial": "T3",
+      "fields": [
+        {
+          "key": "changed",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "from",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "to",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "effortMass",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "loadArm",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "effortArm",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "fulcrum",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q5a",
+      "page": "Part 1 · Page 4",
+      "title": "Lengthen Only The Effort Arm",
+      "tutorial": "T4",
+      "fields": [],
+      "setup": true,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q5b",
+      "page": "Part 1 · Page 4",
+      "title": "Predict, Release, And Observe",
+      "tutorial": "T4",
+      "fields": [
+        {
+          "key": "prediction",
+          "type": "text",
+          "individual": true,
+          "prediction": true,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "observation",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "notes",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": true,
+      "predictionSource": true,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q5c",
+      "page": "Part 1 · Page 4",
+      "title": "What Changed?",
+      "tutorial": "T4",
+      "fields": [
+        {
+          "key": "added",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "from",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "to",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "reason",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q5d",
+      "page": "Part 1 · Page 4",
+      "title": "Must The Heavier Object Fall?",
+      "tutorial": "T4",
+      "fields": [
+        {
+          "key": "always",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "evidence",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q6a",
+      "page": "Part 1 · Page 4",
+      "title": "Find Balance With Fixed Positions",
+      "tutorial": "T4",
+      "fields": [
+        {
+          "key": "observation",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "notes",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": true,
+      "predictionSource": false,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q6b",
+      "page": "Part 1 · Page 4",
+      "title": "Record Your Balancing Mass",
+      "tutorial": "T4",
+      "fields": [
+        {
+          "key": "mass",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q6c",
+      "page": "Part 1 · Page 4",
+      "title": "Compare Two Ways",
+      "tutorial": "T4",
+      "fields": [
+        {
+          "key": "q5",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "q6",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "reason",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q7a",
+      "page": "Part 1 · Page 5",
+      "title": "Keep The Load Fixed",
+      "tutorial": "T3",
+      "fields": [],
+      "setup": true,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q7b1",
+      "page": "Part 1 · Page 5",
+      "title": "Effort Arm 75 mm",
+      "tutorial": "T4",
+      "fields": [
+        {
+          "key": "predictedMass",
+          "type": "number",
+          "individual": true,
+          "prediction": true,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "observation",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "finalMass",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": false,
+      "simulation": true,
+      "predictionSource": true,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q7b2",
+      "page": "Part 1 · Page 5",
+      "title": "Effort Arm 100 mm",
+      "tutorial": "T4",
+      "fields": [
+        {
+          "key": "predictedMass",
+          "type": "number",
+          "individual": true,
+          "prediction": true,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "observation",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "finalMass",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": false,
+      "simulation": true,
+      "predictionSource": true,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q7b3",
+      "page": "Part 1 · Page 5",
+      "title": "Effort Arm 150 mm",
+      "tutorial": "T4",
+      "fields": [
+        {
+          "key": "predictedMass",
+          "type": "number",
+          "individual": true,
+          "prediction": true,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "observation",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "finalMass",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": false,
+      "simulation": true,
+      "predictionSource": true,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q7b4",
+      "page": "Part 1 · Page 5",
+      "title": "Effort Arm 200 mm",
+      "tutorial": "T4",
+      "fields": [
+        {
+          "key": "predictedMass",
+          "type": "number",
+          "individual": true,
+          "prediction": true,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "observation",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "finalMass",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": false,
+      "simulation": true,
+      "predictionSource": true,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q7c",
+      "page": "Part 1 · Page 5",
+      "title": "Describe The Trend",
+      "tutorial": "T4",
+      "fields": [
+        {
+          "key": "trend",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "reason",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q7d",
+      "page": "Part 1 · Page 5",
+      "title": "When The Arm Doubles",
+      "tutorial": "T4",
+      "fields": [
+        {
+          "key": "near",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "far",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "ratio",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "reason",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q8a",
+      "page": "Part 1 · Page 6",
+      "title": "Keep Effort Distance Fixed",
+      "tutorial": "T3",
+      "fields": [],
+      "setup": true,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q8b1",
+      "page": "Part 1 · Page 6",
+      "title": "Load Arm 100 mm",
+      "tutorial": "T5",
+      "fields": [
+        {
+          "key": "predictedMass",
+          "type": "number",
+          "individual": true,
+          "prediction": true,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "observation",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "finalMass",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": false,
+      "simulation": true,
+      "predictionSource": true,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q8b2",
+      "page": "Part 1 · Page 6",
+      "title": "Load Arm 150 mm",
+      "tutorial": "T5",
+      "fields": [
+        {
+          "key": "predictedMass",
+          "type": "number",
+          "individual": true,
+          "prediction": true,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "observation",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "finalMass",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": false,
+      "simulation": true,
+      "predictionSource": true,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q8b3",
+      "page": "Part 1 · Page 6",
+      "title": "Load Arm 200 mm",
+      "tutorial": "T5",
+      "fields": [
+        {
+          "key": "predictedMass",
+          "type": "number",
+          "individual": true,
+          "prediction": true,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "observation",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "finalMass",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": false,
+      "simulation": true,
+      "predictionSource": true,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q8c",
+      "page": "Part 1 · Page 6",
+      "title": "Describe The Load-Arm Trend",
+      "tutorial": "T5",
+      "fields": [
+        {
+          "key": "trend",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "reason",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q8d",
+      "page": "Part 1 · Page 6",
+      "title": "Position, Mass, And Weight",
+      "tutorial": "T5",
+      "fields": [
+        {
+          "key": "changed",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "reason",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q8e",
+      "page": "Part 1 · Page 6",
+      "title": "What Stayed Fixed?",
+      "tutorial": "T3",
+      "fields": [
+        {
+          "key": "constants",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q9a",
+      "page": "Part 2 · Page 1",
+      "title": "Check Balance Before Swapping",
+      "tutorial": "T6",
+      "fields": [
+        {
+          "key": "observation",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "notes",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": true,
+      "predictionSource": false,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q9b",
+      "page": "Part 2 · Page 1",
+      "title": "Predict Before Swap",
+      "tutorial": "T6",
+      "fields": [
+        {
+          "key": "mass",
+          "type": "text",
+          "individual": true,
+          "prediction": true,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "roles",
+          "type": "text",
+          "individual": true,
+          "prediction": true,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "balance",
+          "type": "text",
+          "individual": true,
+          "prediction": true,
+          "teacherReview": false,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q9c",
+      "page": "Part 2 · Page 1",
+      "title": "Swap And Label The New Arms",
+      "tutorial": "T6",
+      "fields": [
+        {
+          "key": "loadArm",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "effortArm",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": true,
+      "simulation": false,
+      "predictionSource": "Q9b",
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q9d",
+      "page": "Part 2 · Page 1",
+      "title": "Release The Swapped Lever",
+      "tutorial": "T6",
+      "fields": [
+        {
+          "key": "observation",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "notes",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": true,
+      "predictionSource": "Q9b",
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q9e",
+      "page": "Part 2 · Page 1",
+      "title": "Explain The Result",
+      "tutorial": "T6",
+      "fields": [
+        {
+          "key": "reason",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q10a",
+      "page": "Part 2 · Page 2",
+      "title": "Find Beam Position",
+      "tutorial": "T7",
+      "fields": [
+        {
+          "key": "coordinate",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q10b",
+      "page": "Part 2 · Page 2",
+      "title": "Test The Centered Fulcrum",
+      "tutorial": "T7",
+      "fields": [
+        {
+          "key": "prediction",
+          "type": "text",
+          "individual": true,
+          "prediction": true,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "observation",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "notes",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": true,
+      "predictionSource": true,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q10c",
+      "page": "Part 2 · Page 2",
+      "title": "Move Only The Fulcrum",
+      "tutorial": "T7",
+      "fields": [],
+      "setup": true,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q10d",
+      "page": "Part 2 · Page 2",
+      "title": "Measure Both New Arms",
+      "tutorial": "T7",
+      "fields": [
+        {
+          "key": "loadArm",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "effortArm",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "gap",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q10e",
+      "page": "Part 2 · Page 2",
+      "title": "Predict And Test The Shifted Pivot",
+      "tutorial": "T7",
+      "fields": [
+        {
+          "key": "prediction",
+          "type": "text",
+          "individual": true,
+          "prediction": true,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "observation",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "notes",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": true,
+      "predictionSource": true,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q10f",
+      "page": "Part 2 · Page 2",
+      "title": "One Support, Two Arms",
+      "tutorial": "T7",
+      "fields": [
+        {
+          "key": "reason",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q11a",
+      "page": "Part 2 · Page 3",
+      "title": "Calculate The Q5 Products",
+      "tutorial": "T8",
+      "fields": [
+        {
+          "key": "loadMass",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "loadArm",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "loadProduct",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "effortMass",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "effortArm",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "effortProduct",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q11b",
+      "page": "Part 2 · Page 3",
+      "title": "Compare The Products",
+      "tutorial": "T8",
+      "fields": [
+        {
+          "key": "compare",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "reason",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q11c",
+      "page": "Part 2 · Page 3",
+      "title": "Choose Your Own Q7 Trial",
+      "tutorial": "T8",
+      "fields": [
+        {
+          "key": "trialId",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "loadMass",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "loadArm",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "loadProduct",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "effortMass",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "effortArm",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "effortProduct",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": true,
+      "design": false
+    },
+    {
+      "id": "Q11d",
+      "page": "Part 2 · Page 3",
+      "title": "State Your Balance Rule",
+      "tutorial": "T8",
+      "fields": [
+        {
+          "key": "rule",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "reason",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q12a",
+      "page": "Part 2 · Page 4",
+      "title": "IMA: 100 mm Load / 100 mm Effort",
+      "tutorial": "T9",
+      "fields": [
+        {
+          "key": "ima",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q12b",
+      "page": "Part 2 · Page 4",
+      "title": "IMA: 100 mm Load / 200 mm Effort",
+      "tutorial": "T9",
+      "fields": [
+        {
+          "key": "ima",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q12c",
+      "page": "Part 2 · Page 4",
+      "title": "IMA: 200 mm Load / 100 mm Effort",
+      "tutorial": "T9",
+      "fields": [
+        {
+          "key": "ima",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q12d",
+      "page": "Part 2 · Page 4",
+      "title": "Compare Effort Force With Load Weight",
+      "tutorial": "T9",
+      "fields": [
+        {
+          "key": "row1",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "row2",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "row3",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q12e",
+      "page": "Part 2 · Page 4",
+      "title": "Choose The Least Effort",
+      "tutorial": "T9",
+      "fields": [
+        {
+          "key": "row",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "reason",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q12f",
+      "page": "Part 2 · Page 4",
+      "title": "First Class And Force Advantage",
+      "tutorial": "T9",
+      "fields": [
+        {
+          "key": "guarantee",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "reason",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q13a",
+      "page": "Part 2 · Page 5",
+      "title": "Find The Balancing Effort Arm",
+      "tutorial": "T10",
+      "fields": [
+        {
+          "key": "observation",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "arm",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "loadLabel",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        },
+        {
+          "key": "effortLabel",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": true
+        }
+      ],
+      "setup": false,
+      "simulation": true,
+      "predictionSource": false,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q13b",
+      "page": "Part 2 · Page 5",
+      "title": "Predict Before Testing",
+      "tutorial": "T10",
+      "fields": [
+        {
+          "key": "prediction",
+          "type": "text",
+          "individual": true,
+          "prediction": true,
+          "teacherReview": false,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q13c",
+      "page": "Part 2 · Page 5",
+      "title": "Try Your Lifting Change",
+      "tutorial": "T10",
+      "fields": [
+        {
+          "key": "observation",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "arm",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": true,
+      "predictionSource": "Q13b",
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q13d",
+      "page": "Part 2 · Page 5",
+      "title": "Balance Versus Rising",
+      "tutorial": "T10",
+      "fields": [
+        {
+          "key": "reason",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q14a",
+      "page": "Part 2 · Page 6",
+      "title": "Choose A Constrained Design",
+      "tutorial": "T11",
+      "fields": [
+        {
+          "key": "loadMass",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "effortMass",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "loadArm",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "effortArm",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        }
+      ],
+      "setup": true,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": true
+    },
+    {
+      "id": "Q14b",
+      "page": "Part 2 · Page 6",
+      "title": "Draw And Label Your Design",
+      "tutorial": "T11",
+      "fields": [
+        {
+          "key": "drawing",
+          "type": "sketch",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q14c",
+      "page": "Part 2 · Page 6",
+      "title": "Defend Before Release",
+      "tutorial": "T11",
+      "fields": [
+        {
+          "key": "loadProduct",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "effortProduct",
+          "type": "number",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "prediction",
+          "type": "text",
+          "individual": true,
+          "prediction": true,
+          "teacherReview": false,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    },
+    {
+      "id": "Q14d",
+      "page": "Part 2 · Page 6",
+      "title": "Test And Revise Your Design",
+      "tutorial": "T11",
+      "fields": [
+        {
+          "key": "observation",
+          "type": "select",
+          "individual": false,
+          "prediction": false,
+          "teacherReview": false,
+          "automatic": false
+        },
+        {
+          "key": "notes",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": true,
+      "predictionSource": "Q14c",
+      "selectedPriorTrial": false,
+      "design": true
+    },
+    {
+      "id": "Q14e",
+      "page": "Part 2 · Page 6",
+      "title": "Make A Claim With Evidence",
+      "tutorial": "T11",
+      "fields": [
+        {
+          "key": "claim",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        },
+        {
+          "key": "evidence",
+          "type": "text",
+          "individual": true,
+          "prediction": false,
+          "teacherReview": true,
+          "automatic": false
+        }
+      ],
+      "setup": false,
+      "simulation": false,
+      "predictionSource": null,
+      "selectedPriorTrial": false,
+      "design": false
+    }
+  ]
+}

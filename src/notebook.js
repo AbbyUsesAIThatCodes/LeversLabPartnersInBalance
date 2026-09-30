@@ -13,12 +13,12 @@ export function createNotebook(build='Local Development') {
 export const learners=book=>book.team.mode==='pair'?book.team.learners:book.team.learners.slice(0,1);
 export const ownerFor=(field,learner)=>field.personal?learner.id:'shared';
 export function answer(book,id,key,owner='shared') {return book.answers[id]?.[owner]?.[key]??'';}
-export function response(book,id,key,value,owner='shared') {
+export function response(book,id,key,value,owner='shared',recordHistory=true) {
  const previous=answer(book,id,key,owner);
  if(JSON.stringify(previous)===JSON.stringify(value))return;
  book.answers[id]??={}; book.answers[id][owner]??={};
  book.answers[id][owner][key]=clone(value);
- book.history.push({id,key,owner,value:clone(value),previous:clone(previous),at:stamp(),driver:book.team.driver});
+ if(recordHistory)book.history.push({id,key,owner,value:clone(value),previous:clone(previous),at:stamp(),driver:book.team.driver});
  // Editing evidence invalidates only this latest check, not historical checks.
  delete book.checks[id];book.updatedAt=stamp();
 }
@@ -61,7 +61,8 @@ export function evaluatePart(book,part,workbench) {
  if(part.trial||part.requiresTrial){
   if(!t)missing.push('A recorded, completed level-release trial.');
   else {
-   if(part.goal&&t.result!==part.goal)failures.push('Your recorded trial has not met the target yet. Keep it as evidence and retry.');
+   const goal=part.goal??PART_BY_ID[part.requiresTrial]?.goal;
+   if(goal&&t.result!==goal)failures.push('Your recorded trial has not met the target yet. Keep it as evidence and retry.');
    if(!t.settled)failures.push('Wait for the apparatus to settle before recording a result.');
    const observation=values.shared?.observation;
    if(observation&&observation!=={balance:'Level',load:'Load Side Down',effort:'Effort Side Down'}[t.result])failures.push('Your observation differs from the recorded apparatus result. Review the trial.');
@@ -69,6 +70,8 @@ export function evaluatePart(book,part,workbench) {
    if(part.id==='Q13c'&&Number(values.shared?.arm)!==t.setup.effortArm)failures.push('The arm must match your successful lifting trial.');
   }
  }
+ if(part.id==='Q10a')for(const type of ['side-view-used','controls-opened'])if(!book.events.some(e=>e.part===part.id&&e.type===type))missing.push(type==='side-view-used'?'Use Side View (or the side diagram).':'Open Controls and find Fulcrum Beam Position.');
+ for(const id of part.references??[])if(!latestTrial(book,id))missing.push(`Record your own ${id} trial before linking its evidence.`);
  if(part.products||part.priorTrial){
   const prior=part.priorTrial?selectedQ7Trial(book,values.shared?.trialId):null;
   const productState=part.products??prior?.setup.state;
@@ -79,7 +82,7 @@ export function evaluatePart(book,part,workbench) {
  const status=failures.length?'Try Again':missing.length?'In Progress':review.length?'Recorded · Teacher Review':'Checked';
  return {status,failures,missing,review,at:stamp(),complete:!failures.length&&!missing.length};
 }
-export function checkPart(book,part,workbench){const check=evaluatePart(book,part,workbench);book.checks[part.id]=check;event(book,'part-checked',{id:part.id,check,answers:clone(book.answers[part.id]??{})});return check;}
+export function checkPart(book,part,workbench){const check=evaluatePart(book,part,workbench);book.checks[part.id]=check;event(book,'part-checked',{id:part.id,check,setup:snapshot(workbench.state,workbench.held),answers:clone(book.answers[part.id]??{})});return check;}
 export function coverage(book){return REQUIRED_IDS.map(id=>({id,status:id==='Intro'||id==='Routine'?(book.coverage[id]?'Recorded':'Not Started'):(book.checks[id]?.status??'Not Started'),complete:id==='Intro'||id==='Routine'?book.coverage[id]:!!book.checks[id]?.complete}));}
 // Validate before replacing any in-memory/current save. No imported HTML runs.
 export function parseBackup(text){
@@ -94,10 +97,11 @@ export function parseBackup(text){
  if(!obj(b.team)||!['solo','pair'].includes(b.team.mode)||!['A','B'].includes(b.team.driver)||!Array.isArray(b.team.learners)||b.team.learners.length!==2||b.team.learners.some((l,i)=>!obj(l)||l.id!==['A','B'][i]||!str(l.label,80))||![0,2,3,5].includes(b.team.reminderMinutes)||!(b.team.rotationStarted===null||str(b.team.rotationStarted,50)))fail();
  for(const k of ['answers','checks','tutorials','workbenches','coverage'])if(!obj(b[k]))fail();
  for(const k of ['history','trials','events','visits'])if(!Array.isArray(b[k])||b[k].length>100000)fail();
- const wb=w=>obj(w)&&valid(w.state)&&typeof w.held==='boolean';
+ const wb=w=>obj(w)&&valid(w.state)&&typeof w.held==='boolean'&&(!('loadArm' in w)||w.loadArm===arm(w.state,'load'))&&(!('effortArm' in w)||w.effortArm===arm(w.state,'effort'));
  if(!wb(b.freeWorkbench)||Object.entries(b.workbenches).some(([id,w])=>!PART_BY_ID[id]||!wb(w)))fail();
  const validateDrawing=d=>obj(d)&&Array.isArray(d.elements)&&d.elements.length<=1000&&d.elements.every(e=>obj(e)&&['beam','load','effort','fulcrum','stroke','label'].includes(e.kind)&&(!e.role||['load','effort','fulcrum'].includes(e.role))&&str(e.label??'',100)&&Number.isFinite(e.x)&&Number.isFinite(e.y)&&e.x>=0&&e.x<=600&&e.y>=0&&e.y<=280&&(!e.points||(Array.isArray(e.points)&&e.points.length<=5000&&e.points.every(p=>Array.isArray(p)&&p.length===2&&p.every(v=>Number.isFinite(v)&&v>=0&&v<=600)))));
  for(const [id,owners] of Object.entries(b.answers)){if(!PART_BY_ID[id]||!obj(owners))fail();for(const [owner,answers]of Object.entries(owners)){if(!['shared','A','B'].includes(owner)||!obj(answers))fail();for(const [key,value]of Object.entries(answers)){const f=PART_BY_ID[id].fields.find(f=>f.key===key);if(!f||(f.type==='sketch'?!validateDrawing(value):!str(value,10000)))fail();}}}
+ for(const [id,t] of Object.entries(b.tutorials))if(!LESSONS.some(l=>l.id===id)||!obj(t)||('note' in t&&!str(t.note))||('drawing' in t&&!validateDrawing(t.drawing))||('completedAt' in t&&!str(t.completedAt,50)))fail();
  for(const t of b.trials)if(!obj(t)||!str(t.id,100)||!PART_BY_ID[t.part]?.trial||!wb(t.setup)||!['A','B'].includes(t.driver)||!str(t.startedAt,50)||!(t.result===null||['balance','load','effort'].includes(t.result))||typeof t.settled!=='boolean'||typeof t.interrupted!=='boolean'||!obj(t.predictions)||!Array.isArray(t.changes))fail();
  for(const h of b.history)if(!obj(h)||!PART_BY_ID[h.id]||!str(h.key,100)||!['shared','A','B'].includes(h.owner)||!str(h.at,50))fail();
  for(const e of b.events)if(!obj(e)||!str(e.type,100)||!str(e.at,50)||!['A','B'].includes(e.driver))fail();
@@ -106,5 +110,5 @@ export function parseBackup(text){
  if(typeof b.coverage.Intro!=='boolean'||typeof b.coverage.Routine!=='boolean')fail();
  return b;
 }
-export function loadNotebook(storage,build){try{const raw=storage.getItem(NOTEBOOK_KEY);return {book:raw?parseBackup(raw):createNotebook(build),error:null};}catch(e){return {book:createNotebook(build),error:e.message};}}
+export function loadNotebook(storage,build){let raw=null;try{raw=storage.getItem(NOTEBOOK_KEY);return {book:raw?parseBackup(raw):createNotebook(build),error:null,recovery:null};}catch(e){return {book:createNotebook(build),error:e.message,recovery:raw};}}
 export function saveNotebook(storage,book){book.updatedAt=stamp();try{storage.setItem(NOTEBOOK_KEY,JSON.stringify(book));return {ok:true};}catch{return {ok:false,error:'Browser saving is unavailable or full. Download a backup now; keep this tab open.'};}}

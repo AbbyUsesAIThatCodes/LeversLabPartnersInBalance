@@ -507,7 +507,11 @@ for (const [id, method] of [
 ])
   $("#" + id).addEventListener("click", () => {
     if (ready) scene[method]();
+    if (id === 'side') learning?.recordAction('side-view-used');
   });
+$('#controls-toggle').addEventListener('click', () => {
+  if (!$('#controls-panel').hidden) learning?.recordAction('controls-opened');
+});
 $("#help").addEventListener("click", () => {
   hideTip();
   $("#help-dialog").showModal();
@@ -616,6 +620,6 @@ learning = mountLearning({
   math: visible => { showMath = visible; render(); save(); },
   mathVisible: () => showMath,
   swap: () => $('#swap').click(),
-  side: () => $('#side').click(),
+  side: () => { if (fallback) learning?.recordAction('side-view-used'); else $('#side').click(); },
   notice,
 });
