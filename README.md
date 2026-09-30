@@ -4,10 +4,11 @@ Separate local-first development game based on the unchanged
 [source game](docs/LEVERLAB-SOURCE.md). Full Git ancestry, workshop, 3D apparatus,
 physics, camera controls, fonts, and fallback diagram are retained.
 
-**Incomplete development checkpoint, not classroom-ready.** All 68 target coverage
-rows (Intro, Routine, and 66 question subparts) and tutorials T0–T12 are defined.
-The learning interface is integrated but its browser startup check is currently
-failing. No playable review ZIP has been approved. See [Status](STATUS.md).
+**Development build for thorough teacher playtesting.** All 68 target coverage
+rows (Intro, Routine, and 66 question subparts) and tutorials T0-T12 are implemented.
+Complete paired and solo browser walkthroughs have passed. Automated checks do not
+grade open reasoning or establish classroom readiness. See [Status](STATUS.md)
+for the exact tested build and [Teacher Review](docs/TEACHER-REVIEW.md) for playtests.
 
 ## Run Locally
 
@@ -15,7 +16,16 @@ Node.js 22+: `npm ci`, `npm test`, `npm run build`, then `npm run dev`.
 Open `http://127.0.0.1:4173/LeverLab/`. Serve over HTTP, not `file://`.
 On Windows restricted environments, unit checks can use
 `node --test --test-isolation=none tests/*.test.mjs`.
-`node tests/notebook-browser.mjs` checks the initial Q1–Q4 slice and local downloads.
+`node tests/notebook-browser.mjs` checks the initial Q1-Q4 slice and local downloads.
+`node tests/full-packet-browser.mjs` exercises the entire mapped packet in paired
+WebGL and solo diagram modes. `node tests/recovery-browser.mjs` checks interrupted
+trials, drawings, unreadable autosaves, and retained Free Play arrangements.
+`node tests/weighted-pointer-browser.mjs` checks the inherited motion and controls.
+Set `CHROMIUM_EXECUTABLE` to an installed Chrome executable when needed.
+
+For a packaged review, extract the complete ZIP and run `node serve-review.mjs`.
+That package needs no npm install or internet connection. Browser storage belongs
+to the exact address; download a backup before changing a preview port.
 
 ## Learning And Evidence
 
