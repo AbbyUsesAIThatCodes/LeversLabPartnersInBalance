@@ -90,6 +90,7 @@ export function evaluatePart(book,part,workbench) {
  return {status,failures,missing,review,at:stamp(),complete:!failures.length&&!missing.length};
 }
 export function checkPart(book,part,workbench){const check=evaluatePart(book,part,workbench);book.checks[part.id]=check;event(book,'part-checked',{id:part.id,check,setup:snapshot(workbench.state,workbench.held),answers:clone(book.answers[part.id]??{})});return check;}
+export function revalidateChecks(book){for(const p of PARTS)if(book.checks[p.id]?.complete&&!evaluatePart(book,p,book.workbenches[p.id]).complete)invalidateChecks(book,[p.id],'Saved evidence no longer meets this check. Save & Check again.');}
 export function coverage(book){return REQUIRED_IDS.map(id=>({id,status:id==='Intro'||id==='Routine'?(book.coverage[id]?'Recorded':'Not Started'):(book.checks[id]?.status??'Not Started'),complete:id==='Intro'||id==='Routine'?book.coverage[id]:!!book.checks[id]?.complete}));}
 // Validate before replacing any in-memory/current save. No imported HTML runs.
 export function parseBackup(text){
