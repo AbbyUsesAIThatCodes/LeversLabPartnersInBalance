@@ -1,5 +1,11 @@
 # Third-Party Notices
 
+Lever Lab: Partners In Balance is the owner's separate, history-preserving
+adaptation of LeversLoadEffortDistance commit
+`9bfce52767e51ae728ffa9fec717264c554d026b`. The original repository and live game
+are unchanged. Its notices below and complete bundled license files are retained.
+No top-level license grant is inferred or added. See `docs/LEVERLAB-SOURCE.md`.
+
 ## Shared Workshop Environment
 
 The classroom, table, cutting mat, cactus, lighting, and camera infrastructure

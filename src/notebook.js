@@ -110,5 +110,5 @@ export function parseBackup(text){
  if(typeof b.coverage.Intro!=='boolean'||typeof b.coverage.Routine!=='boolean')fail();
  return b;
 }
-export function loadNotebook(storage,build){let raw=null;try{raw=storage.getItem(NOTEBOOK_KEY);return {book:raw?parseBackup(raw):createNotebook(build),error:null,recovery:null};}catch(e){return {book:createNotebook(build),error:e.message,recovery:raw};}}
+export function loadNotebook(storage,build){let raw=null;try{raw=storage.getItem(NOTEBOOK_KEY);return {book:raw?parseBackup(raw):createNotebook(build),error:null,recovery:null,fresh:!raw};}catch(e){return {book:createNotebook(build),error:e.message,recovery:raw,fresh:false};}}
 export function saveNotebook(storage,book){book.updatedAt=stamp();try{storage.setItem(NOTEBOOK_KEY,JSON.stringify(book));return {ok:true};}catch{return {ok:false,error:'Browser saving is unavailable or full. Download a backup now; keep this tab open.'};}}
