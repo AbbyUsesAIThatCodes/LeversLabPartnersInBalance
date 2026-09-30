@@ -16,7 +16,7 @@ http
     try {
       const relative = decodeURIComponent(
         new URL(req.url, "http://localhost").pathname,
-      ).replace(/^\/LeversLoadEffortDistance\//, "/");
+      ).replace(/^\/LeverLab\//, "/");
       const p = path.resolve(
         root,
         "." + relative + (relative.endsWith("/") ? "index.html" : ""),
@@ -35,8 +35,8 @@ http
       res.writeHead(404).end("Not found");
     }
   })
-  .listen(Number(process.env.PORT || 4173), "0.0.0.0", () =>
+  .listen(Number(process.env.PORT || 4173), "127.0.0.1", () =>
     console.log(
-      `http://localhost:${process.env.PORT || 4173}/LeversLoadEffortDistance/`,
+      `http://localhost:${process.env.PORT || 4173}/LeverLab/`,
     ),
   );

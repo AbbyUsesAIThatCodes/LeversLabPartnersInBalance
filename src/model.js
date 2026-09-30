@@ -192,7 +192,7 @@ export function advance(state, motion, seconds) {
   }
   return { angle, velocity };
 }
-export const STORAGE_KEY = "levers-load-effort-distance-v1";
+export const STORAGE_KEY = "lever-lab-v1";
 export function restore(raw) {
   const defaults = {
     state: { ...DEFAULT },

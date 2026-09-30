@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 import { verifyBeamMotion } from "./beam-motion-browser.mjs";
 import { STOP, STORAGE_KEY } from "../src/model.js";
 
-const port = Number(process.env.PORT || 4183), url = `http://127.0.0.1:${port}/LeversLoadEffortDistance/`;
+const port = Number(process.env.PORT || 4183), url = `http://127.0.0.1:${port}/LeverLab/`;
 const server = spawn(process.execPath, ["scripts/serve.mjs"], { stdio: "ignore", env: { ...process.env, PORT: String(port) } });
 let browser;
 const errors = [];

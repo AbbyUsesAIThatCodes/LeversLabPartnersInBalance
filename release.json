@@ -1,7 +1,7 @@
 {
   "version": "0.1.0",
-  "codename": "Integrated Core",
-  "codenameSlug": "Integrated-Core",
+  "codename": "Partners In Balance",
+  "codenameSlug": "Partners-In-Balance",
   "status": "development",
-  "milestone": "The existing 0.1.0 Integrated Core roadmap milestone; classroom release remains Issue #3."
+  "milestone": "Private local review of the separate Lever Lab project; no classroom release or deployment."
 }

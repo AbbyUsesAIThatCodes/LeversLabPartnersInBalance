@@ -9,7 +9,7 @@ import { DEFAULT, STORAGE_KEY, STOP, swapPositions } from "../src/model.js";
 const label = process.argv[2] || "after";
 assert.ok(["before", "after"].includes(label));
 const port = Number(process.env.PORT || 4179);
-const url = `http://127.0.0.1:${port}/LeversLoadEffortDistance/`;
+const url = `http://127.0.0.1:${port}/LeverLab/`;
 const server = spawn(process.execPath, ["scripts/serve.mjs"], {
   stdio: "ignore", env: { ...process.env, PORT: String(port) },
 });

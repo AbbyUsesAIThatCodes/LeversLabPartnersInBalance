@@ -14,7 +14,7 @@ import {
 } from "../src/model.js";
 const port = Number(process.env.PORT || 4178),
   origin = `http://127.0.0.1:${port}`,
-  url = origin + "/LeversLoadEffortDistance/";
+  url = origin + "/LeverLab/";
 const server = spawn(process.execPath, ["scripts/serve.mjs"], {
   stdio: "ignore",
   env: { ...process.env, PORT: String(port) },
@@ -541,7 +541,7 @@ try {
   await page.getByRole("button", { name: "Back to the Workbench" }).click();
   await page.goto(origin + "/");
   await ready();
-  assert.match(await page.title(), /Levers: Load, Effort, and Distance/);
+  assert.match(await page.title(), /Lever Lab: Partners In Balance/);
   // Context loss transitions to the same functional fallback without corrupting state.
   const contextState = await snapshot();
   await page
