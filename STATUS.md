@@ -1,68 +1,100 @@
 # Lever Lab: Partners In Balance
 
-## Current Checkpoint
+## Saved Review Checkpoint
 
-Checkpoint at 2026-09-30 22:50 UTC: isolated baseline commit `237912e`;
-implementation checkpoint follows it on the same local branch. Current unit run:
-24/24 passing, including model bounds, concurrent build IDs, notebook validation,
-individual prediction history, Q7-to-Q11 linkage, and report escaping.
-All 68 mapped rows (66 question subparts + Intro/Routine) and T0–T12 are defined
-in `src/curriculum.js`; this is an inventory, not full verification.
-The modes/notebook/UI/report are integrated. Browser diagnostics found port 4187
-was occupied by a different existing game; the test accidentally reached it.
-The browser test now chooses an available ephemeral port. The corrected run is
-still pending. The existing service was not modified or stopped. Do not call
-this playable or complete until that is fixed and the Q1–Q4 browser slice passes.
-No review ZIP or screenshot delivery exists yet.
+The complete required R06 scope is implemented: Part 1 Q1-Q8, Part 2 Q9-Q14,
+66 question subparts plus Intro and Routine, and Learn T0-T12. Optional A-E is
+excluded. Free Play retains the original room, controls, physics, and fallback.
+The source model changed only its local-storage key to isolate this game.
 
-Latest local build before the implementation commit:
-`0.1.0_Partners-In-Balance_local-1e3bd62e_build-002_20260930T224635Z_g237912e4a5db-dirty-b5e96dca_web`.
-Build is deliberately marked dirty; do not relabel it after committing.
+Review artifact source: `beaac5ec0d70b00a90027fde05cd53f11c0f6f03`.
+Full identity:
+`0.1.0_Partners-In-Balance_local-1e3bd62e_build-007_20260930T231950Z_gbeaac5ec0d70_web`.
+The artifact was built from a clean working tree. Later documentation checkpoints
+do not relabel or rebuild this immutable artifact.
 
-Exact next action: inspect browser startup diagnostics, fix the integration,
-rerun `node tests/notebook-browser.mjs`, inspect laptop/projector screenshots,
-then package that immutable artifact for the teacher's initial playtest.
+27/27 unit tests pass. Final build 007 passed complete paired and solo 68-row
+browser walkthroughs, basic notebook checks, interrupted/corrupt-save recovery,
+physics/control regression, and native browser print expansion/restoration. The
+ZIP manifest, all four packaged verification records, and bundled licenses match.
 
-Local branch: `work/01-local-learning-foundation`. Source baseline:
-`AbbyUsesAIThatCodes/LeversLoadEffortDistance@9bfce52767e51ae728ffa9fec717264c554d026b`.
-Source is unchanged. This independent Git copy retains the complete source ancestry.
-No remote is configured. No merges, deployments, emails, or auto-merge are authorized.
+Playable preview on this computer: http://127.0.0.1:4200/
+Playable ZIP: `output/0.1.0_Partners-In-Balance_local-1e3bd62e_build-007_20260930T231950Z_gbeaac5ec0d70_web.zip`
+ZIP SHA-256: `9793f4a6034b6ac1400ff78db6752638291c4f5121ca8a274583ee5433dbb071`.
+Size: 1,778,368 bytes; 34 files. Extract and run `node serve-review.mjs`; no npm
+install or internet is needed. The ZIP includes screenshots, synthetic complete
+student reports/backups, coverage inventory, provenance, and existing notices.
+The original early preview on port 4199 is older; use port 4200 for this review.
+Download a backup before moving work between preview addresses.
 
-The approved new repository name is `AbbyUsesAIThatCodes/LeverLab`.
-Creation is pending because the available GitHub connector cannot create repositories.
-Automatic approval review rejected direct credential-helper access; do not retry it.
-Create an empty repository using normal authenticated GitHub capabilities, disable
-Actions before the first push, and verify Pages is absent. Push only the sanitized
-new baseline/working branch, not every historical ref. Never push to the source.
+## Review Evidence
 
-## Bounded Work
+- `artifacts/full-packet-review/verification.json`: paired WebGL and solo diagram
+  walkthroughs, all 68 rows and all 13 tutorials, individual responses, Q7 retry
+  history and actual Q7-to-Q11 linkage, Q12 force comparisons, Q13 limits,
+  non-default Q14 design/sketch, full download and validated restore.
+- `artifacts/notebook-review/verification.json`: exact Learn return, prediction
+  gate, factual corrections, local downloads, reload, roles, responsive screenshots.
+- `artifacts/recovery-review/verification.json`: interrupted trials, retained
+  predictions, separate retry, pointer drawing/Undo, corrupt-save recovery,
+  retained Free Play state, and two off-center swaps.
+- `artifacts/weighted-pointer/verification.json`: inherited physics, visible build
+  identity, all role drags, continuous motion, cancellation, Help, reduced animation,
+  WebGL/fallback parity, and context loss.
+- `artifacts/print-review/verification.json`: native browser print expansion and
+  restoration of evidence sections. The machine-readable appendix is not printed.
 
-1. Isolate the copy, preserve provenance/licenses, remove active workflow triggers,
-   establish build identity and recoverable checkpoints.
-2. Add local autosave, validated backup/restore, pair/solo contribution records,
-   teacher-controlled role rotation, and human-readable evidence download.
-3. Implement all Part 1 Q1–8 and Part 2 Q9–14 subparts with T0–T12 tutorials,
-   preserved predictions/retries and exact Learn/return routes.
-4. Audit coverage, run model/progress/browser checks, inspect screenshots and
-   package the immutable build as a playable review ZIP for teacher playtesting.
+Synthetic browser responses are test fixtures, not model explanations. Automated
+checks establish software behavior and recorded coverage, not teaching quality,
+individual mastery, HQSD approval, or readiness for classroom deployment.
 
-## Source And Scope
+## Source And Remote State
 
-R06 Part 1 and Part 2 each have six pages. No Optional A–E tasks are required.
-The key and goal map are pinned to EES PR #78 commit
-`bea8b69fe00fe989f418b985cb3f8005f0b4d41f`; local evidence stays outside this repository.
-The student PDFs contain no embedded game hyperlinks. Source identification comes
-from the matching key and teacher guide, not an invented PDF link extraction.
-The source game has no top-level license. Preserve existing notices without
-declaring an unsupported license; this is the owner's authorized adaptation.
-No publisher source text, real student data, accounts, telemetry, or network
-student storage belongs in this project.
+Local branch: `work/01-local-learning-foundation`. The independent Git copy retains
+complete ancestry from `AbbyUsesAIThatCodes/LeversLoadEffortDistance` at
+`9bfce52767e51ae728ffa9fec717264c554d026b`. The source checkout and live game are
+unchanged. Its local push URL is disabled. This is a history-preserving copy,
+not a claimed GitHub fork-network relationship.
 
-## Review Boundaries
+The approved new repository is `AbbyUsesAIThatCodes/LeverLab`; remote creation is
+being handled by the parent task and is still pending here. No repository, issue,
+or PR URL has been created in this checkout. There is no configured remote.
+Automatic approval review previously rejected credential-helper access; do not
+retry it. Use supported authenticated repository creation when available.
 
-Predictions are captured, never graded for matching the eventual outcome.
-Reasoning and student-created sketches need teacher review, never keyword grading.
-Completion is evidence coverage, not individual mastery or an official approval.
-The game supports physical transfer but does not certify physical build/test work.
-Downloads require the student to attach the file and select Turn In in Classroom.
-Teacher playtest approval is required before any public deployment.
+`review-baseline` points to isolated baseline commit `237912e`.
+Before a first push, verify the new repository has Actions disabled and Pages
+unconfigured. Push only sanitized baseline/working branches, never all historical
+refs. The inherited workflow is inert at `docs/upstream/pages.yml.disabled`;
+no active `.github/workflows` YAML remains. Keep one bounded draft PR at a time.
+No merge, deployment, email, or auto-merge is authorized.
+
+## Authority And Boundaries
+
+The exact R06 key and goal map are pinned to EES PR #78 commit
+`bea8b69fe00fe989f418b985cb3f8005f0b4d41f`. Local teacher audit sources stay outside
+this repository. Source identification came from the key and teacher guide;
+the student PDF text contained no embedded game hyperlink. No proprietary publisher
+source text or real student identities belong in the game or test fixtures.
+
+No top-level source license was present. Preserve existing notices and bundled
+Comic Neue/Three.js licenses without inventing a license grant.
+
+Work is local to the browser, with autosave and validated JSON backup/restore.
+Each learner owns predictions, explanations, and drawings; shared apparatus events
+retain driver attribution. The teacher calls role switches. Predictions are not
+graded for correctness, and open reasoning/sketch quality remains teacher review.
+The printable HTML export includes originals, revisions, drawings, trials,
+role history, help visits, and embedded machine-readable data. Download is not
+Classroom submission: attach the file and select Turn In manually. The simulation
+does not certify physical assembly or testing.
+
+Next milestone: collect thorough teacher playtest feedback, then create the new
+repository/issue/draft PR through supported GitHub capabilities. No public
+deployment is authorized.
+
+Known review limits: real classroom use and assistive-technology review remain
+human tasks. The floating notebook can cover apparatus labels; See Workbench
+collapses it. Printing includes complete evidence history and can be lengthy:
+the deliberately revision-heavy synthetic solo run printed to 104 pages. The
+interactive self-contained HTML report is the primary review file.
