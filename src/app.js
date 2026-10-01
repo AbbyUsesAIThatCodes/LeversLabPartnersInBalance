@@ -239,7 +239,7 @@ function viewBounds() {
     const labelHeight = Math.max(...$$(".part-tag").map((e) => e.getBoundingClientRect().height));
     return {
       left: compact ? 14 : cards[0].right + 14,
-      right: compact ? innerWidth - 14 : cards[1].left - 14,
+      right: compact ? innerWidth - 14 : Math.min(cards[1].left - 14, $('#notebook')&&!$('#notebook').hidden?$('#notebook').getBoundingClientRect().left-16:innerWidth-14),
       top: top + labelHeight + 18,
       bottom: bottom - 14,
     };
@@ -637,6 +637,7 @@ try {
   unavailable();
 }
 learning = mountLearning({
+  layout:()=>{if(ready)scene.resetCamera();},
   pauseCue: message => { $('#beam-status').title=message; },
   identify: (active, feedback) => { identifying=active;identifyFeedback=feedback;scene?.setIdentification(active,feedback);render(); },
   get: () => ({ state: { ...state }, held }),
@@ -651,3 +652,5 @@ learning = mountLearning({
   side: () => { if (fallback) learning?.recordAction('side-view-used'); else $('#side').click(); },
   notice,
 });
+
+if(ready)scene.resetCamera();

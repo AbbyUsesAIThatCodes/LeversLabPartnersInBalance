@@ -1,9 +1,7 @@
 export const readBook = page => page.evaluate(() => JSON.parse(localStorage.getItem('lever-lab-notebook-v1')));
 export async function selectQuestion(page, id) {
-  if (await page.locator('[data-lab="index"]').count() === 0) await page.locator('[data-lab="mode-challenge"]').click();
   await page.locator('[data-lab="index"]').click();
-  const tile=page.locator(`[data-lab="question"][data-part="${id}"]`), group=tile.locator('xpath=ancestor::details');
-  if(await group.getAttribute('open')===null)await group.locator('summary').click();
+  const tile=page.locator(`[data-lab="question"][data-part="${id}"]`);
   await tile.click();
 }
 export async function choose(page,key,value,owner='shared') {
@@ -17,7 +15,6 @@ export async function checkCurrent(page) {
   if((await readBook(page)).part!==id || await page.locator('.question-grid').count())await selectQuestion(page,id);
 }
 export async function openRecovery(page) {
-  if(await page.locator('[data-lab="index"]').count()===0)await page.locator('[data-lab="mode-challenge"]').click();
   await page.locator('[data-lab="index"]').click();
   await page.locator('[data-lab="session"]').click();
 }
