@@ -1,6 +1,6 @@
 # Lever Lab: Partners In Balance
 
-## Current Repair Candidate - Build 016
+## Current User Playtest Build - 016
 
 App source: `7f2e52806be7a0dc041b05506a42bfecd950b42c` (clean when built).
 Build: `0.1.0_Partners-In-Balance_local-1e3bd62e_build-016_20261001T030128Z_g7f2e52806be7_web`.
@@ -35,9 +35,23 @@ Private JESS_PC preview `http://127.0.0.1:4200/` was verified serving build 016
 uses port 4201 by default. Saves are tied to the preview address. The prior 014
 package and ZIP remain intact; its prior helper alone was replaced.
 
-Independent recheck and user playtest approval remain pending. Hold student use.
-No new Library version was uploaded: existing ZIP/screenshots remain version 2
-(build 014), preserved and held. Replace those same identities only after recheck.
+Independent recheck passed: the parent confirmed all four guided defects and
+the prior five integrity regressions, all 55 unit tests, and both 68-row backups.
+The SAME three Library items were replaced with this exact build using version-2
+guards; every write confirmed version 3. Earlier versions remain preserved.
+
+ZIP: `libfile_b5341add39fc819197cb64a7f01bedc9`.
+Identification: `libfile_4abd580955888191bd72908f5f32e64d`.
+Design: `libfile_ff0ef5b87fe081919fe1c14698970f2c`.
+Returned filenames, file IDs, versions, byte counts, and SHA256 hashes are retained
+in `artifacts/library-build016-delivery/confirmed-deliverables.json`. Windows
+extended attributes are unavailable; exact Library identity is retained in the
+sidecar instead. The upload preparation capability was unavailable before any
+write; supported guarded owned-item replacements succeeded sequentially.
+
+No rebuild or artifact-byte modification occurred. The packaged pre-review hold
+notice remains conservative; independent recheck has now passed, while thorough
+teacher playtesting is still required before student use or public deployment.
 There is no configured remote or issue/PR URL; the parent/user still handles the
 empty LeverLab repository. No deployment, merge, email, or source-game change.
 
