@@ -1,6 +1,9 @@
 # Lever Lab: Partners In Balance
 
-## Responsive Layout Pass In Progress
+## Responsive Review Candidate - Build 023
+
+App source: `380fe0ba33133d36cfe7c465963cd8f19a6240c1` (clean when built).
+Build: `0.1.0_Partners-In-Balance_local-1e3bd62e_build-023_20261001T124833Z_g380fe0ba3313_web`.
 
 The supplied 1920x1200 screenshot was materialized through the current Library
 helper in existing WSL, including its Library metadata, and inspected as pixels.
@@ -12,9 +15,22 @@ The focused change consolidates existing buttons into the header, moves the
 notebook to a bottom dock, and groups controls into a left rail. Shared measured
 bounds frame the whole lever to the right and place its labels/diagram in the
 same clear area. All questions, controls, save contracts, hand art, and effects
-remain. Build 020 and Library version 4 are preserved while this pass is tested.
+remain. Build 020 and Library version 4 are preserved.
 
-## Focused Visual Review - Build 020
+All 58 unit tests and both complete 68-row browser runs pass. The five original
+integrity regressions, later four edge cases, migration, and shipped preview
+also pass on this exact build. The focused layout suite passed all five laptop
+viewports, extreme positions, index/reference, drawings, reduced motion,
+math placement, and build-020 save continuity. Its final strengthened checks
+wait for resize/keyboard scrolling to settle and allow one pixel of native
+scroll rounding (measured difference: 0.1875px). The final rerun passed in both
+renderers. Packaging and Library delivery are the remaining steps.
+
+The desktop connection interrupted an earlier browser run. Tools recovered and
+the interrupted suites were restarted; partial runs are not counted as passes.
+All eight frozen room hashes match. See `docs/RESPONSIVE-LAYOUT-REVIEW.md`.
+
+## Preserved Visual Review - Build 020
 
 App source: `181718cb56cb81331987b28b7035b35f0ab2bd13` (clean when built).
 Build: `0.1.0_Partners-In-Balance_local-1e3bd62e_build-020_20261001T121138Z_g181718cb56cb_web`.
