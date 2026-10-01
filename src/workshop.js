@@ -26,6 +26,7 @@ export class WorkshopScene {
   async init() {
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
+      stencil: true,
       powerPreference: "low-power",
     });
     this.renderer.setPixelRatio(Math.min(devicePixelRatio, 1.6));

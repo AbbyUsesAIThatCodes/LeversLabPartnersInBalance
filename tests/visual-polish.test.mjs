@@ -8,7 +8,7 @@ test('the standalone hand has five distinct shaped digits and an unchanged silho
 });
 test('attention is exterior-only, input-transparent, sparse, and static with reduced motion',()=>{
  const a=createApparatus(),colors=a.pickable.map(m=>m.material.color.getHex()),points=[];for(const root of [a.moving,a.base])root.traverse(o=>{if(o.isPoints)points.push(o);});assert.equal(points.length,3);assert.equal(points.reduce((n,p)=>n+p.geometry.getAttribute('position').count,0),36);
- for(const cue of a.cues){assert.equal(cue.material.side,THREE.BackSide);assert.equal(cue.material.depthWrite,false);assert.equal(a.pickable.includes(cue),false);assert.equal(cue.raycast(),undefined);}
+ for(const cue of a.cues){assert.equal(cue.material.side,THREE.BackSide);assert.equal(cue.material.depthWrite,false);assert.equal(cue.material.stencilFunc,THREE.EqualStencilFunc);assert.equal(cue.material.stencilRef,0);assert.equal(cue.material.stencilWriteMask,0);assert.equal(a.pickable.includes(cue),false);assert.equal(cue.raycast(),undefined);}assert.ok(a.pickable.every(m=>m.material.stencilRef===1&&m.material.stencilZPass===THREE.ReplaceStencilOp));
  a.attention.setRoles(['effort']);a.attention.update(100,false,{role:'effort',correct:false},1000);assert.equal(points.filter(p=>p.visible).length,1);assert.ok(a.cues.filter(c=>c.visible).every(c=>c.material.color.getHex()===ATTENTION_COLORS.incorrect));
  a.attention.update(1100,false,null,0);assert.ok(a.cues.filter(c=>c.visible).every(c=>c.material.color.getHex()===ATTENTION_COLORS.invite));a.attention.update(1200,true,null,0);assert.ok(points.every(p=>!p.visible));assert.equal(a.attention.update(1400,true,null,0),false);assert.deepEqual(a.pickable.map(m=>m.material.color.getHex()),colors);
 });

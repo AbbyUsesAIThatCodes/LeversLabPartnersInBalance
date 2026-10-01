@@ -4,10 +4,14 @@ export const ATTENTION_COLORS={invite:0x68bce5,correct:0x49b977,incorrect:0xe978
 // passes, textures, per-frame geometry allocation, or input surfaces.
 export function createAttention(pickable,roots){
  const cues=[],groups=[],enabled=new Set();let lastFrame=-Infinity,lastColor='',animate=true;
+ // Mask visible apparatus pixels so overlapping finger/palm shells cannot draw
+ // pale seams across the hand. The existing framebuffer supplies this 8-bit mask.
+ for(const original of pickable){const m=original.material;m.stencilWrite=true;m.stencilRef=1;m.stencilFunc=THREE.AlwaysStencilFunc;m.stencilZPass=THREE.ReplaceStencilOp;}
+ const outside={stencilWrite:true,stencilRef:0,stencilFunc:THREE.EqualStencilFunc,stencilWriteMask:0};
  for(const [role,root]of Object.entries(roots)){
   root.updateMatrixWorld(true);const bounds=new THREE.Box3().setFromObject(root),center=bounds.getCenter(new THREE.Vector3()),half=bounds.getSize(new THREE.Vector3()).multiplyScalar(.5);
   const materials=[.045,.105].map((width,layer)=>{
-   const m=new THREE.MeshBasicMaterial({color:ATTENTION_COLORS.invite,side:THREE.BackSide,transparent:true,opacity:layer?.09:.32,depthWrite:false});
+   const m=new THREE.MeshBasicMaterial({...outside,color:ATTENTION_COLORS.invite,side:THREE.BackSide,transparent:true,opacity:layer?.09:.32,depthWrite:false});
    m.onBeforeCompile=shader=>{shader.uniforms.cueWidth={value:width};shader.vertexShader='uniform float cueWidth;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\ntransformed += normal * cueWidth;');};
    m.customProgramCacheKey=()=>String(width);return m;
   });
@@ -21,7 +25,7 @@ export function createAttention(pickable,roots){
    const p=center.clone().addScaledVector(d,radius+.10);root.worldToLocal(p);surfaces.push(...p.toArray());directions.push(...d.toArray());phases.push(i/12);zeros.push(0,0,0);
   }
   const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(zeros,3));geometry.setAttribute('cueSurface',new THREE.Float32BufferAttribute(surfaces,3));geometry.setAttribute('cueDirection',new THREE.Float32BufferAttribute(directions,3));geometry.setAttribute('cuePhase',new THREE.Float32BufferAttribute(phases,1));
-  const material=new THREE.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{cueTime:{value:0},cueColor:{value:new THREE.Color(ATTENTION_COLORS.invite)}},vertexShader:`uniform float cueTime;attribute vec3 cueSurface;attribute vec3 cueDirection;attribute float cuePhase;varying float alpha;void main(){float age=fract(cueTime*.34+cuePhase);vec3 p=cueSurface+cueDirection*(age*1.25);vec4 mv=modelViewMatrix*vec4(p,1.);gl_Position=projectionMatrix*mv;gl_PointSize=clamp(135./-mv.z,1.5,3.5);alpha=smoothstep(0.,.16,age)*(1.-age)*(1.-age)*.7;}`,fragmentShader:`uniform vec3 cueColor;varying float alpha;void main(){float d=length(gl_PointCoord-.5);float edge=1.-smoothstep(.15,.5,d);gl_FragColor=vec4(cueColor,alpha*edge);}`});
+  const material=new THREE.ShaderMaterial({...outside,transparent:true,depthWrite:false,uniforms:{cueTime:{value:0},cueColor:{value:new THREE.Color(ATTENTION_COLORS.invite)}},vertexShader:`uniform float cueTime;attribute vec3 cueSurface;attribute vec3 cueDirection;attribute float cuePhase;varying float alpha;void main(){float age=fract(cueTime*.34+cuePhase);vec3 p=cueSurface+cueDirection*(age*1.25);vec4 mv=modelViewMatrix*vec4(p,1.);gl_Position=projectionMatrix*mv;gl_PointSize=clamp(135./-mv.z,1.5,3.5);alpha=smoothstep(0.,.16,age)*(1.-age)*(1.-age)*.7;}`,fragmentShader:`uniform vec3 cueColor;varying float alpha;void main(){float d=length(gl_PointCoord-.5);float edge=1.-smoothstep(.15,.5,d);gl_FragColor=vec4(cueColor,alpha*edge);}`});
   const points=new THREE.Points(geometry,material);points.name=role+'-attention-particles';points.visible=false;points.frustumCulled=false;points.userData.attention=true;points.raycast=()=>{};root.add(points);groups.push({role,materials,points});
  }
  return {cues,setRoles(roles,animated=true){animate=animated;enabled.clear();for(const role of roles)if(role)enabled.add(role);for(const cue of cues)cue.visible=enabled.has(cue.userData.cueRole);lastFrame=-Infinity;},update(time,reduced,feedback,until=0){
