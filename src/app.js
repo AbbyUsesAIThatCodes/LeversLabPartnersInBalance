@@ -1,3 +1,4 @@
+import {partIcon} from './part-icons.js';
 import {handSVG} from './hand-svg.js';
 import { LeverScene } from "./scene.js";
 import {
@@ -341,8 +342,9 @@ function drawFallback() {
       const p = role === 'fulcrum' ? {x:px,y:285} : point(state[role]);
       const y = p.y + (role === 'load' ? 52 : role === 'effort' ? -30 : 0);
       const picked = identifyFeedback?.role === role;
-      const fill = picked ? (identifyFeedback.correct ? '#72dc94' : '#ff9494') : '#b4e5ff';
-      $('#fallback-svg').insertAdjacentHTML('beforeend', `<g data-identify-role="${role}" role="button" tabindex="0" aria-label="${candidateNames[role]}"><rect x="${p.x-48}" y="${y-24}" width="96" height="48" rx="10" fill="transparent" stroke="${fill}" stroke-width="8"/><text x="${p.x}" y="${y+5}" text-anchor="middle" font-size="13" font-weight="bold" dy="48">${candidateNames[role]}</text></g>`);
+      const width=role==='fulcrum'?58:82,height=role==='fulcrum'?182:66,top=role==='fulcrum'?190:y-33;
+      const sparks=Array.from({length:8},(_,i)=>{const angle=i*Math.PI/4,dx=Math.cos(angle),dy=Math.sin(angle);return `<circle class="cue-spark" cx="${p.x+dx*(width/2+4)}" cy="${top+height/2+dy*(height/2+4)}" r="1.4" style="--dx:${dx*16}px;--dy:${dy*16}px;--delay:${-i*.36}s"/>`;}).join('');
+      $('#fallback-svg').insertAdjacentHTML('beforeend', `<g class="fallback-cue ${picked?(identifyFeedback.correct?'right':'wrong'):''}" data-identify-role="${role}" role="button" tabindex="0" aria-label="${candidateNames[role]}"><rect x="${p.x-width/2}" y="${top}" width="${width}" height="${height}" rx="13" fill="transparent"/><rect class="cue-outline" x="${p.x-width/2}" y="${top}" width="${width}" height="${height}" rx="13"/>${sparks}<text x="${p.x}" y="${top+height+19}" text-anchor="middle" font-size="13" font-weight="bold">${candidateNames[role]}</text></g>`);
     }
   }
   updateStatus();
@@ -355,7 +357,7 @@ function applyIdentification() {
     tag.classList.toggle('right', identifying && picked && identifyFeedback.correct);
     tag.classList.toggle('wrong', identifying && picked && !identifyFeedback.correct);
     tag.setAttribute('aria-label', identifying ? candidateNames[role] : `Select or Drag ${cap(role)}`);
-    if (identifying) tag.textContent = candidateNames[role];
+    if (identifying) tag.innerHTML = partIcon(role)+`<span>${candidateNames[role]}</span>`;
   }
 }
 $('#fallback-svg').addEventListener('click', e => { const role=e.target.closest('[data-identify-role]')?.dataset.identifyRole; if(role)learning?.identifyPart(role); });
@@ -642,7 +644,7 @@ try {
 learning = mountLearning({
   layout:()=>{if(ready)scene.resetCamera();},
   pauseCue: message => { $('#beam-status').title=message; },
-  identify: (active, feedback) => { identifying=active;identifyFeedback=feedback;scene?.setIdentification(active,feedback);render(); },
+  identify: (active, feedback) => { const changed=feedback&&feedback!==identifyFeedback;identifying=active;identifyFeedback=feedback;scene?.setIdentification(active,feedback);render();if(changed)setTimeout(()=>{if(identifyFeedback===feedback)document.querySelectorAll('.identify-candidate.right,.identify-candidate.wrong,.fallback-cue.right,.fallback-cue.wrong').forEach(el=>el.classList.remove('right','wrong'));},1050); },
   get: () => ({ state: { ...state }, held }),
   motion: () => ({ ...(ready ? scene.motion : fallbackMotion) }),
   change: next => setState(next),

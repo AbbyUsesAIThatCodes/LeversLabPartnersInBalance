@@ -47,16 +47,12 @@ export class LeverScene extends WorkshopScene {
   }
   highlight(part) {
     this.hovered=part;
-    for(const cue of this.apparatus?.cues??[]){
-      const role=cue.userData.cueRole,picked=this.identifyFeedback?.role===role;
-      cue.visible=this.identifying||role===(part||this.selected);
-      cue.material.color.set(this.identifying?(picked?(this.identifyFeedback.correct?0x36c36d:0xed5252):0x75cfff):0x78ad82);
-      cue.material.opacity=this.identifying?.5:.24;
-    }
+    this.apparatus?.attention.setRoles(this.identifying?ROLES:[part||this.selected]);
     this.dirty=true;
   }
   setIdentification(active, feedback) {
     this.identifying = active;
+    if(feedback!==this.identifyFeedback)this.feedbackUntil=performance.now()+1000;
     this.identifyFeedback = feedback;
     this.highlight(null);
   }
@@ -82,7 +78,8 @@ export class LeverScene extends WorkshopScene {
       }
     }
     const changed = this.drag ? false : this.controls.update();
-    if (changed || this.dirty || old !== this.motion.angle) this.draw();
+    const attentionChanged=this.apparatus?.attention.update(time,this.reduced,this.identifyFeedback,this.feedbackUntil);
+    if (changed || this.dirty || old !== this.motion.angle || attentionChanged) this.draw();
   }
   screenPositions() {
     if (!this.state || !this.apparatus) return {};
@@ -144,7 +141,7 @@ export class LeverScene extends WorkshopScene {
     for (const angle of [-STOP, 0, STOP]) {
       apparatus.update(this.state || DEFAULT, angle);
       for (const root of [apparatus.moving, apparatus.base]) root.traverse((object) => {
-        if (!object.geometry) return;
+        if (!object.geometry || object.userData.attention) return;
         object.geometry.computeBoundingBox();
         const box = object.geometry.boundingBox;
         for (const x of [box.min.x, box.max.x])

@@ -20,6 +20,6 @@ test('hand contact, vertical hanging load, clearance and force anchors survive b
  }assert.equal(cases,54);
 });
 test('identification shells preserve original surfaces and deliberate vertical gestures increase setting downward',()=>{
- const a=createApparatus();assert.ok(a.cues.length);for(const c of a.cues){assert.equal(c.material.side,THREE.BackSide);assert.equal(c.visible,false);assert.ok(c.scale.x>1);}
+ const a=createApparatus();assert.ok(a.cues.length);for(const c of a.cues){assert.equal(c.material.side,THREE.BackSide);assert.equal(c.visible,false);assert.equal(c.userData.attention,true);assert.equal(c.material.depthWrite,false);assert.deepEqual(c.raycast(),undefined);}
  assert.equal(gestureKind(3,4),'auto');assert.equal(gestureKind(15,15),'auto');assert.equal(gestureKind(3,20),'mass');assert.equal(gestureKind(20,3),'position');assert.equal(gestureDelta({kind:'mass',startY:20},0,30),50);assert.equal(gestureDelta({kind:'mass',startY:20},0,10),-50);
 });

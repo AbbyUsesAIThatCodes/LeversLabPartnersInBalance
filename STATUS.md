@@ -1,5 +1,17 @@
 # Lever Lab: Partners In Balance
 
+## Focused Visual Polish In Progress
+
+The approved pass changes only the standalone effort hand, matching apparatus
+line icons, and exterior attention effects. Build 016 and Library version 3
+remain preserved and usable for review. The first hand/icon checkpoint is
+`eadf117` / local build 017. Visual inspection found the hand too small and
+foreshortened; the next iteration enlarges its fixed geometry, turns its back
+toward the viewer, and shortens the upright wrist ending. Physics, force values,
+lesson flow, anonymous storage, schema, and regression repairs are unchanged.
+All 58 unit tests pass, including new anatomy, sparse-effects, reduced-motion,
+and input-transparency checks. Final browser/visual verification is pending.
+
 ## Current User Playtest Build - 016
 
 App source: `7f2e52806be7a0dc041b05506a42bfecd950b42c` (clean when built).

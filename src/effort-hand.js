@@ -27,8 +27,8 @@ function sculpt(curve,widths,rings=32,sides=16){
 export function createEffortHand(add){
  const skinMeshes=[],details=[];
  const surface=(geometry,color,name)=>{const m=add(geometry,color,[0,0,0],name);m.material.metalness=0;m.material.roughness=color===NAIL?.58:.87;m.userData.handSurface=true;return m;};
- const palmCurve=new THREE.CatmullRomCurve3([[0,.75,.40],[0,.92,.78],[0,1.08,1.23],[0,1.37,1.61],[0,1.72,1.78]].map(vector));
- const palm=surface(sculpt(palmCurve,[[0,.05,.035],[.10,.60,.19],[.30,.72,.31],[.53,.61,.32],[.72,.37,.26],[.89,.34,.23],[.97,.23,.15],[1,.001,.001]]),SKIN,'contacting-palm');skinMeshes.push(palm);
+ const palmCurve=new THREE.CatmullRomCurve3([[0,.75,.40],[0,.92,.75],[0,1.08,1.10],[0,1.38,1.22],[0,1.72,1.22]].map(vector));
+ const palm=surface(sculpt(palmCurve,[[0,.05,.035],[.10,.60,.19],[.30,.72,.31],[.53,.61,.32],[.72,.37,.26],[.94,.35,.25],[.98,.29,.21],[1,.001,.001]]),SKIN,'contacting-palm');skinMeshes.push(palm);
  const digits=[
   {name:'index',x:-.49,root:.58,tip:-.06,r:.165,height:.89},
   {name:'middle',x:-.15,root:.48,tip:-.23,r:.175,height:.96},
@@ -55,6 +55,6 @@ export function createEffortHand(add){
  digit('thumb',[[-.43,.98,1.25],[-.76,.93,1.02],[-.91,.64,.75],[-.88,.30,.44],[-.71,.12,.28]],.207);
  // Place the lowest finger pad on the beam without changing hand proportions.
  let bottom=Infinity;for(const m of skinMeshes){m.geometry.computeBoundingBox();bottom=Math.min(bottom,m.geometry.boundingBox.min.y);}
- for(const m of [...skinMeshes,...details]){m.geometry.translate(0,-bottom,0);m.geometry.computeBoundingBox();}
+ for(const m of [...skinMeshes,...details]){m.geometry.translate(0,-bottom,0);m.geometry.scale(1.55,1.55,1.55);m.geometry.computeBoundingBox();}
  return {palm,skinMeshes,details};
 }

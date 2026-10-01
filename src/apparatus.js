@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { massKey, POINTER } from "./model.js";
 import {createEffortHand} from './effort-hand.js';
+import {createAttention} from './attention.js';
 export const HEIGHT = 9,
   SCALE = 25,
   BEAM_TOP = 0.42;
@@ -141,9 +142,7 @@ export function createApparatus() {
       createEffortHand((geometry,color,xyz,name)=>mesh(weight,geometry,color,xyz,role,name));
     }
   }
-  // Back-face shells extend outside each original surface without tinting it.
-  const cues=[];
-  for(const original of pickable){const shell=new THREE.Mesh(original.geometry,new THREE.MeshBasicMaterial({color:0x75cfff,side:THREE.BackSide,transparent:true,opacity:.5,depthWrite:false}));shell.scale.setScalar(1.18);shell.visible=false;shell.userData.cueRole=original.userData.part;original.add(shell);cues.push(shell);}
+  const attention=createAttention(pickable,{load:weights.load,effort:weights.effort,fulcrum:base}),cues=attention.cues;
 
   function update(state, angle) {
     const pivot = state.fulcrum / SCALE;
@@ -157,7 +156,7 @@ export function createApparatus() {
       anchor.position.set((state[role] - state.fulcrum) / SCALE, 0, 0);
       anchor.rotation.z = role === "load" ? -angle : 0;
       weights[role].scale.setScalar(role === "load" ? size : 1);
-      if(role === "effort")weights[role].rotation.y=state.effort>state.fulcrum?Math.PI/3:-Math.PI/3;
+      if(role === "effort")weights[role].rotation.y=state.effort>state.fulcrum?Math.PI*.8:-Math.PI*.8;
       weights[role].position.y = role === "load" ? -1.6 : BEAM_TOP;
     }
     moving.updateMatrixWorld(true);
@@ -165,6 +164,7 @@ export function createApparatus() {
   }
   return {
     cues,
+    attention,
     moving,
     base,
     beam,
