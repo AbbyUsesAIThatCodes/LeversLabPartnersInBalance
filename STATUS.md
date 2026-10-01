@@ -128,3 +128,13 @@ Recording a prediction starts its test; setup edits make that prediction stale
 without deleting it. Vertical drag adjusts load mass or calibrated push, with a
 direction threshold separating position changes. Hand size remains constant.
 
+
+## Save Compatibility Checkpoint
+
+A bounded schema-2 migration contract is implemented with stable app/assignment and
+question IDs, independent content revisions, preserved original/current builds,
+archived retired-question evidence, and historical completion records. Valid old
+schema-1 data migrates; semantic changes require another look while cosmetic changes
+retain completion. Staged validated saves retain original bytes under quota failure.
+Failed imports leave the current notebook/apparatus unchanged. No real student data
+was read. See docs/SAVE-COMPATIBILITY.md. Full guided UI/browser validation is pending.

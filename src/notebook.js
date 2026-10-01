@@ -1,15 +1,18 @@
 import { DEFAULT, valid, arm, measures } from './model.js';
 import { PARTS, PART_BY_ID, LESSONS, REQUIRED_IDS } from './curriculum.js';
 import {REPRESENTATION,representationValid} from './representation.js';
+import {SAVE_SCHEMA,APP_ID,ASSIGNMENT_ID,CONTENT_VERSION,QUESTION_REVISIONS,assignmentRecord,migrateNotebook} from './save-contract.js';
+import {HISTORICAL_PARTS} from './question-history.js';
+const KNOWN_PARTS=Object.fromEntries(Object.entries({...HISTORICAL_PARTS,...PART_BY_ID}).map(([id,p])=>[id,{...p,fields:[...(HISTORICAL_PARTS[id]?.fields??[]).filter(f=>!p.fields.some(current=>current.key===f.key)),...p.fields]}]));
 export const NOTEBOOK_KEY='lever-lab-notebook-v1';
 export const FORMAT='lever-lab-notebook';
-export const SCHEMA=1;
+export const SCHEMA=SAVE_SCHEMA;
 export const MAX_BACKUP_BYTES=12*1024*1024;
 const clone=value=>structuredClone(value);
 export const stamp=()=>new Date().toISOString();
 export function createNotebook(build='Local Development') {
  const now=stamp();
- return {format:FORMAT,schema:SCHEMA,representation:REPRESENTATION,id:globalThis.crypto.randomUUID(),createdAt:now,updatedAt:now,build,mode:'free',part:'Q1a',lesson:'T0',returnTo:null,team:{mode:'solo',learners:[{id:'A',label:'Shared Classwork'},{id:'B',label:'Earlier Imported Response'}],driver:'A',reminderMinutes:0,rotationStarted:null},answers:{},history:[],trials:[],events:[],checks:{},visits:[],tutorials:{},workbenches:{},freeWorkbench:{state:{...DEFAULT},held:true},coverage:{Intro:false,Routine:false}};
+ return {format:FORMAT,schema:SCHEMA,representation:REPRESENTATION,assignment:assignmentRecord(),originalBuild:build,currentBuild:build,migrations:[],archivedQuestions:{},completionHistory:{},id:globalThis.crypto.randomUUID(),createdAt:now,updatedAt:now,build,mode:'free',part:'Q1a',lesson:'T0',returnTo:null,team:{mode:'solo',learners:[{id:'A',label:'Shared Classwork'},{id:'B',label:'Earlier Imported Response'}],driver:'A',reminderMinutes:0,rotationStarted:null},answers:{},history:[],trials:[],events:[],checks:{},visits:[],tutorials:{},workbenches:{},freeWorkbench:{state:{...DEFAULT},held:true},coverage:{Intro:false,Routine:false}};
 }
 export const learners=book=>book.team.mode==='pair'?book.team.learners:book.team.learners.slice(0,1);
 export const ownerFor=(field,learner)=>field.personal?learner.id:'shared';
@@ -94,7 +97,7 @@ export function checkPart(book,part,workbench){const check=evaluatePart(book,par
 export function revalidateChecks(book){for(const p of PARTS)if(book.checks[p.id]?.complete&&!evaluatePart(book,p,book.workbenches[p.id]).complete)invalidateChecks(book,[p.id],'Saved evidence no longer meets this check. Review this step again.');}
 export function coverage(book){return REQUIRED_IDS.map(id=>({id,status:id==='Intro'||id==='Routine'?(book.coverage[id]?'Recorded':'Not Started'):(book.checks[id]?.status??'Not Started'),complete:id==='Intro'||id==='Routine'?book.coverage[id]:!!book.checks[id]?.complete}));}
 // Validate before replacing any in-memory/current save. No imported HTML runs.
-export function parseBackup(text){
+export function parseBackup(text,{build=null,catalog=QUESTION_REVISIONS}={}){
  if(typeof text!=='string'||new TextEncoder().encode(text).length>MAX_BACKUP_BYTES)throw new Error('Backup exceeds the 12 MB limit.');
  let b;try{b=JSON.parse(text);}catch{throw new Error('This is not valid JSON.');}
  const fail=()=>{throw new Error('This file is not a supported, valid Lever Lab notebook. Your current work was kept.');};
@@ -102,37 +105,71 @@ export function parseBackup(text){
  const str=(x,max=10000)=>typeof x==='string'&&x.length<=max;
  const walk=(x,depth=0)=>{if(depth>25)fail();if(x&&typeof x==='object'){for(const k of Object.keys(x)){if(['__proto__','constructor','prototype'].includes(k))fail();walk(x[k],depth+1);}}else if(typeof x==='string'&&x.length>100000)fail();};
  if(!obj(b))fail();walk(b);
- if(b.format!==FORMAT||b.schema!==SCHEMA||!str(b.id,100)||!str(b.build,300)||!str(b.createdAt,50)||!str(b.updatedAt,50)||!['free','learn','challenge'].includes(b.mode)||!PART_BY_ID[b.part]||!LESSONS.some(l=>l.id===b.lesson)||!(b.returnTo===null||PART_BY_ID[b.returnTo]))fail();
+ if(b.format!==FORMAT||![1,SCHEMA].includes(b.schema)||!str(b.id,100)||!str(b.build,300)||!str(b.createdAt,50)||!str(b.updatedAt,50)||!['free','learn','challenge'].includes(b.mode)||!KNOWN_PARTS[b.part]||!LESSONS.some(l=>l.id===b.lesson)||!(b.returnTo===null||KNOWN_PARTS[b.returnTo]))fail();
  if(!obj(b.team)||!['solo','pair'].includes(b.team.mode)||!['A','B'].includes(b.team.driver)||!Array.isArray(b.team.learners)||b.team.learners.length!==2||b.team.learners.some((l,i)=>!obj(l)||l.id!==['A','B'][i]||!str(l.label,80))||![0,2,3,5].includes(b.team.reminderMinutes)||!(b.team.rotationStarted===null||str(b.team.rotationStarted,50)))fail();
  for(const k of ['answers','checks','tutorials','workbenches','coverage'])if(!obj(b[k]))fail();
  for(const k of ['history','trials','events','visits'])if(!Array.isArray(b[k])||b[k].length>100000)fail();
  const wb=w=>obj(w)&&valid(w.state)&&typeof w.held==='boolean'&&(!('loadArm' in w)||w.loadArm===arm(w.state,'load'))&&(!('effortArm' in w)||w.effortArm===arm(w.state,'effort'));
- if(!wb(b.freeWorkbench)||Object.entries(b.workbenches).some(([id,w])=>!PART_BY_ID[id]||!wb(w)))fail();
+ if(!wb(b.freeWorkbench)||Object.entries(b.workbenches).some(([id,w])=>!KNOWN_PARTS[id]||!wb(w)))fail();
  const validateDrawing=d=>obj(d)&&Array.isArray(d.elements)&&d.elements.length<=1000&&d.elements.every(e=>obj(e)&&['beam','load','effort','fulcrum','stroke','label'].includes(e.kind)&&(!e.role||['load','effort','fulcrum'].includes(e.role))&&str(e.label??'',100)&&Number.isFinite(e.x)&&Number.isFinite(e.y)&&e.x>=0&&e.x<=600&&e.y>=0&&e.y<=280&&(!e.points||(Array.isArray(e.points)&&e.points.length<=5000&&e.points.every(p=>Array.isArray(p)&&p.length===2&&p.every(v=>Number.isFinite(v)&&v>=0&&v<=600)))));
  const fieldValue=(f,v)=>f.type==='sketch'?validateDrawing(v):str(v,10000);
  const ownerValid=(f,owner)=>f.personal?['A','B'].includes(owner):owner==='shared';
- const answersValid=(id,owners)=>{if(!PART_BY_ID[id]||!obj(owners))return false;for(const [owner,answers]of Object.entries(owners)){if(!obj(answers))return false;for(const [key,value]of Object.entries(answers)){const f=PART_BY_ID[id].fields.find(f=>f.key===key);if(!f||!ownerValid(f,owner)||!fieldValue(f,value))return false;}}return true;};
+ const answersValid=(id,owners)=>{if(!KNOWN_PARTS[id]||!obj(owners))return false;for(const [owner,answers]of Object.entries(owners)){if(!obj(answers))return false;for(const [key,value]of Object.entries(answers)){const f=KNOWN_PARTS[id].fields.find(f=>f.key===key);if(!f||!ownerValid(f,owner)||!fieldValue(f,value))return false;}}return true;};
+ if(b.schema===SCHEMA){
+  if(!obj(b.assignment)||b.assignment.appId!==APP_ID||b.assignment.id!==ASSIGNMENT_ID||!Number.isInteger(b.assignment.version)||b.assignment.version<1||b.assignment.version>CONTENT_VERSION||!obj(b.assignment.questions)||Object.entries(b.assignment.questions).some(([id,v])=>!(/^(Q\d+[a-z]\d*|Intro|Routine)$/).test(id)||!Number.isInteger(v)||v<1))fail();
+  if(!str(b.originalBuild,300)||!str(b.currentBuild,300)||!Array.isArray(b.migrations)||!obj(b.archivedQuestions)||!obj(b.completionHistory))fail();
+  for(const m of b.migrations)if(!obj(m)||!str(m.at,50)||!Number.isInteger(m.fromSchema)||m.toSchema!==SCHEMA||!str(m.fromBuild,300)||!str(m.toBuild,300)||!['changed','added','retired'].every(k=>Array.isArray(m[k])&&m[k].every(id=>str(id,100))))fail();
+  for(const [id,a] of Object.entries(b.archivedQuestions))if(!str(id,100)||!obj(a)||!obj(a.answers)||!['history','trials','events'].every(k=>Array.isArray(a[k])&&a[k].every(obj)))fail();
+ }
  if(b.representation!==undefined&&!representationValid(b.representation))fail();
- for(const item of [...b.history,...b.events,...b.trials,...Object.values(b.workbenches)])if(item.representation!==undefined&&!representationValid(item.representation))fail();
+ for(const item of [...b.history,...b.events,...b.trials,...Object.values(b.workbenches)])if(item?.representation!==undefined&&!representationValid(item.representation))fail();
  for(const [id,owners] of Object.entries(b.answers))if(!answersValid(id,owners))fail();
  for(const [id,t] of Object.entries(b.tutorials))if(!LESSONS.some(l=>l.id===id)||!obj(t)||('note' in t&&!str(t.note))||('drawing' in t&&!validateDrawing(t.drawing))||('completedAt' in t&&!str(t.completedAt,50)))fail();
- for(const t of b.trials)if(!obj(t)||!str(t.id,100)||!PART_BY_ID[t.part]?.trial||!wb(t.setup)||!['A','B'].includes(t.driver)||!str(t.startedAt,50)||!(t.result===null||['balance','load','effort'].includes(t.result))||typeof t.settled!=='boolean'||typeof t.interrupted!=='boolean'||!obj(t.predictions)||!Array.isArray(t.changes))fail();
- for(const t of b.trials){const p=PART_BY_ID[t.part],source=p.prediction===true?p.id:p.prediction;if(source?!answersValid(source,t.predictions):Object.keys(t.predictions).length)fail();if(t.completedAt!==null&&!str(t.completedAt,50))fail();if(t.settled&&(t.result!==measures(t.setup.state).direction||!t.completedAt))fail();for(const c of t.changes)if(!obj(c)||!wb(c.before)||!wb(c.after)||!str(c.at,50)||!['A','B'].includes(c.driver))fail();}
- for(const h of b.history){if(!obj(h)||!PART_BY_ID[h.id]||!str(h.key,100)||!str(h.at,50)||!['A','B'].includes(h.driver))fail();const f=PART_BY_ID[h.id].fields.find(f=>f.key===h.key);if(!f||!ownerValid(f,h.owner)||!fieldValue(f,h.value)||(h.previous!==''&&!fieldValue(f,h.previous)))fail();}
+ for(const t of b.trials)if(!obj(t)||!str(t.id,100)||!KNOWN_PARTS[t.part]?.trial||!wb(t.setup)||!['A','B'].includes(t.driver)||!str(t.startedAt,50)||!(t.result===null||['balance','load','effort'].includes(t.result))||typeof t.settled!=='boolean'||typeof t.interrupted!=='boolean'||!obj(t.predictions)||!Array.isArray(t.changes))fail();
+ for(const t of b.trials){const p=KNOWN_PARTS[t.part],source=p.prediction===true?p.id:p.prediction;if(source?!answersValid(source,t.predictions):Object.keys(t.predictions).length)fail();if(t.completedAt!==null&&!str(t.completedAt,50))fail();if(t.settled&&(t.result!==measures(t.setup.state).direction||!t.completedAt))fail();for(const c of t.changes)if(!obj(c)||!wb(c.before)||!wb(c.after)||!str(c.at,50)||!['A','B'].includes(c.driver))fail();}
+ for(const h of b.history){if(!obj(h)||!KNOWN_PARTS[h.id]||!str(h.key,100)||!str(h.at,50)||!['A','B'].includes(h.driver))fail();const f=KNOWN_PARTS[h.id].fields.find(f=>f.key===h.key);if(!f||!ownerValid(f,h.owner)||!fieldValue(f,h.value)||(h.previous!==''&&!fieldValue(f,h.previous)))fail();}
  const checkValid=ch=>obj(ch)&&str(ch.status,100)&&typeof ch.complete==='boolean'&&str(ch.at,50)&&['failures','missing','review'].every(k=>Array.isArray(ch[k])&&ch[k].every(v=>str(v)));
  for(const e of b.events){
-  if(!obj(e)||!str(e.type,100)||!str(e.at,50)||!['A','B'].includes(e.driver)||!PART_BY_ID[e.part])fail();
-  if(e.type==='part-checked'&&(!PART_BY_ID[e.id]||e.id!==e.part||!checkValid(e.check)||!wb(e.setup)||!answersValid(e.id,e.answers)))fail();
+  if(!obj(e)||!str(e.type,100)||!str(e.at,50)||!['A','B'].includes(e.driver)||!KNOWN_PARTS[e.part])fail();
+  if(e.type==='part-checked'&&(!KNOWN_PARTS[e.id]||e.id!==e.part||!checkValid(e.check)||!wb(e.setup)||!answersValid(e.id,e.answers)))fail();
   if(e.type==='identify-picked'&&(!['effort','load','fulcrum'].includes(e.picked)||!['effort','load','fulcrum'].includes(e.expected)||typeof e.correct!=='boolean'||e.correct!==(e.picked===e.expected)||!Number.isInteger(e.streak)||e.streak<0||e.streak>3||(!e.correct&&e.streak!==0)))fail();
   if(e.type==='control-change'&&(!valid(e.before)||!valid(e.after)||typeof e.held!=='boolean'))fail();
   if(['trial-completed','trial-interrupted'].includes(e.type)&&(!str(e.trialId,100)||!b.trials.some(t=>t.id===e.trialId&&t.part===e.part)))fail();
   if(e.type==='session-settings'&&(!obj(e.team)||!['solo','pair'].includes(e.team.mode)||!Array.isArray(e.team.learners)||e.team.learners.length!==2||e.team.learners.some((l,i)=>!obj(l)||l.id!==['A','B'][i]||!str(l.label,80))))fail();
-  if(e.type==='support-viewed'&&(!['lesson','help','tooltip','reference','math'].includes(e.source)||!str(e.resource,2000)||!(e.from===null||PART_BY_ID[e.from])||!['free','learn','challenge'].includes(e.mode)||!Array.isArray(e.learners)||!e.learners.length||e.learners.length>2||e.learners.some(id=>!['A','B'].includes(id))))fail();
+  if(e.type==='support-viewed'&&(!['lesson','help','tooltip','reference','math'].includes(e.source)||!str(e.resource,2000)||!(e.from===null||KNOWN_PARTS[e.from])||!['free','learn','challenge'].includes(e.mode)||!Array.isArray(e.learners)||!e.learners.length||e.learners.length>2||e.learners.some(id=>!['A','B'].includes(id))))fail();
  }
- for(const v of b.visits)if(!obj(v)||!LESSONS.some(l=>l.id===v.lesson)||!(v.from===null||PART_BY_ID[v.from])||!str(v.at,50))fail();
- for(const [id,ch] of Object.entries(b.checks))if(!PART_BY_ID[id]||!checkValid(ch))fail();
+ for(const v of b.visits)if(!obj(v)||!LESSONS.some(l=>l.id===v.lesson)||!(v.from===null||KNOWN_PARTS[v.from])||!str(v.at,50))fail();
+ for(const [id,ch] of Object.entries(b.checks))if(!KNOWN_PARTS[id]||!checkValid(ch))fail();
  if(typeof b.coverage.Intro!=='boolean'||typeof b.coverage.Routine!=='boolean')fail();
- return b;
+ return migrateNotebook(b,build,catalog);
 }
-export function loadNotebook(storage,build){let raw=null;try{raw=storage.getItem(NOTEBOOK_KEY);return {book:raw?parseBackup(raw):createNotebook(build),error:null,recovery:null,fresh:!raw};}catch(e){return {book:createNotebook(build),error:e.message,recovery:raw,fresh:false};}}
-export function saveNotebook(storage,book){book.updatedAt=stamp();try{storage.setItem(NOTEBOOK_KEY,JSON.stringify(book));return {ok:true};}catch{return {ok:false,error:'Browser saving is unavailable or full. Download a backup now; keep this tab open.'};}}
+export function loadNotebook(storage,build){
+ let raw=null;
+ try{
+  raw=storage.getItem(NOTEBOOK_KEY);if(!raw)return {book:createNotebook(build),error:null,recovery:null,fresh:true};
+  const book=parseBackup(raw,{build});
+  const source=JSON.parse(raw),changed=source.schema!==book.schema||JSON.stringify(source.assignment)!==JSON.stringify(book.assignment);
+  const saved=changed?saveNotebook(storage,book):{ok:true};
+  return {book,error:saved.ok?null:saved.error,recovery:null,fresh:false,migrationPending:!saved.ok};
+ }catch(e){return {book:createNotebook(build),error:e.message,recovery:raw,fresh:false};}
+}
+export function saveNotebook(storage,book){
+ const stage=NOTEBOOK_KEY+'.staged',previous=NOTEBOOK_KEY+'.previous';let original=null,wrote=false;
+ try{
+  if(book.schema!==SCHEMA)throw Error('Migrate the notebook before saving.');
+  book.updatedAt=stamp();const encoded=JSON.stringify(book);parseBackup(encoded);
+  original=storage.getItem(NOTEBOOK_KEY);
+  storage.setItem(stage,encoded);
+  const staged=storage.getItem(stage);if(staged!==encoded)throw Error('Staged save differs.');parseBackup(staged);
+  if(original!==null)storage.setItem(previous,original);
+  storage.setItem(NOTEBOOK_KEY,staged);wrote=true;
+  if(storage.getItem(NOTEBOOK_KEY)!==staged)throw Error('Save verification failed.');
+  storage.removeItem?.(stage);
+  return {ok:true};
+ }catch{
+  try{storage.removeItem?.(stage);}catch{}
+  if(wrote)try{original===null?storage.removeItem?.(NOTEBOOK_KEY):storage.setItem(NOTEBOOK_KEY,original);}catch{}
+  try{storage.removeItem?.(stage);}catch{}
+  return {ok:false,error:'Browser saving is unavailable or full. The previous save was kept. Download a recovery copy and keep this tab open.'};
+ }
+}

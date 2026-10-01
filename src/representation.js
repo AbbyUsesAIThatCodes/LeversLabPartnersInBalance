@@ -14,8 +14,5 @@ export function adoptRepresentation(book) {
   for(const trial of book.trials)trial.setup.representation??=prior;
   book.previousRepresentation=prior;
   book.representation=REPRESENTATION;
-  // Historical checks remain in events. New instructions need a fresh completion
-  // record, without deleting any original response, trial, drawing, or setup.
-  for(const check of Object.values(book.checks))Object.assign(check,{complete:false,status:'Review Updated Instructions',missing:['Review this step with the hanging load and calibrated hand push.']});
   return true;
 }
