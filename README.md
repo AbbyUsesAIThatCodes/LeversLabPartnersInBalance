@@ -1,8 +1,9 @@
 # Lever Lab: Partners In Balance
 
 Separate local-first development game based on the unchanged
-[source game](docs/LEVERLAB-SOURCE.md). Full Git ancestry, workshop, 3D apparatus,
-physics, camera controls, fonts, and fallback diagram are retained.
+[source game](docs/LEVERLAB-SOURCE.md). Full Git ancestry, physics, camera controls, fonts, and fallback diagram are retained.
+The guided revision uses a hanging load, a calibrated hand push, and the frozen
+ClassroomVirtualization room; the mat, paper pad, and pencil remain.
 
 **Development build for thorough teacher playtesting.** All 68 target coverage
 rows (Intro, Routine, and 66 question subparts) and tutorials T0-T12 are implemented.
@@ -16,21 +17,23 @@ Node.js 22+: `npm ci`, `npm test`, `npm run build`, then `npm run dev`.
 Open `http://127.0.0.1:4173/LeverLab/`. Serve over HTTP, not `file://`.
 On Windows restricted environments, unit checks can use
 `node --test --test-isolation=none tests/*.test.mjs`.
-`node tests/notebook-browser.mjs` checks graphical identification, the anonymous interface, Learn return, and recovery.
-`node tests/full-packet-browser.mjs` exercises the entire mapped packet in
-WebGL and diagram modes. `node tests/recovery-browser.mjs` checks interrupted
-trials, drawings, unreadable autosaves, and retained Free Play arrangements.
-`node tests/weighted-pointer-browser.mjs` checks the inherited motion and controls.
+`node tests/guided-preview-browser.mjs` checks the introduction, graphical parts,
+room provenance, retained props, controls, gestures, and flat Question Index.
+`node tests/guided-full-browser.mjs` completes all 68 coverage rows in both renderers.
+`node tests/correctness-browser.mjs` repeats the five integrity regressions.
+`node tests/guided-migration-browser.mjs` imports an actual prior-build synthetic
+notebook and verifies retained work, recoverable original bytes, and future rejection.
 Set `CHROMIUM_EXECUTABLE` to an installed Chrome executable when needed.
 
-For a packaged review, extract the complete ZIP and run `node serve-review.mjs`.
+For a packaged review, extract the complete ZIP and run `StartReview.cmd` on Windows
+or `node serve-review.mjs` with Node.js 22+.
 That package needs no npm install or internet connection. Browser storage belongs
 to the exact address; download a backup before changing a preview port.
 
 ## Learning And Evidence
 
-Free Play preserves the original workbench. Learn has T0–T12 practice and Challenge
-has the two six-page R06 packets, without Optional A-E. One anonymous notebook
+One guided assignment embeds T0-T12 teaching and worked examples into both
+six-page R06 packets, without Optional A-E. One anonymous notebook
 works for a classwork partnership or someone working independently. Classroom
 handles identity; the teacher guides partner routines outside this interface.
 Predictions are never graded for correctness. Explanations/sketches need teacher
@@ -39,7 +42,10 @@ review, not keyword grading. Completion records required evidence, not a mastery
 Identify Parts uses Effort, Load, and Fulcrum clicks with a three-correct streak,
 blue candidate cues, and keyboard access. Hide Notebook / Show Notebook clears
 the workbench. Question Index uses lever icons and distinguishes complete evidence
-from writing/sketches that need teacher review. Learn This includes Return To Question.
+from writing/sketches that need teacher review. Vocabulary returns to the current
+question without changing its setup. Controls remain usable while the beam pauses.
+Recording a prediction starts the test; changed setups require a fresh prediction.
+Effort is shown in g-equivalent with an automatic Newton readout, never as hand mass.
 
 Browser autosave is separate from the original game. Question Index offers
 Recover Saved Work with validated JSON backup/restore. After all required evidence

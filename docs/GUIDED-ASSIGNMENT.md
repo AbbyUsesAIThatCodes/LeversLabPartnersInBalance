@@ -76,7 +76,8 @@ The final room update is a separate checkpoint from the semantic/UI work.
 
 ## Current Checkpoint
 
-This file records the newly approved scope and semantic decision. Implementation
-has not yet changed the validated build 011 or the Library/port-4200 preview. The
-repository remains local, with remote creation pending the user's empty LeverLab.
+The guided revision is implemented locally. The frozen room handoff is integrated
+from source `28e31ff0fbf06ee5fd9fe58cb499f0ef0d757f9a`; its eight canonical
+file hashes are retained in `docs/room-source/`. See STATUS.md for the exact build,
+completed browser checks, and delivered artifacts. The remote remains pending.
 No public deployment, merge, email, credential retrieval, or original-game change.

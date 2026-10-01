@@ -23,7 +23,9 @@ Saving writes a staged copy, checks its exact bytes and validates its schema, ke
 the prior raw save, then replaces and verifies the current key. Quota failures keep
 the original current bytes; cleanup removes an incomplete stage. A failed restore
 does not replace the running notebook or apparatus. Migration records original and
-current builds, schema transition, and changed/new/retired question IDs.
+current builds, schema transition, and changed/new/retired question IDs. The
+`migration-original` and `restore-original` companion keys keep the exact raw
+pre-update/replaced copies across later autosaves; Recovery offers downloads.
 
 Portable backups retain historical paired responses and labels. The human-readable
 report and its embedded JSON anonymize structured partner-name fields without
