@@ -1,5 +1,6 @@
 import { DEFAULT, valid, arm, measures } from './model.js';
 import { PARTS, PART_BY_ID, LESSONS, REQUIRED_IDS } from './curriculum.js';
+import {REPRESENTATION,representationValid} from './representation.js';
 export const NOTEBOOK_KEY='lever-lab-notebook-v1';
 export const FORMAT='lever-lab-notebook';
 export const SCHEMA=1;
@@ -8,7 +9,7 @@ const clone=value=>structuredClone(value);
 export const stamp=()=>new Date().toISOString();
 export function createNotebook(build='Local Development') {
  const now=stamp();
- return {format:FORMAT,schema:SCHEMA,id:globalThis.crypto.randomUUID(),createdAt:now,updatedAt:now,build,mode:'free',part:'Q1a',lesson:'T0',returnTo:null,team:{mode:'solo',learners:[{id:'A',label:'Shared Classwork'},{id:'B',label:'Earlier Imported Response'}],driver:'A',reminderMinutes:0,rotationStarted:null},answers:{},history:[],trials:[],events:[],checks:{},visits:[],tutorials:{},workbenches:{},freeWorkbench:{state:{...DEFAULT},held:true},coverage:{Intro:false,Routine:false}};
+ return {format:FORMAT,schema:SCHEMA,representation:REPRESENTATION,id:globalThis.crypto.randomUUID(),createdAt:now,updatedAt:now,build,mode:'free',part:'Q1a',lesson:'T0',returnTo:null,team:{mode:'solo',learners:[{id:'A',label:'Shared Classwork'},{id:'B',label:'Earlier Imported Response'}],driver:'A',reminderMinutes:0,rotationStarted:null},answers:{},history:[],trials:[],events:[],checks:{},visits:[],tutorials:{},workbenches:{},freeWorkbench:{state:{...DEFAULT},held:true},coverage:{Intro:false,Routine:false}};
 }
 export const learners=book=>book.team.mode==='pair'?book.team.learners:book.team.learners.slice(0,1);
 export const ownerFor=(field,learner)=>field.personal?learner.id:'shared';
@@ -18,7 +19,7 @@ export function response(book,id,key,value,owner='shared',recordHistory=true) {
  if(JSON.stringify(previous)===JSON.stringify(value))return;
  book.answers[id]??={}; book.answers[id][owner]??={};
  book.answers[id][owner][key]=clone(value);
- if(recordHistory)book.history.push({id,key,owner,value:clone(value),previous:clone(previous),at:stamp(),driver:book.team.driver});
+ if(recordHistory)book.history.push({id,key,owner,value:clone(value),previous:clone(previous),at:stamp(),driver:book.team.driver,representation:book.representation??REPRESENTATION});
  // Editing evidence invalidates only this latest check, not historical checks.
  invalidateChecks(book,[id]);book.updatedAt=stamp();
 }
@@ -26,7 +27,7 @@ export function invalidateChecks(book,ids,reason='Evidence changed. Review this 
  for(const id of ids)if(book.checks[id])book.checks[id]={status:'Needs Recheck',complete:false,failures:[],missing:[reason],review:[],at:stamp()};
 }
 export const sameState=(a,b)=>!!a&&!!b&&Object.keys(DEFAULT).every(k=>a[k]===b[k]);
-export function event(book,type,detail={}){book.events.push({type,at:stamp(),part:book.part,driver:book.team.driver,...clone(detail)});book.updatedAt=stamp();}
+export function event(book,type,detail={}){book.events.push({type,at:stamp(),part:book.part,driver:book.team.driver,representation:book.representation??REPRESENTATION,...clone(detail)});book.updatedAt=stamp();}
 export function rotate(book) {if(book.team.mode!=='pair')return;book.team.driver=book.team.driver==='A'?'B':'A';book.team.rotationStarted=stamp();event(book,'roles-swapped',{driver:book.team.driver});}
 export function supportViewed(book,source,resource,from=book.mode==='challenge'?book.part:book.returnTo){event(book,'support-viewed',{source,resource,from:from??null,mode:book.mode,learners:learners(book).map(l=>l.id)});}
 export function visitLesson(book,id,from=null){book.visits.push({lesson:id,from,at:stamp(),driver:book.team.driver});supportViewed(book,'lesson',id,from);book.lesson=id;book.returnTo=from;book.mode='learn';}
@@ -35,7 +36,7 @@ export function predictionReady(book,part) {
  const source=part.prediction===true?part:PART_BY_ID[part.prediction];
  return !!source && source.fields.filter(f=>f.prediction).every(f=>learners(book).every(l=>String(answer(book,source.id,f.key,l.id)).trim()));
 }
-export function snapshot(state,held=true){return {state:{...state},loadArm:arm(state,'load'),effortArm:arm(state,'effort'),held};}
+export function snapshot(state,held=true,representation=REPRESENTATION){return {state:{...state},loadArm:arm(state,'load'),effortArm:arm(state,'effort'),held,representation};}
 export function latestTrial(book,id){return book.trials.findLast(t=>t.part===id && t.completedAt && !t.interrupted);}
 export function selectedQ7Trial(book,id){return book.trials.find(t=>t.id===id&&/^Q7b[1-4]$/.test(t.part)&&t.settled&&t.result==='balance'&&!t.interrupted);}
 export function sketchComplete(drawing){return !!drawing&&Array.isArray(drawing.elements)&&drawing.elements.some(e=>e.kind==='beam'||e.kind==='stroke')&&['load','effort','fulcrum'].every(role=>drawing.elements.some(e=>e.role===role&&e.label?.trim()));}
@@ -111,6 +112,8 @@ export function parseBackup(text){
  const fieldValue=(f,v)=>f.type==='sketch'?validateDrawing(v):str(v,10000);
  const ownerValid=(f,owner)=>f.personal?['A','B'].includes(owner):owner==='shared';
  const answersValid=(id,owners)=>{if(!PART_BY_ID[id]||!obj(owners))return false;for(const [owner,answers]of Object.entries(owners)){if(!obj(answers))return false;for(const [key,value]of Object.entries(answers)){const f=PART_BY_ID[id].fields.find(f=>f.key===key);if(!f||!ownerValid(f,owner)||!fieldValue(f,value))return false;}}return true;};
+ if(b.representation!==undefined&&!representationValid(b.representation))fail();
+ for(const item of [...b.history,...b.events,...b.trials,...Object.values(b.workbenches)])if(item.representation!==undefined&&!representationValid(item.representation))fail();
  for(const [id,owners] of Object.entries(b.answers))if(!answersValid(id,owners))fail();
  for(const [id,t] of Object.entries(b.tutorials))if(!LESSONS.some(l=>l.id===id)||!obj(t)||('note' in t&&!str(t.note))||('drawing' in t&&!validateDrawing(t.drawing))||('completedAt' in t&&!str(t.completedAt,50)))fail();
  for(const t of b.trials)if(!obj(t)||!str(t.id,100)||!PART_BY_ID[t.part]?.trial||!wb(t.setup)||!['A','B'].includes(t.driver)||!str(t.startedAt,50)||!(t.result===null||['balance','load','effort'].includes(t.result))||typeof t.settled!=='boolean'||typeof t.interrupted!=='boolean'||!obj(t.predictions)||!Array.isArray(t.changes))fail();

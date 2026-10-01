@@ -116,3 +116,15 @@ The game has no accounts, telemetry, or student server records; download does no
 verify submission. Physical building/testing remains a separate experience.
 The notebook can cover apparatus labels; Hide Notebook clears the view. Full
 print evidence histories can be long; the interactive HTML is the primary work file.
+
+## Force Adapter Checkpoint
+
+Calibrated effort helpers, force-only effort inertia, and explicit legacy/new
+representation metadata are implemented. All 38 unit tests pass, including exact
+packet balance cases, the force/IMA bridge, and preservation of legacy evidence.
+No new browser build is claimed yet. Latest flow refinement keeps controls usable:
+only the beam pauses for setup/prediction; Continue gates required evidence.
+Recording a prediction starts its test; setup edits make that prediction stale
+without deleting it. Vertical drag adjusts load mass or calibrated push, with a
+direction threshold separating position changes. Hand size remains constant.
+
