@@ -27,6 +27,7 @@ try{
  assert.equal(await page.locator('#notebook select').count(),0);
  assert.doesNotMatch(await page.locator('#notebook').innerText(),/Q1[abc]/);
  assert.equal(await page.locator('.identify-choices .identify-candidate').count(),3);
+ await page.screenshot({path:'artifacts/notebook-review/graphical-identification.png'});
  await page.locator('[data-tag="load"]').click();assert.match(await page.locator('#identify-feedback').innerText(),/0 Of 3/);
  await page.locator('[data-tag="effort"]').focus();await page.keyboard.press('Enter');assert.match(await page.locator('#identify-feedback').innerText(),/1 Of 3/);
  await page.locator('[data-lab="help"]').click();assert.equal(await page.locator('[data-lab="return"]').innerText(),'Return To Question');
@@ -54,5 +55,5 @@ try{
  const data=await book();assert.ok(data.events.some(e=>e.type==='identify-picked'&&!e.correct));assert.ok(data.visits.some(v=>v.from==='Q1a'&&v.lesson==='T1'));
  await writeFile('artifacts/notebook-review/test-student-work.html',reportHTML(data,manifest));
  const reportPage=await browser.newPage();await reportPage.goto('file:///'+process.cwd().replaceAll('\\','/')+'/artifacts/notebook-review/test-student-work.html');assert.equal(await reportPage.locator('section h2').count(),67);assert.ok(await reportPage.locator('svg').count()>0);await reportPage.screenshot({path:'artifacts/notebook-review/report-preview.png'});
- assert.deepEqual(errors,[]);assert.deepEqual(external,[]);await writeFile('artifacts/notebook-review/verification.json',JSON.stringify({build:manifest.id,mode:'WebGL',verified:'Graphical identification reset and keyboard streak; anonymous UI and compact identity; Q3 setup, prediction gate and release; exact Learn return; autosave/recovery; final download gated; no external requests',notVerified:'Complete paired/solo 68-row runs, Q5–Q14 browser paths, touch sketch, fallback notebook paths',errors,external},null,2));console.log('NOTEBOOK BROWSER SLICE PASSED '+manifest.id);
+ assert.deepEqual(errors,[]);assert.deepEqual(external,[]);await writeFile('artifacts/notebook-review/verification.json',JSON.stringify({build:manifest.id,mode:'WebGL',verified:'Graphical identification reset and keyboard streak; anonymous UI and compact identity; Q3 setup, prediction gate and release; exact Learn return; autosave/recovery; final download gated; no external requests',notVerified:'Full 68-row walkthrough and fallback paths are verified separately in full-packet-review',errors,external},null,2));console.log('NOTEBOOK BROWSER SLICE PASSED '+manifest.id);
 }finally{await browser?.close();server.kill();}

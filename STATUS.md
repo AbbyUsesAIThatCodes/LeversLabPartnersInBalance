@@ -24,25 +24,15 @@ The complete required R06 scope is implemented: Part 1 Q1-Q8, Part 2 Q9-Q14,
 excluded. Free Play retains the original room, controls, physics, and fallback.
 The source model changed only its local-storage key to isolate this game.
 
-Review artifact source: `beaac5ec0d70b00a90027fde05cd53f11c0f6f03`.
-Full identity:
-`0.1.0_Partners-In-Balance_local-1e3bd62e_build-007_20260930T231950Z_gbeaac5ec0d70_web`.
-The artifact was built from a clean working tree. Later documentation checkpoints
-do not relabel or rebuild this immutable artifact.
+The replacement interface is saved in `04d72545d27b3504617498266f954b401c632852`.
+Build 010 passed 35 unit tests, the graphical notebook browser slice, dedicated
+correctness regressions in both renderers, and recovery tests. Its full packet
+walkthrough is in progress. A final small contrast correction is queued for the
+next immutable build. Neither new UI artifact is claimed classroom-ready.
 
-27/27 unit tests pass. Final build 007 passed complete paired and solo 68-row
-browser walkthroughs, basic notebook checks, interrupted/corrupt-save recovery,
-physics/control regression, and native browser print expansion/restoration. The
-ZIP manifest, all four packaged verification records, and bundled licenses match.
-
-Playable preview on this computer: http://127.0.0.1:4200/
-Playable ZIP: `output/0.1.0_Partners-In-Balance_local-1e3bd62e_build-007_20260930T231950Z_gbeaac5ec0d70_web.zip`
-ZIP SHA-256: `9793f4a6034b6ac1400ff78db6752638291c4f5121ca8a274583ee5433dbb071`.
-Size: 1,778,368 bytes; 34 files. Extract and run `node serve-review.mjs`; no npm
-install or internet is needed. The ZIP includes screenshots, synthetic complete
-student reports/backups, coverage inventory, provenance, and existing notices.
-The original early preview on port 4199 is older; use port 4200 for this review.
-Download a backup before moving work between preview addresses.
+The Library and port 4200 still contain build 007, which remains on hold until
+replacement verification and upload complete. Repository creation remains pending
+the user's empty LeverLab repository; there is no PR or deployment.
 
 ## Review Evidence
 
@@ -122,4 +112,8 @@ The revised anonymous graphical UI is coded. All 35 unit tests pass, including
 identification streak reset and Learn return. The five correctness repairs remain
 covered. Browser walkthroughs and refreshed playable packaging are next; no new
 Library artifact or deployment is claimed at this checkpoint.
+
+
+Build 010 completed both full 68-row renderer flows successfully. Final build
+adds the selected-answer contrast correction and refreshed review guidance.
 

@@ -10,9 +10,10 @@ retains the original 3D workshop, physics, controls, and diagram fallback.
    and compare diagram fallback. The entire window remains the 3D viewport.
 2. In Challenge, make a factual error and follow Learn This. Return to the exact
    subpart and confirm the original response and apparatus evidence remain.
-3. Try both solo and paired sessions. Each learner owns their predictions and
-   explanations; apparatus measurements are shared with driver attribution.
-   The teacher calls role switches. The reminder does not swap automatically.
+3. Identify Effort, Load, and Fulcrum using the apparatus or keyboard buttons.
+   A wrong choice resets the three-choice streak. All candidates share a blue cue.
+   Use Hide Notebook / Show Notebook and the lever-icon Question Index.
+   Classwork is anonymous and shared; the teacher guides partner routines externally.
 4. Complete Q7 with a failed first prediction and a successful retry. Select
    your actual saved row in Q11; verify both the first prediction and final mass.
 5. Check Q12: IMA 2 requires half the load weight as effort at ideal balance;
@@ -20,7 +21,7 @@ retains the original 3D workshop, physics, controls, and diagram fallback.
 6. Test Q13's balance and lift distinction, then create a non-default Q14 design.
    Label your own sketch with its masses and arms, test, and explain your evidence.
 7. Reload, download a backup, restore it, and inspect the Student Work report.
-   Confirm drawings, originals, revisions, trial setups, role history, and help use.
+   Confirm drawings, originals, revisions, trial setups, retained changes and help use.
 
 ## What Feedback Means
 
@@ -41,12 +42,12 @@ friction, measurement error, and real testing remain separate experiences.
 
 ## Saving And Submission
 
-Work stays in this browser. Use fictional labels for review. Download backups before
+Work stays in this browser. Download backups before
 switching devices, browsers, or local preview ports. Invalid restore files are
 rejected before replacing the open notebook. An unreadable autosave is kept for
 recovery instead of silently overwritten.
 
-Download Student Work produces one printable HTML file with embedded drawings and
+After all question evidence is recorded, Download Completed Work produces one printable HTML file with embedded drawings and
 machine-readable notebook data. Attach it to the Google Classroom assignment and
 select Turn In. Lever Lab neither uploads nor verifies submission. There are no
 accounts, telemetry, runtime CDNs, or student server records. The teacher writes

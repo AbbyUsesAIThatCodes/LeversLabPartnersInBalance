@@ -39,8 +39,8 @@ try {
     const angle = () => page.locator("#app").evaluate(e => Number(e.dataset.angle));
     const status = () => page.locator("#beam-status").innerText();
     assert.equal(await page.locator("#build-identity").textContent(), manifest.id);
-    assert.equal(await page.locator("#build-identity").isVisible(), true);
-    assert.ok(await page.locator("#build-identity").boundingBox());
+    assert.equal(await page.locator("#build-identity").isVisible(), false);
+    assert.ok(await page.locator("#build-summary").boundingBox());
     if (mode === "true") await click("#side");
     await click("#controls-toggle");
     await click("#hold");
