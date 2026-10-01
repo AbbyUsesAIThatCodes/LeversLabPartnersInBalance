@@ -1,0 +1,18 @@
+import {QUESTIONS,PARTS,PART_BY_ID,LESSONS} from './curriculum.js';
+import {coverage} from './notebook.js';
+import {escapeHTML as esc} from './report.js';
+export const studentText=value=>String(value??'').replace(/\bQ(\d+)(?:[a-z]\d*)?\b/g,'Question $1');
+export const identifyOrder=['Q1b','Q1a','Q1c'];
+export const identifyRoles=['effort','load','fulcrum'];
+export const isIdentify=id=>identifyOrder.includes(id);
+export const identifyStreak=book=>book.events.findLast(e=>e.type==='identify-picked')?.streak??0;
+export const leverIcon=`<svg viewBox="0 0 100 60" aria-hidden="true"><path d="M12 27H88" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><path d="M50 29L39 49H61Z" fill="currentColor"/><rect x="17" y="11" width="18" height="15" rx="3" fill="currentColor"/><path d="M77 28v11" stroke="currentColor" stroke-width="3"/><circle cx="77" cy="46" r="7" fill="currentColor"/></svg>`;
+const cardStatus=(book,ids)=>{const complete=ids.every(id=>book.checks[id]?.complete),review=complete&&ids.some(id=>book.checks[id]?.review.length);return {complete,review,label:complete?(review?'Evidence Complete · Teacher Review':'Checked'):ids.some(id=>book.checks[id]?.status==='Try Again')?'Needs Another Try':'Keep Going'};};
+export function indexHTML(book){
+ const done=QUESTIONS.filter(q=>q.parts.every(p=>book.checks[p.id]?.complete)).length;
+ return `<h2>Question Index</h2><p>${done} Of ${QUESTIONS.length} Questions Recorded</p><p class="lab-note">&#10003; means the required evidence is complete. A pencil means writing or a sketch still needs teacher review; it is not marked correct.</p>${QUESTIONS.map(q=>`<details class="question-group" ${q.number===PART_BY_ID[book.part].question?'open':''}><summary>Question ${q.number}: ${esc(q.title)}</summary><div class="question-grid">${q.parts.filter(p=>!isIdentify(p.id)||p.id==='Q1a').map(p=>{const ids=isIdentify(p.id)?identifyOrder:[p.id],s=cardStatus(book,ids);return `<button class="question-tile ${s.complete?'complete':''}" data-lab="question" data-part="${p.id}">${leverIcon}<strong>${esc(isIdentify(p.id)?'Identify The Parts':p.title)}</strong><span>${s.complete?'&#10003; ':''}${s.review?'✎ ':''}${s.label}</span></button>`;}).join('')}</div></details>`).join('')}<div class="local-work"><button data-lab="session">Recover Saved Work</button>${coverage(book).every(r=>r.complete)?'<h3>Your Work Is Ready</h3><p>Writing and sketches remain for teacher review.</p><button data-lab="report">Download Completed Work</button><button data-lab="backup">Download Resume Backup</button><p class="lab-note">Attach the work file in Google Classroom and select Turn In. Downloading does not submit it.</p>':'<p class="lab-note">Your completed work download appears here after all questions have their required evidence.</p>'}</div>`;
+}
+export function lessonIndexHTML(){return `<h2>Learn</h2><p>Choose A Tutorial</p><div class="question-grid">${LESSONS.map(l=>`<button class="question-tile" data-lab="lesson" data-lesson="${l.id}">${leverIcon}<strong>${esc(l.title)}</strong></button>`).join('')}</div>`;}
+export function feedbackHTML(check){if(!check)return '';return `<b>${esc(check.status==='Checked'?'Ready To Continue':check.status)}</b>${check.failures.length||check.missing.length?`<ul>${[...check.failures,...check.missing].map(x=>`<li>${esc(studentText(x))}</li>`).join('')}</ul>`:''}${check.review.length?'<p>Recorded. Your teacher will review the explanation or sketch.</p>':''}`;}
+export function sharedSession(book){book.team.mode='solo';book.team.driver='A';book.team.reminderMinutes=0;}
+export function updateIntro(book){if(['Q1a','Q1b','Q1c','Q1d','Q2a','Q2b'].every(id=>book.checks[id]?.complete))book.coverage.Intro=true;}

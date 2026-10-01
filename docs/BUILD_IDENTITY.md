@@ -26,3 +26,9 @@ are recorded. Retesting an artifact preserves its ID. No PR ordinal is invented.
 
 The original game's hidden-display exception does not apply to this new project.
 The inherited remote allocator is dormant; no workflow is authorized to invoke it.
+
+## Approved Compact Game Display
+
+The user explicitly requested compact version plus Local Review in the upper left,
+or version-PRnumber once an actual PR exists. The full identity stays in the
+console, build manifest, exports, artifact filenames, and review documentation.

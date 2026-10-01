@@ -25,6 +25,8 @@ import {
 import { fmt, helpTip, setTip, describeTooltips, renderMath, installTooltips } from "./math.js";
 import { mountLearning } from './learning.js';
 let learning = null;
+let identifying = false, identifyFeedback = null;
+const candidateNames = {load:'Crate', effort:'Hanging Mass', fulcrum:'Support'};
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)],
   cap = (s) => s[0].toUpperCase() + s.slice(1);
@@ -91,9 +93,9 @@ for (const role of ROLES) {
   tag.dataset.select = role;
   tag.setAttribute("aria-label", `Select or Drag ${cap(role)}`);
   $("#tags").append(tag);
-  tag.addEventListener("click", () => select(role));
+  tag.addEventListener("click", () => { if (!learning?.identifyPart(role)) select(role); });
   tag.addEventListener("pointerdown", (e) => {
-    if (ready) scene.beginDrag(e, role);
+    if (ready && !identifying) scene.beginDrag(e, role);
   });
   tag.addEventListener("keydown", (e) => {
     if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) {
@@ -125,6 +127,7 @@ function setState(next, system = false) {
   if (!system) learning?.changed(previous, state, held);
 }
 function keyboardStep(role, key) {
+  if (identifying) return;
   select(role);
   if (key === "ArrowLeft" || key === "ArrowRight")
     setState(
@@ -196,6 +199,7 @@ function render() {
   renderMath(state);
   describeTooltips();
   renderSelection();
+  applyIdentification();
   updateStatus();
   if (fallback) drawFallback();
   if (ready) scene.dirty = true;
@@ -336,8 +340,31 @@ function drawFallback() {
       "",
     )}<g data-balance-pointer role="img" aria-label="Weighted balance pointer"><path d="M${px} 195L${pointerX} ${pointerY}" stroke="#b68d46" stroke-width="5"/><circle data-pointer-bob cx="${pointerX}" cy="${pointerY}" r="13" fill="#b68d46"/><circle cx="${pointerX}" cy="${pointerY}" r="8" fill="${colors.fulcrum}"/></g><text x="${px}" y="386" text-anchor="middle" font-size="21" fill="${colors.fulcrum}">Fulcrum · ${state.fulcrum} mm</text>`;
   $("#app").dataset.angle = angle;
+  if (identifying) {
+    $('#fallback-svg').querySelectorAll('text').forEach(text => text.remove());
+    for (const role of ROLES) {
+      const p = role === 'fulcrum' ? {x:px,y:285} : point(state[role]);
+      const y = p.y + (role === 'effort' ? 52 : role === 'load' ? -30 : 0);
+      const picked = identifyFeedback?.role === role;
+      const fill = picked ? (identifyFeedback.correct ? '#72dc94' : '#ff9494') : '#b4e5ff';
+      $('#fallback-svg').insertAdjacentHTML('beforeend', `<g data-identify-role="${role}" role="button" tabindex="0" aria-label="${candidateNames[role]}"><rect x="${p.x-48}" y="${y-24}" width="96" height="48" rx="10" fill="${fill}" fill-opacity=".75" stroke="#174d68" stroke-width="3"/><text x="${p.x}" y="${y+5}" text-anchor="middle" font-size="13" font-weight="bold">${candidateNames[role]}</text></g>`);
+    }
+  }
   updateStatus();
 }
+function applyIdentification() {
+  $('#app').dataset.identifying = String(identifying);
+  for (const role of ROLES) {
+    const tag = $(`[data-tag="${role}"]`), picked = identifyFeedback?.role === role;
+    tag.classList.toggle('identify-candidate', identifying);
+    tag.classList.toggle('right', identifying && picked && identifyFeedback.correct);
+    tag.classList.toggle('wrong', identifying && picked && !identifyFeedback.correct);
+    tag.setAttribute('aria-label', identifying ? candidateNames[role] : `Select or Drag ${cap(role)}`);
+    if (identifying) tag.textContent = candidateNames[role];
+  }
+}
+$('#fallback-svg').addEventListener('click', e => { const role=e.target.closest('[data-identify-role]')?.dataset.identifyRole; if(role)learning?.identifyPart(role); });
+$('#fallback-svg').addEventListener('keydown', e => { if(['Enter',' '].includes(e.key)){const role=e.target.closest('[data-identify-role]')?.dataset.identifyRole;if(role){e.preventDefault();learning?.identifyPart(role);}} });
 function fallbackFrame(time) {
   if (!fallback) return;
   const dt = fallbackTime === null ? 0 : (time - fallbackTime) / 1000;
@@ -590,6 +617,7 @@ render();
 try {
   scene = new LeverScene($("#scene"), {
     onChange: setState,
+    onIdentify: role => learning?.identifyPart(role) ?? false,
     onSelect: (role) => {
       selected = role;
       renderSelection();
@@ -614,6 +642,7 @@ try {
   unavailable();
 }
 learning = mountLearning({
+  identify: (active, feedback) => { identifying=active;identifyFeedback=feedback;scene?.setIdentification(active,feedback);render(); },
   get: () => ({ state: { ...state }, held }),
   motion: () => ({ ...(ready ? scene.motion : fallbackMotion) }),
   change: next => setState(next),

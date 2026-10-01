@@ -115,3 +115,11 @@ human tasks. The floating notebook can cover apparatus labels; See Workbench
 collapses it. Printing includes complete evidence history and can be lengthy:
 the deliberately revision-heavy synthetic solo run printed to 104 pages. The
 interactive self-contained HTML report is the primary review file.
+
+## Graphical Interface Checkpoint
+
+The revised anonymous graphical UI is coded. All 35 unit tests pass, including
+identification streak reset and Learn return. The five correctness repairs remain
+covered. Browser walkthroughs and refreshed playable packaging are next; no new
+Library artifact or deployment is claimed at this checkpoint.
+

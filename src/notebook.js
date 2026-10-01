@@ -8,7 +8,7 @@ const clone=value=>structuredClone(value);
 export const stamp=()=>new Date().toISOString();
 export function createNotebook(build='Local Development') {
  const now=stamp();
- return {format:FORMAT,schema:SCHEMA,id:globalThis.crypto.randomUUID(),createdAt:now,updatedAt:now,build,mode:'free',part:'Q1a',lesson:'T0',returnTo:null,team:{mode:'solo',learners:[{id:'A',label:'Learner A'},{id:'B',label:'Learner B'}],driver:'A',reminderMinutes:0,rotationStarted:null},answers:{},history:[],trials:[],events:[],checks:{},visits:[],tutorials:{},workbenches:{},freeWorkbench:{state:{...DEFAULT},held:true},coverage:{Intro:false,Routine:false}};
+ return {format:FORMAT,schema:SCHEMA,id:globalThis.crypto.randomUUID(),createdAt:now,updatedAt:now,build,mode:'free',part:'Q1a',lesson:'T0',returnTo:null,team:{mode:'solo',learners:[{id:'A',label:'Shared Classwork'},{id:'B',label:'Earlier Imported Response'}],driver:'A',reminderMinutes:0,rotationStarted:null},answers:{},history:[],trials:[],events:[],checks:{},visits:[],tutorials:{},workbenches:{},freeWorkbench:{state:{...DEFAULT},held:true},coverage:{Intro:false,Routine:false}};
 }
 export const learners=book=>book.team.mode==='pair'?book.team.learners:book.team.learners.slice(0,1);
 export const ownerFor=(field,learner)=>field.personal?learner.id:'shared';
@@ -22,7 +22,7 @@ export function response(book,id,key,value,owner='shared',recordHistory=true) {
  // Editing evidence invalidates only this latest check, not historical checks.
  invalidateChecks(book,[id]);book.updatedAt=stamp();
 }
-export function invalidateChecks(book,ids,reason='Evidence changed. Save & Check again.') {
+export function invalidateChecks(book,ids,reason='Evidence changed. Review this step again.') {
  for(const id of ids)if(book.checks[id])book.checks[id]={status:'Needs Recheck',complete:false,failures:[],missing:[reason],review:[],at:stamp()};
 }
 export const sameState=(a,b)=>!!a&&!!b&&Object.keys(DEFAULT).every(k=>a[k]===b[k]);
@@ -89,8 +89,8 @@ export function evaluatePart(book,part,workbench) {
  const status=failures.length?'Try Again':missing.length?'In Progress':review.length?'Recorded · Teacher Review':'Checked';
  return {status,failures,missing,review,at:stamp(),complete:!failures.length&&!missing.length};
 }
-export function checkPart(book,part,workbench){const check=evaluatePart(book,part,workbench);book.checks[part.id]=check;event(book,'part-checked',{id:part.id,check,setup:snapshot(workbench.state,workbench.held),answers:clone(book.answers[part.id]??{})});return check;}
-export function revalidateChecks(book){for(const p of PARTS)if(book.checks[p.id]?.complete&&!evaluatePart(book,p,book.workbenches[p.id]).complete)invalidateChecks(book,[p.id],'Saved evidence no longer meets this check. Save & Check again.');}
+export function checkPart(book,part,workbench){const check=evaluatePart(book,part,workbench);book.checks[part.id]=check;event(book,'part-checked',{part:part.id,id:part.id,check,setup:snapshot(workbench.state,workbench.held),answers:clone(book.answers[part.id]??{})});return check;}
+export function revalidateChecks(book){for(const p of PARTS)if(book.checks[p.id]?.complete&&!evaluatePart(book,p,book.workbenches[p.id]).complete)invalidateChecks(book,[p.id],'Saved evidence no longer meets this check. Review this step again.');}
 export function coverage(book){return REQUIRED_IDS.map(id=>({id,status:id==='Intro'||id==='Routine'?(book.coverage[id]?'Recorded':'Not Started'):(book.checks[id]?.status??'Not Started'),complete:id==='Intro'||id==='Routine'?book.coverage[id]:!!book.checks[id]?.complete}));}
 // Validate before replacing any in-memory/current save. No imported HTML runs.
 export function parseBackup(text){
@@ -120,6 +120,7 @@ export function parseBackup(text){
  for(const e of b.events){
   if(!obj(e)||!str(e.type,100)||!str(e.at,50)||!['A','B'].includes(e.driver)||!PART_BY_ID[e.part])fail();
   if(e.type==='part-checked'&&(!PART_BY_ID[e.id]||e.id!==e.part||!checkValid(e.check)||!wb(e.setup)||!answersValid(e.id,e.answers)))fail();
+  if(e.type==='identify-picked'&&(!['effort','load','fulcrum'].includes(e.picked)||!['effort','load','fulcrum'].includes(e.expected)||typeof e.correct!=='boolean'||e.correct!==(e.picked===e.expected)||!Number.isInteger(e.streak)||e.streak<0||e.streak>3||(!e.correct&&e.streak!==0)))fail();
   if(e.type==='control-change'&&(!valid(e.before)||!valid(e.after)||typeof e.held!=='boolean'))fail();
   if(['trial-completed','trial-interrupted'].includes(e.type)&&(!str(e.trialId,100)||!b.trials.some(t=>t.id===e.trialId&&t.part===e.part)))fail();
   if(e.type==='session-settings'&&(!obj(e.team)||!['solo','pair'].includes(e.team.mode)||!Array.isArray(e.team.learners)||e.team.learners.length!==2||e.team.learners.some((l,i)=>!obj(l)||l.id!==['A','B'][i]||!str(l.label,80))))fail();

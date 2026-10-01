@@ -51,8 +51,18 @@ export class LeverScene extends WorkshopScene {
           : 0,
       );
       mesh.material.emissiveIntensity = 0.35;
+      if (this.identifying && mesh.userData.part) {
+        const picked = this.identifyFeedback?.role === mesh.userData.part;
+        mesh.material.emissive.set(picked ? (this.identifyFeedback.correct ? 0x36c36d : 0xed5252) : 0x75cfff);
+        mesh.material.emissiveIntensity = 0.6;
+      }
     }
     this.dirty = true;
+  }
+  setIdentification(active, feedback) {
+    this.identifying = active;
+    this.identifyFeedback = feedback;
+    this.highlight(null);
   }
   frame(time) {
     if (!this.active) {
@@ -270,6 +280,11 @@ export class LeverScene extends WorkshopScene {
       "pointerdown",
       (e) => {
         const p = this.hit(e);
+        if (p && this.callbacks.onIdentify?.(p)) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          return;
+        }
         if (p) this.beginDrag(e, p);
       },
       true,

@@ -1,5 +1,19 @@
 #lab-navigation{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:6px 0;pointer-events:auto}
 #lab-navigation{padding-left:10px;padding-right:10px}
+#build-summary{display:block;font-size:12px;line-height:1.2;color:#284d43;margin-top:3px}
+#build-identity[hidden]{display:none}
+.question-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
+.question-group{margin:12px 0;border:1px solid #b4c3ad;border-radius:10px;padding:9px}
+.question-group summary{font-weight:bold;cursor:pointer}
+.question-tile{display:flex;flex-direction:column;align-items:center;gap:5px;min-height:115px;padding:9px;font-size:12px;text-align:center}
+.question-tile svg{width:64px;height:40px}.question-tile span{font-size:11px}.question-tile.complete{background:#d4edcf;border-color:#38734b;color:#205b31}
+.answer-choices,.identify-choices{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0}
+.answer-choices button{font-size:13px;padding:9px}.answer-choices [aria-pressed=true]{background:#d5ebd2;box-shadow:inset 0 0 0 2px #447b46}
+.identify-candidate{background:#b4e5ff!important;color:#163c50!important;border:2px solid #378bb1!important;min-height:44px}
+.identify-candidate.right{background:#b1ecc1!important;border-color:#238842!important}.identify-candidate.wrong{background:#ffc1bd!important;border-color:#bd352e!important}
+.identify-choices button{flex:1;font-size:12px;padding:9px}.identify-choices span{display:block;font-size:25px}.local-work{border-top:1px solid #b4c3ad;padding-top:12px}
+[data-identifying=true] #coordinates{visibility:hidden}
+[data-identify-role]{cursor:pointer}[data-identify-role]:focus rect{stroke:#152f88;stroke-width:5}
 .notebook-heading{position:sticky;top:-18px;background:#fffdf3;z-index:2;padding:7px 0;border-bottom:1px solid #d9e0d0}
 #lab-navigation button{font-size:14px;padding:7px 11px}#role-status{font-size:12px;margin-left:auto}#save-status{font-size:11px;color:#315b50;max-width:180px}
 #build-identity{font-size:10px;line-height:1.2;overflow-wrap:anywhere;max-width:100%;user-select:text;padding:2px 8px}
