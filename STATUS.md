@@ -231,3 +231,19 @@ The new hanging-load/contacting-hand apparatus, constant-size push semantics, do
 
 Build 013 completed both full 68-row browser walkthroughs, including Q7-to-Q11 selection, Q12 comparisons, Q13 lifting, Q14 drawing/revisions, final report and restore. Both renderers passed all five integrity browser regressions. Subsequent bounded corrections synchronize notebook/main controls, retain a downloadable pre-update raw copy across autosaves, validate new prediction links/future question revisions, and turn the hand for a clearer silhouette. All 50 unit tests pass. The next build will repeat the affected guided browser suites before packaging; no old build evidence is substituted.
 
+# Build 014 Review Hold And Repair Checkpoint
+
+Build 014 and its Library version 2 remain preserved, but are on hold for student
+use after independent review found four edge cases. The bounded repair fixes Q14
+retry product ownership, rejects completed trials predating an intervening setup
+edit, renders the entire HTML report from its anonymized copy, and keeps migration
+raw bytes protected until their verified archive succeeds. Recovery offers a
+pre-update download and Retry Saving; a blocked migration cannot be bypassed by
+ordinary autosave or restore.
+
+All four new regressions failed against the pre-repair source and now pass. All
+54 unit tests pass, including the earlier five integrity regressions. Evidence:
+`artifacts/build014-edge-regressions-before.txt` and
+`artifacts/review014-unit-after.txt`. Real-browser edge-case and full guided runs
+on the next build are pending. No Library replacement is authorized before
+independent recheck of this repair. No remote, issue, PR, or deployment exists.

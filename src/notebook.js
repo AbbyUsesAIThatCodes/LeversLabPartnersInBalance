@@ -74,7 +74,10 @@ export function evaluatePart(book,part,workbench) {
    const goal=part.goal??PART_BY_ID[part.requiresTrial]?.goal;
    if(goal&&t.result!==goal)failures.push('Your recorded trial has not met the target yet. Keep it as evidence and retry.');
    if(!t.settled)failures.push('Wait for the apparatus to settle before recording a result.');
-   if(part.trial&&(!sameState(state,t.setup.state)||book.trials.some(x=>x.part===part.id&&!x.completedAt)))missing.push('Release and record a completed trial for this current arrangement.');
+   const completedIndex=book.events.findLastIndex(e=>e.type==='trial-completed'&&e.trialId===t.id);
+   const editedSinceTrial=completedIndex>=0&&book.events.slice(completedIndex+1).some(e=>e.type==='control-change'&&e.part===part.id);
+   const stalePrediction=t.predictionId&&book.guided?.predictions.find(p=>p.id===t.predictionId)?.invalidatedAt;
+   if(part.trial&&(!sameState(state,t.setup.state)||editedSinceTrial||stalePrediction||book.trials.some(x=>x.part===part.id&&!x.completedAt)))missing.push('Release and record a completed trial for this current arrangement after its latest edit.');
    const observation=values.shared?.observation;
    if(observation&&observation!=={balance:'Level',load:'Load Side Down',effort:'Effort Side Down'}[t.result])failures.push('Your observation differs from the recorded apparatus result. Review the trial.');
    if(values.shared?.finalMass!==undefined&&Number(values.shared.finalMass)!==t.setup.state.effortMass)failures.push('Final effort push must match the recorded trial.');
@@ -157,10 +160,10 @@ export function loadNotebook(storage,build){
   const book=parseBackup(raw,{build});
   const source=JSON.parse(raw),changed=source.schema!==book.schema||JSON.stringify(source.assignment)!==JSON.stringify(book.assignment);
   const saved=changed?saveNotebook(storage,book,{preserveOriginal:'migration-original'}):{ok:true};
-  return {book,error:saved.ok?null:saved.error,recovery:null,fresh:false,migrationPending:!saved.ok};
+  return {book,error:saved.ok?null:saved.error,recovery:null,fresh:false,migrationPending:!saved.ok,migrationOriginal:saved.ok?null:raw};
  }catch(e){return {book:createNotebook(build),error:e.message,recovery:raw,fresh:false};}
 }
-export function saveNotebook(storage,book,{preserveOriginal=null}={}){
+export function saveNotebook(storage,book,{preserveOriginal=null,originalRaw=null}={}){
  const stage=NOTEBOOK_KEY+'.staged',previous=NOTEBOOK_KEY+'.previous';let original=null,wrote=false;
  try{
   if(book.schema!==SCHEMA)throw Error('Migrate the notebook before saving.');
@@ -168,7 +171,8 @@ export function saveNotebook(storage,book,{preserveOriginal=null}={}){
   original=storage.getItem(NOTEBOOK_KEY);
   storage.setItem(stage,encoded);
   const staged=storage.getItem(stage);if(staged!==encoded)throw Error('Staged save differs.');parseBackup(staged);
-  if(original!==null){if(preserveOriginal)storage.setItem(NOTEBOOK_KEY+'.'+preserveOriginal,original);storage.setItem(previous,original);}
+  if(preserveOriginal&&(originalRaw??original)!==null){const key=NOTEBOOK_KEY+'.'+preserveOriginal,raw=originalRaw??original;storage.setItem(key,raw);if(storage.getItem(key)!==raw)throw Error('Original save archive differs.');}
+  if(original!==null)storage.setItem(previous,original);
   storage.setItem(NOTEBOOK_KEY,staged);wrote=true;
   if(storage.getItem(NOTEBOOK_KEY)!==staged)throw Error('Save verification failed.');
   storage.removeItem?.(stage);

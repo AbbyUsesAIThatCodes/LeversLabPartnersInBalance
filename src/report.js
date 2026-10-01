@@ -21,8 +21,8 @@ export function drawingSVG(drawing){
  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 280" role="img" aria-label="Student-created lever sketch"><rect width="600" height="280" fill="#fffdf3"/>${shapes}</svg>`;
 }
 const jsonBlock=value=>`<pre>${escapeHTML(JSON.stringify(value,null,2))}</pre>`;
-export function reportHTML(book,manifest){
- const reportBook=anonymousReportNotebook(book);
+export function reportHTML(sourceBook,manifest){
+ const book=anonymousReportNotebook(sourceBook),reportBook=book;
  const rows=coverage(book),done=rows.filter(r=>r.complete).length;
  const people={A:'Classwork Response',B:'Earlier Imported Response',shared:'Classwork Response'};
  const sections=PARTS.map(part=>{
