@@ -1,6 +1,6 @@
 # Lever Lab: Partners In Balance
 
-## Responsive Review Candidate - Build 023
+## Current Responsive Playtest Build - 023
 
 App source: `380fe0ba33133d36cfe7c465963cd8f19a6240c1` (clean when built).
 Build: `0.1.0_Partners-In-Balance_local-1e3bd62e_build-023_20261001T124833Z_g380fe0ba3313_web`.
@@ -24,7 +24,23 @@ viewports, extreme positions, index/reference, drawings, reduced motion,
 math placement, and build-020 save continuity. Its final strengthened checks
 wait for resize/keyboard scrolling to settle and allow one pixel of native
 scroll rounding (measured difference: 0.1875px). The final rerun passed in both
-renderers. Packaging and Library delivery are the remaining steps.
+renderers. No application changes were made after this artifact was built.
+
+The ZIP is 7,035,455 bytes with 58 entries; archive integrity is verified.
+SHA256: `1951c957ead31f9735a8fcc15a6c307a404d4f9957b85dfdd8c4d747ef6cd03a`.
+The SAME ZIP and two screenshot Library identities now confirm version 5,
+preserving version 4. Screenshots show 1920x1080 and 1280x720 layouts.
+Exact filenames, IDs, sizes, and hashes are in
+`artifacts/build023-review-deliverables.json`; successful Library results are in
+`artifacts/library-layout-transfer/confirmed-deliverables.json`. Upload
+preparation was unavailable before any write; guarded owned-item replacements
+succeeded in order. Windows file metadata remains in the exact result sidecar.
+
+The private JESS_PC preview on `http://127.0.0.1:4200/` serves this exact build.
+The ZIP includes `StartReview.cmd` with default port 4201. The existing user
+launcher on 4201 was not stopped or changed; an older tab may still show build
+020. Saves belong to the browser address. Build 020's package and ZIP remain
+unchanged. No repository creation, merge, public deployment, or email occurred.
 
 The desktop connection interrupted an earlier browser run. Tools recovered and
 the interrupted suites were restarted; partial runs are not counted as passes.
