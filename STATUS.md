@@ -1,18 +1,36 @@
 # Lever Lab: Partners In Balance
 
-## Focused Visual Polish In Progress
+## Focused Visual Review - Build 020
 
-The approved pass changes only the standalone effort hand, matching apparatus
-line icons, and exterior attention effects. Build 016 and Library version 3
-remain preserved and usable for review. The first hand/icon checkpoint is
-`eadf117` / local build 017. Visual inspection found the hand too small and
-foreshortened; the next iteration enlarges its fixed geometry, turns its back
-toward the viewer, and shortens the upright wrist ending. Physics, force values,
-lesson flow, anonymous storage, schema, and regression repairs are unchanged.
-All 58 unit tests pass, including new anatomy, sparse-effects, reduced-motion,
-and input-transparency checks. Final browser/visual verification is pending.
+App source: `181718cb56cb81331987b28b7035b35f0ab2bd13` (clean when built).
+Build: `0.1.0_Partners-In-Balance_local-1e3bd62e_build-020_20261001T121138Z_g181718cb56cb_web`.
+The hand now has a shaped palm, four unequal bent fingers, opposed thumb,
+small nails, joint creases, and a short rounded wrist with no forearm.
+Its size stays constant at every effort setting. Matching line icons and
+soft exterior attention effects retain keyboard access and noncolor feedback.
+Physics, force values, lesson flow, anonymous storage, schema, and all earlier
+regression repairs are unchanged. Build 016 and its Library version remain preserved.
 
-## Current User Playtest Build - 016
+All 58 unit tests pass. Exact-build browser checks pass for both full 68-row
+packet runs, the five original integrity regressions, the later four review
+defects, and migration of earlier work. Focused graphical checks pass for both
+renderers: repeated choices, actual picking, keyboard focus, reduced motion,
+390px layout, build-016 evidence preservation, and drag versus orbit.
+Three hand angles and normal/button-size views were visually inspected.
+The optional recorder produced only 0.184 seconds of usable motion; that clip
+is excluded rather than represented as a full animation. Screenshots are supplied.
+
+Evidence: `artifacts/polish-unit-final.txt`, the five guided verification folders,
+and `artifacts/visual-polish/verification.json`. Frozen-room batching warnings
+match unchanged build 016; there are no new runtime errors. No physical
+Chromebook performance measurement was performed. See
+`docs/VISUAL-POLISH-REVIEW.md` for scope and limits.
+
+Packaging and same-identity Library replacement are the remaining delivery steps.
+There is no configured remote or issue/PR URL; the user/parent still handles the
+empty LeverLab repository. No deployment, merge, email, or source-game change.
+
+## Preserved User Playtest Build - 016
 
 App source: `7f2e52806be7a0dc041b05506a42bfecd950b42c` (clean when built).
 Build: `0.1.0_Partners-In-Balance_local-1e3bd62e_build-016_20261001T030128Z_g7f2e52806be7_web`.
