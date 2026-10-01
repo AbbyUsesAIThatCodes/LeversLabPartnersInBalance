@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { massKey, POINTER } from "./model.js";
+import {createEffortHand} from './effort-hand.js';
 export const HEIGHT = 9,
   SCALE = 25,
   BEAM_TOP = 0.42;
@@ -137,19 +138,7 @@ export function createApparatus() {
       cylinder(weight,0.48,0.55,COLORS.load,0,-0.275,0,role,"hanging-load");
       for(const y of [0,-0.55])cylinder(weight,0.53,0.08,brass,0,y,0,role,"weight-rim");
     } else {
-      // Original stylized hand. Palm rests on the rail; fingers and forearm
-      // extend across its depth. The force setting never changes hand size.
-      const skin=0x75452f;
-      const palm=mesh(weight,new THREE.SphereGeometry(1,24,16),skin,[0,.28,0],role,"contacting-palm");
-      palm.scale.set(.67,.28,.83);
-      for(const [x,length] of [[-.48,.68],[-.16,.94],[.16,1.02],[.48,.82]]){
-        const finger=mesh(weight,new THREE.CapsuleGeometry(.17,length,6,12),skin,[x,.19,-.66-length/2],role,"finger");
-        finger.rotation.x=Math.PI/2;
-      }
-      const thumb=mesh(weight,new THREE.CapsuleGeometry(.2,.65,6,12),skin,[-.76,.25,-.25],role,"thumb");thumb.rotation.z=-.8;thumb.rotation.x=1.0;
-      const wrist=mesh(weight,new THREE.CapsuleGeometry(.44,.75,8,16),skin,[0,.59,1.0],role,"wrist");wrist.rotation.x=.9;
-      const forearm=mesh(weight,new THREE.CapsuleGeometry(.5,2.4,8,16),skin,[0,1.5,2.45],role,"forearm");forearm.rotation.x=.9;
-      for(const m of weight.children){m.material.metalness=0;m.material.roughness=.8;}
+      createEffortHand((geometry,color,xyz,name)=>mesh(weight,geometry,color,xyz,role,name));
     }
   }
   // Back-face shells extend outside each original surface without tinting it.
@@ -168,7 +157,7 @@ export function createApparatus() {
       anchor.position.set((state[role] - state.fulcrum) / SCALE, 0, 0);
       anchor.rotation.z = role === "load" ? -angle : 0;
       weights[role].scale.setScalar(role === "load" ? size : 1);
-      if(role === "effort")weights[role].rotation.y=state.effort>state.fulcrum?Math.PI/2:-Math.PI/2;
+      if(role === "effort")weights[role].rotation.y=state.effort>state.fulcrum?Math.PI/3:-Math.PI/3;
       weights[role].position.y = role === "load" ? -1.6 : BEAM_TOP;
     }
     moving.updateMatrixWorld(true);

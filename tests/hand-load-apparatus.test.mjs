@@ -14,8 +14,7 @@ test('hand contact, vertical hanging load, clearance and force anchors survive b
  for(const mass of [25,100,1000])for(const angle of [-STOP,0,STOP])for(const pair of [[-250,250,-175],[-250,250,175],[-75,75,0]])for(const reverse of [false,true]){
   let s={load:pair[0],effort:pair[1],fulcrum:pair[2],loadMass:mass,effortMass:1000};if(reverse)s=swapPositions(s);a.update(s,angle);cases++;
   close(a.weights.load.getWorldQuaternion(new THREE.Quaternion()).angleTo(new THREE.Quaternion()),0);
-  const palm=a.weights.effort.getObjectByName('contacting-palm');
-  const contact=a.beam.worldToLocal(palm.localToWorld(new THREE.Vector3(0,-1,0)));close(contact.y,BEAM_TOP);
+  let contactY=Infinity;for(const skin of a.weights.effort.children.filter(m=>m.userData.handSurface&&!m.userData.noCue)){const points=skin.geometry.getAttribute('position');for(let i=0;i<points.count;i++){const p=a.beam.worldToLocal(skin.localToWorld(new THREE.Vector3().fromBufferAttribute(points,i)));contactY=Math.min(contactY,p.y);}}close(contactY,BEAM_TOP);
   let torque=0;for(const role of ['load','effort']){const p=pos(a.attachments[role]);close(p.x,s.fulcrum/SCALE+(s[role]-s.fulcrum)/SCALE*Math.cos(angle));torque-=(p.x-s.fulcrum/SCALE)*s[role+'Mass']*GRAVITY*SCALE/1e6;assert.ok(new THREE.Box3().setFromObject(a.weights[role]).min.y>0,'clears desk');}
   close(torque,appliedTorque(s,angle));
  }assert.equal(cases,54);
