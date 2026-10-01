@@ -8,6 +8,7 @@
     <link rel="icon" href="./favicon.svg" />
     <link rel="stylesheet" href="./style.css" />
     <link rel="stylesheet" href="./notebook.css" />
+    <link rel="stylesheet" href="./layout.css" />
   </head>
   <body>
     <main id="app">
@@ -20,6 +21,7 @@
               ><small>Predict. Release. Explain.</small><strong id="build-summary">__DISPLAY_ID__</strong>
             </div>
           </div>
+          <div class="header-controls">
           <div class="actions">
             <button
               id="controls-toggle"
@@ -36,8 +38,7 @@
             ><button id="help">Help</button
             ><button id="fullscreen">Full Screen</button>
           </div>
-        </header>
-        <div id="build-identity" aria-label="Build Identifier" hidden>__BUILD_ID__</div>
+
         <nav class="tools" aria-label="Workbench Controls">
           <output id="beam-status" aria-live="polite">Held Level</output
           ><button id="hold" aria-pressed="true">Release</button
@@ -59,6 +60,9 @@
           </div>
           <button id="workbench-help" class="help-tip" type="button" aria-label="Move and Adjust Help">?</button>
         </nav>
+          </div>
+        </header>
+        <div id="build-identity" aria-label="Build Identifier" hidden>__BUILD_ID__</div>
       </div>
       <div id="stage">
         <div id="scene"><p class="loading">Setting up your workbench…</p></div>

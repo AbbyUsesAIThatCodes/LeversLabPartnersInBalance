@@ -215,73 +215,45 @@ function updateStatus(isHeld = held, motion = ready ? scene.motion : fallbackMot
     status === "Balanced",
   );
 }
-// Reserve the overlays even while hidden: toggling them must never reframe
-// a student's camera. Read their real CSS dimensions rather than duplicating
-// responsive breakpoints and card sizes in the scene.
-function viewBounds() {
-  const app = $("#app"), controls = $("#controls-panel"), math = $("#math-panel");
-  const controlsHidden = controls.hidden, mathHidden = math.hidden;
-  const controlsOpen = app.classList.contains("controls-open");
-  const mathHeight = app.style.getPropertyValue("--math-height");
-  const toolbarBottom = app.style.getPropertyValue("--toolbar-bottom");
-  try {
-    controls.hidden = math.hidden = false;
-    app.classList.remove("controls-open");
-    const mathRect = math.getBoundingClientRect();
-    app.style.setProperty("--math-height", `${mathRect.height}px`);
-    const compact = compactViewport.matches;
-    const toolbar = $("#top").getBoundingClientRect();
-    app.style.setProperty("--toolbar-bottom", `${toolbar.bottom}px`);
-    const shared = $("#panel-fulcrum").getBoundingClientRect();
-    const cards = [...$("#object-controls").children].map((e) => e.getBoundingClientRect());
-    const top = Math.max(toolbar.bottom, !compact && innerHeight > 500 ? shared.bottom : 0);
-    const bottom = Math.min(mathRect.top,
-      compact ? controls.getBoundingClientRect().top : innerHeight <= 500 ? shared.top : innerHeight);
-    const labelHeight = Math.max(...$$(".part-tag").map((e) => e.getBoundingClientRect().height));
-    return {
-      left: compact ? 14 : cards[0].right + 14,
-      right: compact ? innerWidth - 14 : Math.min(cards[1].left - 14, $('#notebook')&&!$('#notebook').hidden?$('#notebook').getBoundingClientRect().left-16:innerWidth-14),
-      top: top + labelHeight + 18,
-      bottom: bottom - 14,
-    };
-  } finally {
-    controls.hidden = controlsHidden;
-    math.hidden = mathHidden;
-    app.classList.toggle("controls-open", controlsOpen);
-    if (mathHeight) app.style.setProperty("--math-height", mathHeight);
-    else app.style.removeProperty("--math-height");
-    if (toolbarBottom) app.style.setProperty("--toolbar-bottom", toolbarBottom);
-    else app.style.removeProperty("--toolbar-bottom");
-  }
+// The same measured clear area drives the camera, labels, and diagram.
+// Controls occupy a left rail; question work stays in the bottom dock.
+let layoutFrame=0;
+function clearArea() {
+  const app=$('#app'), pane=$('#notebook'), math=$('#math-panel');
+  const top=$('#top').getBoundingClientRect().bottom;
+  app.style.setProperty('--toolbar-bottom',`${top}px`);
+  const notebookBottom=pane&&!pane.hidden?innerHeight-pane.getBoundingClientRect().top:0;
+  const mathBottom=!math.hidden?innerHeight-$('footer').getBoundingClientRect().top:0;
+  const dock=Math.max(notebookBottom,mathBottom,12);
+  app.style.setProperty('--dock-reserve',`${dock}px`);
+  const rail=$('#controls-panel').getBoundingClientRect();
+  const left=!$('#controls-panel').hidden?rail.right+14:16;
+  const area={left,right:innerWidth-16,top:top+10,bottom:innerHeight-dock-12};
+  app.style.setProperty('--clear-left',`${area.left}px`);
+  app.style.setProperty('--clear-top',`${area.top}px`);
+  app.style.setProperty('--clear-width',`${Math.max(80,area.right-area.left)}px`);
+  app.style.setProperty('--clear-height',`${Math.max(80,area.bottom-area.top)}px`);
+  return area;
+}
+function viewBounds(){
+  const area=clearArea(),labels=Math.max(0,...$$('.part-tag').map(e=>e.getBoundingClientRect().height));
+  return {...area,top:area.top+labels+16,bottom:Math.max(area.top+labels+70,area.bottom-8)};
+}
+function scheduleLayout(){
+  if(layoutFrame)return;
+  layoutFrame=requestAnimationFrame(()=>{layoutFrame=0;clearArea();if(ready)scene.resize(false,true);else if(fallback)drawFallback();});
 }
 
 function onFrame({ positions, angle, velocity, held: isHeld }) {
   updateStatus(isHeld, { angle, velocity });
   $("#app").dataset.angle = angle;
   if (!positions.load) return;
-  const compactControls = !$("#controls-panel").hidden && compactViewport.matches;
-  const sharedControlsAbove =
-    !$("#controls-panel").hidden && !compactControls && innerHeight > 500;
-  const top = Math.max(
-    $("#top").getBoundingClientRect().bottom,
-    sharedControlsAbove ? $("#panel-fulcrum").getBoundingClientRect().bottom : 0,
-  );
-  const bottom = compactControls
-    ? $("#controls-panel").getBoundingClientRect().top
-    : showMath
-      ? $("#math-panel").getBoundingClientRect().top
-      : innerHeight - 12;
+  const area=clearArea(),top=area.top,bottom=area.bottom;
   const parts = [...ROLES].sort((a, b) => positions[a].x - positions[b].x);
   const tags = parts.map((p) => $(`[data-tag="${p}"]`));
   const widths = tags.map((t) => t.getBoundingClientRect().width),
     heights = tags.map((t) => t.getBoundingClientRect().height);
-  const sideControls = !$("#controls-panel").hidden && !compactControls;
-  const left = sideControls
-    ? $("#object-controls").firstElementChild.getBoundingClientRect().right + 8
-    : 10;
-  const right = sideControls
-    ? $("#object-controls").lastElementChild.getBoundingClientRect().left - 8
-    : innerWidth - 10;
+  const left=area.left,right=area.right;
   const xs = parts.map((p, i) =>
     Math.max(
       left + widths[i] / 2,
@@ -388,6 +360,8 @@ function syncPanelVisibility() {
   const visible =
     showMath && !(!$("#controls-panel").hidden && compactViewport.matches);
   $("#math-panel").hidden = !visible;
+  $("#app").classList.toggle("math-open",visible);
+  scheduleLayout();
   $("#math-toggle").textContent = visible ? "Hide Math" : "Show Math";
   $("#math-toggle").setAttribute("aria-expanded", String(visible));
 }
@@ -403,6 +377,7 @@ function showControls(show) {
   syncPanelVisibility();
   hideTip();
   if (show) {
+    $("#controls-panel").scrollTop=0;
     for (const panel of $$("#object-controls, .control-card")) panel.scrollTop = 0;
     $("#object-controls input").focus({ preventScroll: true });
   } else $("#controls-toggle").focus({ preventScroll: true });
@@ -580,20 +555,9 @@ document.addEventListener("keydown", (e) => {
     showControls(false);
   }
 });
-new ResizeObserver(() => {
-  $("#app").style.setProperty(
-    "--toolbar-bottom",
-    `${$("#top").getBoundingClientRect().bottom}px`,
-  );
-  if (ready) scene.dirty = true;
-}).observe($("#top"));
-new ResizeObserver(() => {
-  $("#app").style.setProperty(
-    "--math-height",
-    `${$("#math-panel").getBoundingClientRect().height}px`,
-  );
-  if (ready) scene.dirty = true;
-}).observe($("#math-panel"));
+new ResizeObserver(scheduleLayout).observe($('#top'));
+new ResizeObserver(scheduleLayout).observe($('#math-panel'));
+window.addEventListener('resize',scheduleLayout);
 const hideTip = installTooltips(resource => learning?.supportViewed('tooltip', resource));
 function unavailable() {
   if (fallback) return;
@@ -644,7 +608,7 @@ try {
   unavailable();
 }
 learning = mountLearning({
-  layout:()=>{if(ready)scene.resetCamera();},
+  layout:scheduleLayout,
   pauseCue: message => { $('#beam-status').title=message; },
   identify: (active, feedback) => { const changed=feedback&&feedback!==identifyFeedback;identifying=active;identifyFeedback=feedback;scene?.setIdentification(active,feedback);render();if(changed)setTimeout(()=>{if(identifyFeedback===feedback)document.querySelectorAll('.identify-candidate.right,.identify-candidate.wrong,.fallback-cue.right,.fallback-cue.wrong').forEach(el=>el.classList.remove('right','wrong'));},1050); },
   get: () => ({ state: { ...state }, held }),

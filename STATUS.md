@@ -1,5 +1,19 @@
 # Lever Lab: Partners In Balance
 
+## Responsive Layout Pass In Progress
+
+The supplied 1920x1200 screenshot was materialized through the current Library
+helper in existing WSL, including its Library metadata, and inspected as pixels.
+Windows materialization had failed before installing any file; no credential
+workaround was used. The screenshot shows the right notebook covering effort
+controls/hand and a separate workbench toolbar beneath the header.
+
+The focused change consolidates existing buttons into the header, moves the
+notebook to a bottom dock, and groups controls into a left rail. Shared measured
+bounds frame the whole lever to the right and place its labels/diagram in the
+same clear area. All questions, controls, save contracts, hand art, and effects
+remain. Build 020 and Library version 4 are preserved while this pass is tested.
+
 ## Focused Visual Review - Build 020
 
 App source: `181718cb56cb81331987b28b7035b35f0ab2bd13` (clean when built).

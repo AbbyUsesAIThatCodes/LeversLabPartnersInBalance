@@ -138,8 +138,10 @@ export class LeverScene extends WorkshopScene {
     };
     const apparatus = this.apparatus || createApparatus();
     const points = [];
-    for (const angle of [-STOP, 0, STOP]) {
-      apparatus.update(this.state || DEFAULT, angle);
+    const configurations=[this.state||DEFAULT];
+    for(const fulcrum of [-175,0,175])for(const swapped of [false,true])configurations.push({loadMass:1000,effortMass:1000,load:swapped?250:-250,effort:swapped?-250:250,fulcrum});
+    for (const state of configurations) for (const angle of [-STOP, 0, STOP]) {
+      apparatus.update(state, angle);
       for (const root of [apparatus.moving, apparatus.base]) root.traverse((object) => {
         if (!object.geometry || object.userData.attention) return;
         object.geometry.computeBoundingBox();
@@ -157,7 +159,7 @@ export class LeverScene extends WorkshopScene {
     });
     this.camera.clearViewOffset();
     this.controls.target.set(0, 5.8, 0);
-    const direction = new THREE.Vector3(side ? 0 : 6, side ? 2 : 28, 51).normalize();
+    const direction = new THREE.Vector3(side ? 0 : 10, side ? 2 : 28, 51).normalize();
     const boundsAt = (distance) => {
       this.camera.position.copy(this.controls.target).addScaledVector(direction, distance);
       this.camera.lookAt(this.controls.target);
@@ -200,10 +202,10 @@ export class LeverScene extends WorkshopScene {
   sideCamera() {
     this.fitCamera(true);
   }
-  resize(reset = false) {
+  resize(reset = false, force = false) {
     const w = this.host.clientWidth, h = this.host.clientHeight;
     if (!w || !h) return;
-    if (!reset && this.lastSize?.w === w && this.lastSize?.h === h) return;
+    if (!reset && !force && this.lastSize?.w === w && this.lastSize?.h === h) return;
     const offset = this.camera.position.clone().sub(this.controls.target);
     const zoom = this.fitDistance ? offset.length() / this.fitDistance : 1;
     this.renderer.setSize(w, h, false);
