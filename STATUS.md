@@ -1,19 +1,45 @@
 # Lever Lab: Partners In Balance
 
-## Current Repair Source - Final Browser Recheck Pending
+## Current Repair Candidate - Build 016
 
-Build 014 is on hold for student use. The four independently reported edge cases
-are fixed in `004a751a99a472d4223d2c7f1c528004c125b895`; all 54 unit tests pass.
-Validated intermediate candidate identity:
-`0.1.0_Partners-In-Balance_local-1e3bd62e_build-015_20261001T025418Z_g004a751a99a4_web`.
-Build 015 passed both full 68-row guided flows, all four review edge cases, the
-previous five browser integrity regressions, migration, and graphical preview.
-A related synthetic regression then exposed generated learner-name prefixes in
-historical check metadata. This report-only correction now passes all 55 unit
-tests. Responses and original backups are preserved. A new clean build will
-repeat the browser checks before packaging.
-Independent recheck is required before another Library replacement. Library
-version 2 and build 014 remain preserved. No deployment or remote action occurred.
+App source: `7f2e52806be7a0dc041b05506a42bfecd950b42c` (clean when built).
+Build: `0.1.0_Partners-In-Balance_local-1e3bd62e_build-016_20261001T030128Z_g7f2e52806be7_web`.
+All 55 unit tests pass. All four reported defects are repaired, including a
+related generated-name leak in historical check metadata. The four original
+regressions failed before repair; the additional report regression also failed
+before its correction. Student-authored evidence and original backups are retained.
+
+Exact-build browser suites all pass: two complete 68-row guided walkthroughs,
+all new edge cases in WebGL and diagram mode, the earlier five integrity
+regressions, migration of build-011 synthetic work (all 209 revisions), and the
+graphical preview. They exercise Q7-to-Q11 traceability, Q12, Q13/Q14 drawings,
+final readable reports, restore/reload, quota recovery, and generated identity
+removal. Eight frozen-room hashes match. No browser errors were reported.
+
+Evidence: `artifacts/guided-full/verification.json`,
+`artifacts/review-014-edges/verification.json`,
+`artifacts/guided-correctness/verification.json`,
+`artifacts/guided-migration/verification.json`,
+`artifacts/guided-preview/verification.json`, and
+`artifacts/review014-unit-final.txt`.
+
+The local ZIP is `output/0.1.0_Partners-In-Balance_local-1e3bd62e_build-016_20261001T030128Z_g7f2e52806be7_web.zip`
+(4,122,237 bytes, 43 entries; ZIP integrity verified).
+SHA256: `5715b8a5fa779ff5540686e6cb203917b8a35e58aa04034db2b52e83c5fa03b3`.
+It includes the launcher, screenshots, complete synthetic reports/backups, all
+five browser-suite verification records, source record, and license notices.
+Artifact paths and hashes: `artifacts/build016-review-deliverables.json`.
+
+Private JESS_PC preview `http://127.0.0.1:4200/` was verified serving build 016
+(owned helper PID 6248). `StartReview.cmd` is in its review package; the launcher
+uses port 4201 by default. Saves are tied to the preview address. The prior 014
+package and ZIP remain intact; its prior helper alone was replaced.
+
+Independent recheck and user playtest approval remain pending. Hold student use.
+No new Library version was uploaded: existing ZIP/screenshots remain version 2
+(build 014), preserved and held. Replace those same identities only after recheck.
+There is no configured remote or issue/PR URL; the parent/user still handles the
+empty LeverLab repository. No deployment, merge, email, or source-game change.
 
 ## Preserved Guided Review - Build 014
 
