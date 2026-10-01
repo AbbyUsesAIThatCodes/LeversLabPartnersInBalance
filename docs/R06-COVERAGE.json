@@ -73,8 +73,8 @@
   ],
   "excludes": "Optional A–E and proprietary publisher source files",
   "specialRows": {
-    "Intro": "T0, T1, and T2 recorded practice",
-    "Routine": "T0 recorded practice or a held-level release record"
+    "Intro": "Completed identification, labeled sketch, setup, and arm labels after the introduction",
+    "Routine": "A held-level release record with retained prediction/process evidence"
   },
   "rows": [
     {
@@ -86,7 +86,7 @@
         {
           "key": "role",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -107,7 +107,7 @@
         {
           "key": "role",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -128,7 +128,7 @@
         {
           "key": "role",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -149,7 +149,7 @@
         {
           "key": "drawing",
           "type": "sketch",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -182,7 +182,7 @@
         {
           "key": "loadArm",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -190,7 +190,7 @@
         {
           "key": "effortArm",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -211,7 +211,7 @@
         {
           "key": "agree",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -219,7 +219,7 @@
         {
           "key": "start",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -227,7 +227,7 @@
         {
           "key": "end",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -235,7 +235,7 @@
         {
           "key": "reason",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -268,7 +268,7 @@
         {
           "key": "prediction",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": true,
           "teacherReview": false,
           "automatic": false
@@ -289,7 +289,7 @@
         {
           "key": "observation",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -297,7 +297,7 @@
         {
           "key": "notes",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -318,7 +318,7 @@
         {
           "key": "mass",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -326,7 +326,7 @@
         {
           "key": "arm",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -334,7 +334,7 @@
         {
           "key": "reason",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -367,7 +367,7 @@
         {
           "key": "prediction",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": true,
           "teacherReview": false,
           "automatic": false
@@ -388,7 +388,7 @@
         {
           "key": "observation",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -396,7 +396,7 @@
         {
           "key": "notes",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -417,7 +417,7 @@
         {
           "key": "changed",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -425,7 +425,7 @@
         {
           "key": "from",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -433,7 +433,7 @@
         {
           "key": "to",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -441,7 +441,7 @@
         {
           "key": "effortMass",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -449,7 +449,7 @@
         {
           "key": "loadArm",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -457,7 +457,7 @@
         {
           "key": "effortArm",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -465,7 +465,7 @@
         {
           "key": "fulcrum",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -498,7 +498,7 @@
         {
           "key": "prediction",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": true,
           "teacherReview": false,
           "automatic": false
@@ -506,7 +506,7 @@
         {
           "key": "observation",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -514,7 +514,7 @@
         {
           "key": "notes",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -535,7 +535,7 @@
         {
           "key": "added",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -543,7 +543,7 @@
         {
           "key": "from",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -551,7 +551,7 @@
         {
           "key": "to",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -559,7 +559,7 @@
         {
           "key": "reason",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -574,13 +574,13 @@
     {
       "id": "Q5d",
       "page": "Part 1 · Page 4",
-      "title": "Must The Heavier Object Fall?",
+      "title": "Must The Load Move Down?",
       "tutorial": "T4",
       "fields": [
         {
           "key": "always",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -588,7 +588,7 @@
         {
           "key": "evidence",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -609,7 +609,7 @@
         {
           "key": "observation",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -617,7 +617,7 @@
         {
           "key": "notes",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -632,13 +632,13 @@
     {
       "id": "Q6b",
       "page": "Part 1 · Page 4",
-      "title": "Record Your Balancing Mass",
+      "title": "Record Your Balancing Push",
       "tutorial": "T4",
       "fields": [
         {
           "key": "mass",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -659,7 +659,7 @@
         {
           "key": "q5",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -667,7 +667,7 @@
         {
           "key": "q6",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -675,7 +675,7 @@
         {
           "key": "reason",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -708,7 +708,7 @@
         {
           "key": "predictedMass",
           "type": "number",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": true,
           "teacherReview": false,
           "automatic": false
@@ -716,7 +716,7 @@
         {
           "key": "observation",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -724,7 +724,7 @@
         {
           "key": "finalMass",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -745,7 +745,7 @@
         {
           "key": "predictedMass",
           "type": "number",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": true,
           "teacherReview": false,
           "automatic": false
@@ -753,7 +753,7 @@
         {
           "key": "observation",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -761,7 +761,7 @@
         {
           "key": "finalMass",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -782,7 +782,7 @@
         {
           "key": "predictedMass",
           "type": "number",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": true,
           "teacherReview": false,
           "automatic": false
@@ -790,7 +790,7 @@
         {
           "key": "observation",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -798,7 +798,7 @@
         {
           "key": "finalMass",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -819,7 +819,7 @@
         {
           "key": "predictedMass",
           "type": "number",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": true,
           "teacherReview": false,
           "automatic": false
@@ -827,7 +827,7 @@
         {
           "key": "observation",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -835,7 +835,7 @@
         {
           "key": "finalMass",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -856,7 +856,7 @@
         {
           "key": "trend",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -864,7 +864,7 @@
         {
           "key": "reason",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -885,7 +885,7 @@
         {
           "key": "near",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -893,7 +893,7 @@
         {
           "key": "far",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -901,7 +901,7 @@
         {
           "key": "ratio",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -909,7 +909,7 @@
         {
           "key": "reason",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -942,7 +942,7 @@
         {
           "key": "predictedMass",
           "type": "number",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": true,
           "teacherReview": false,
           "automatic": false
@@ -950,7 +950,7 @@
         {
           "key": "observation",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -958,7 +958,7 @@
         {
           "key": "finalMass",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -979,7 +979,7 @@
         {
           "key": "predictedMass",
           "type": "number",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": true,
           "teacherReview": false,
           "automatic": false
@@ -987,7 +987,7 @@
         {
           "key": "observation",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -995,7 +995,7 @@
         {
           "key": "finalMass",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1016,7 +1016,7 @@
         {
           "key": "predictedMass",
           "type": "number",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": true,
           "teacherReview": false,
           "automatic": false
@@ -1024,7 +1024,7 @@
         {
           "key": "observation",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1032,7 +1032,7 @@
         {
           "key": "finalMass",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1053,7 +1053,7 @@
         {
           "key": "trend",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1061,7 +1061,7 @@
         {
           "key": "reason",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -1082,7 +1082,7 @@
         {
           "key": "changed",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1090,7 +1090,7 @@
         {
           "key": "reason",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -1111,7 +1111,7 @@
         {
           "key": "constants",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1132,7 +1132,7 @@
         {
           "key": "observation",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1140,7 +1140,7 @@
         {
           "key": "notes",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -1161,7 +1161,7 @@
         {
           "key": "mass",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": true,
           "teacherReview": false,
           "automatic": false
@@ -1169,7 +1169,7 @@
         {
           "key": "roles",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": true,
           "teacherReview": false,
           "automatic": false
@@ -1177,7 +1177,7 @@
         {
           "key": "balance",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": true,
           "teacherReview": false,
           "automatic": false
@@ -1198,7 +1198,7 @@
         {
           "key": "loadArm",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1206,7 +1206,7 @@
         {
           "key": "effortArm",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1227,7 +1227,7 @@
         {
           "key": "observation",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1235,7 +1235,7 @@
         {
           "key": "notes",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -1256,7 +1256,7 @@
         {
           "key": "reason",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -1277,7 +1277,7 @@
         {
           "key": "coordinate",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1298,7 +1298,7 @@
         {
           "key": "prediction",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": true,
           "teacherReview": false,
           "automatic": false
@@ -1306,7 +1306,7 @@
         {
           "key": "observation",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1314,7 +1314,7 @@
         {
           "key": "notes",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -1347,7 +1347,7 @@
         {
           "key": "loadArm",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1355,7 +1355,7 @@
         {
           "key": "effortArm",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1363,7 +1363,7 @@
         {
           "key": "gap",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1384,7 +1384,7 @@
         {
           "key": "prediction",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": true,
           "teacherReview": false,
           "automatic": false
@@ -1392,7 +1392,7 @@
         {
           "key": "observation",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1400,7 +1400,7 @@
         {
           "key": "notes",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -1421,7 +1421,7 @@
         {
           "key": "reason",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -1442,7 +1442,7 @@
         {
           "key": "loadMass",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1450,7 +1450,7 @@
         {
           "key": "loadArm",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1458,7 +1458,7 @@
         {
           "key": "loadProduct",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1466,7 +1466,7 @@
         {
           "key": "effortMass",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1474,7 +1474,7 @@
         {
           "key": "effortArm",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1482,7 +1482,7 @@
         {
           "key": "effortProduct",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1503,7 +1503,7 @@
         {
           "key": "compare",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1511,7 +1511,7 @@
         {
           "key": "reason",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -1532,7 +1532,7 @@
         {
           "key": "trialId",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1540,7 +1540,7 @@
         {
           "key": "loadMass",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1548,7 +1548,7 @@
         {
           "key": "loadArm",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1556,7 +1556,7 @@
         {
           "key": "loadProduct",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1564,7 +1564,7 @@
         {
           "key": "effortMass",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1572,7 +1572,7 @@
         {
           "key": "effortArm",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1580,7 +1580,7 @@
         {
           "key": "effortProduct",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1601,7 +1601,7 @@
         {
           "key": "rule",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1609,7 +1609,7 @@
         {
           "key": "reason",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -1630,7 +1630,7 @@
         {
           "key": "ima",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1651,7 +1651,7 @@
         {
           "key": "ima",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1672,7 +1672,7 @@
         {
           "key": "ima",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1693,7 +1693,7 @@
         {
           "key": "row1",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1701,7 +1701,7 @@
         {
           "key": "row2",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1709,7 +1709,7 @@
         {
           "key": "row3",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1730,7 +1730,7 @@
         {
           "key": "row",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1738,7 +1738,7 @@
         {
           "key": "reason",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -1759,7 +1759,7 @@
         {
           "key": "guarantee",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1767,7 +1767,7 @@
         {
           "key": "reason",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -1788,7 +1788,7 @@
         {
           "key": "observation",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1796,7 +1796,7 @@
         {
           "key": "arm",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1804,7 +1804,7 @@
         {
           "key": "loadLabel",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1812,7 +1812,7 @@
         {
           "key": "effortLabel",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": true
@@ -1833,7 +1833,7 @@
         {
           "key": "prediction",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": true,
           "teacherReview": false,
           "automatic": false
@@ -1854,7 +1854,7 @@
         {
           "key": "observation",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1862,7 +1862,7 @@
         {
           "key": "arm",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1883,7 +1883,7 @@
         {
           "key": "reason",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -1904,7 +1904,7 @@
         {
           "key": "loadMass",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1912,7 +1912,7 @@
         {
           "key": "effortMass",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1920,7 +1920,7 @@
         {
           "key": "loadArm",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1928,7 +1928,7 @@
         {
           "key": "effortArm",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1949,7 +1949,7 @@
         {
           "key": "drawing",
           "type": "sketch",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -1970,7 +1970,7 @@
         {
           "key": "loadProduct",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1978,7 +1978,7 @@
         {
           "key": "effortProduct",
           "type": "number",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -1986,7 +1986,7 @@
         {
           "key": "prediction",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": true,
           "teacherReview": false,
           "automatic": false
@@ -2007,7 +2007,7 @@
         {
           "key": "observation",
           "type": "select",
-          "individual": false,
+          "authoredResponse": false,
           "prediction": false,
           "teacherReview": false,
           "automatic": false
@@ -2015,7 +2015,7 @@
         {
           "key": "notes",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -2036,7 +2036,7 @@
         {
           "key": "claim",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false
@@ -2044,7 +2044,7 @@
         {
           "key": "evidence",
           "type": "text",
-          "individual": true,
+          "authoredResponse": true,
           "prediction": false,
           "teacherReview": true,
           "automatic": false

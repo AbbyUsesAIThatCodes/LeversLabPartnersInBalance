@@ -1,8 +1,6 @@
-# R06 Challenge Coverage
+# R06 Guided Coverage
 
-All 68 agreed IDs are retained: Intro, Routine, and 66 question subparts. This inventory alone is not proof of correct completion. The full UI test creates separate anonymous diagram and 3D runs, follows constrained-check failures to their exact tutorial and back, preserves row retries, and verifies downloaded reports and restored notebooks. Actual runs and build IDs live in `artifacts/full-packet-review/verification.json`. Open reasoning and sketch quality still require teacher review.
-
-The latest approved interface groups Q1a-Q1c into a three-correct graphical identification sequence while retaining their IDs and evidence. Shared anonymous classwork supersedes the earlier partner-name/role UI requirement. T12 now covers progress, recovery, and downloads. Final export is gated on all 68 required evidence rows.
+All 68 agreed IDs are retained: Intro, Routine, and 66 question subparts. This inventory alone is not proof of correct completion. The guided UI test completes anonymous diagram and 3D runs, verifies objective Continue gates, preserves row retries, and checks downloaded reports and restored notebooks. T0-T12 instruction is embedded; no separate Learn mode or partner-name UI remains. The flat index groups three identification subparts into one display step while retaining every evidence ID. Actual run evidence is in `artifacts/guided-full/verification.json`. Open reasoning and sketch quality still require teacher review.
 
 Teacher source/key files and local analytical goal definitions remain outside public assets. No optional A–E tasks or physical-build completion claims are added.
 
