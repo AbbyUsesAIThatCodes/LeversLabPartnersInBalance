@@ -1,5 +1,83 @@
 # Lever Lab: Partners In Balance
 
+## Current Guided Review — Build 014
+
+The guided assignment is ready for the user's thorough playtest and independent
+review. App source: `439abfc7261ecb2db6f1d9b7307b5da94bbef209` (clean when built).
+Full identity: `0.1.0_Partners-In-Balance_local-1e3bd62e_build-014_20261001T022507Z_g439abfc7261e_web`.
+Later documentation/test-harness checkpoints do not relabel this artifact.
+
+One guided route embeds T0–T12 instruction and worked examples into all 68 R06
+coverage IDs. Controls remain usable; setup changes pause the beam and require
+a fresh prediction before testing. The constant-size contacting hand supplies
+calibrated effort push; the hanging object is the load. The flat index retains
+all evidence IDs. Writing and sketches remain teacher review, not falsely correct.
+
+The frozen room source is `28e31ff0fbf06ee5fd9fe58cb499f0ef0d757f9a`.
+All eight canonical hashes match; 38 posters are present; the mat, paper pad,
+sheet, and pencil retain their transforms/materials. Room source files are unchanged.
+Library materialization was unavailable on Windows due to os.setxattr; the exact
+public frozen Git blobs supplied by the parent were retrieved and hash-verified.
+
+## Validation
+
+50 unit tests pass. Exact-build browser evidence:
+
+- `artifacts/guided-full/verification.json`: two full 68-row flows, WebGL and
+  diagram; setup-bound predictions, automatic release, Q7 retries and Q7→Q11
+  selection, Q12 ratios, Q13 lift, Q14 keyboard sketch/design, final report,
+  native-print expansion/restoration, and backup restoration. No browser errors
+  or external runtime requests.
+- `artifacts/guided-correctness/verification.json`: all five reported integrity
+  regressions pass in both renderers; support exposure remains attributable.
+- `artifacts/guided-preview/verification.json`: introduction, new room, retained
+  props, 38 posters, graphical streak, flat 64-step index, editable controls,
+  main/notebook synchronization, vertical load/push gestures, vocabulary return.
+- `artifacts/guided-migration/verification.json`: actual build-011 synthetic
+  notebook retains all answers and 209 history entries; semantic revisions need
+  another look, unchanged IMA completion remains, raw pre-update bytes survive
+  autosaves/reload and can be downloaded, future schema rejected atomically.
+
+An initial report screenshot capture failed after print expansion. The test
+harness now captures the interactive report separately, then checks print
+expansion/restoration; both final full walkthroughs passed. No app change or
+rebuild was needed for that harness correction.
+
+## Delivered Preview
+
+Same three Library items, all now version 2:
+
+- ZIP: `libfile_b5341add39fc819197cb64a7f01bedc9`
+- Identification: `libfile_4abd580955888191bd72908f5f32e64d`
+- Design Evidence: `libfile_ff0ef5b87fe081919fe1c14698970f2c`
+
+Exact filenames, file IDs, byte counts, and SHA-256 values are retained in
+`artifacts/library-guided-delivery/confirmed-deliverables.json`.
+ZIP SHA-256: `47dd49bbeff4b11cff395cc08e4b96a5dbd8a054e0b0fd8c2481bb539bed5aae`; 4,107,273 bytes, 38 entries.
+ZIP contents were checked. It includes StartReview.cmd and Node.js local server,
+the offline game, screenshots, synthetic completed work, and exact-build evidence.
+
+JESS_PC preview: http://127.0.0.1:4200/ (build 014).
+Server/launcher/package details: `artifacts/FINAL-PREVIEW.json`.
+The packaged launcher defaults to port 4201; browser storage is tied to the
+address, so use recovery download/import when changing ports or devices.
+
+Prepared Library uploads returned a deterministic unavailable error before any
+write. Authorized owned replacements then succeeded with version-1 guards.
+Windows cannot store the returned extended attributes; the authoritative identity
+and new versions are preserved in the local sidecar above.
+
+## Boundaries And Remaining Work
+
+The source repository remains clean at baseline
+`9bfce52767e51ae728ffa9fec717264c554d026b`. No active Actions workflow, remote,
+public deployment, merge, auto-merge, email, or original-game change.
+Empty LeverLab remote creation remains with the parent/user. History bundle stays
+local. All learner evidence is local; Classroom attachment/Turn In is manual.
+Automated evidence checks do not certify reasoning quality or physical building.
+
+## Earlier Checkpoints
+
 ## New Revision In Progress
 
 The latest user direction supersedes the three-mode UI and previous apparatus
