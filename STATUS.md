@@ -26,7 +26,22 @@ match unchanged build 016; there are no new runtime errors. No physical
 Chromebook performance measurement was performed. See
 `docs/VISUAL-POLISH-REVIEW.md` for scope and limits.
 
-Packaging and same-identity Library replacement are the remaining delivery steps.
+The validated ZIP contains 53 entries and is 6,207,747 bytes.
+SHA256: `8fcd85bf8cd45fbc636ad189d70d093cdd7fcf3f62f2be55faa859e075bec529`.
+The SAME ZIP and two screenshot Library items now confirm version 4; earlier
+versions are preserved. The second screenshot now shows a close-up of the hand.
+Exact IDs, filenames, hashes, and byte counts are retained in
+`artifacts/build020-review-deliverables.json`; successful Library results are in
+`artifacts/library-polish-delivery/confirmed-deliverables.json`.
+Windows extended attributes are unavailable; identity is retained in the
+sidecar. Upload preparation was unavailable before any write; supported guarded
+owned-item replacements succeeded in order without rebuilding artifact bytes.
+
+Private JESS_PC preview `http://127.0.0.1:4200/` now serves this exact build.
+Its package includes `StartReview.cmd` (default port 4201); saves are tied to the
+preview address. The prior 016 ZIP and package remain unchanged. No usable video
+is included. Teacher playtesting remains necessary before student use.
+
 There is no configured remote or issue/PR URL; the user/parent still handles the
 empty LeverLab repository. No deployment, merge, email, or source-game change.
 
