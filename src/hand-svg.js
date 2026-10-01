@@ -1,0 +1,2 @@
+// Original schematic palm and forearm, pointing down onto the contact at (x,y).
+export const handSVG=(x,y,scale=1)=>`<g transform="translate(${x} ${y}) scale(${scale})"><path d="M-11 -64 L11 -64 L12 -31 Q20 -27 19 -18 L14 -5 Q12 0 6 0 H-9 Q-14 0 -15 -6 L-19 -19 Q-21 -26 -17 -28 Q-13 -30 -10 -22 L-9 -35 Z" fill="#75452f" stroke="#4a2b20" stroke-width="1.5"/><path d="M-7 -18 V-5 M0 -19 V-5 M7 -17 V-5" fill="none" stroke="#b58060" stroke-width="1.4"/></g>`;

@@ -1,3 +1,4 @@
+import {gestureKind,gestureDelta} from './gesture.js';
 import * as THREE from "three";
 import { WorkshopScene } from "./workshop.js";
 import {
@@ -15,18 +16,20 @@ import {
 import { createApparatus, HEIGHT, SCALE } from "./apparatus.js";
 
 export class LeverScene extends WorkshopScene {
-  makeRoom() {
+  async makeRoom() {
     super.makeRoom();
-    // Same classroom backdrop as the latest Mechanical Advantage workbench.
-    const wall = this.box(110, 48, 0.4, 0xd8dfd0, 0, 18, -32);
-    wall.castShadow = false;
-    wall.receiveShadow = false;
-    this.classroom = [
-      wall,
-      this.box(30, 12, 0.45, 0x847453, 1, 15, -31.6),
-      this.box(28.8, 10.8, 0.16, 0x355850, 1, 15, -31.3),
-      this.box(31, 0.35, 1.2, 0xae9a76, 1, 8.9, -30.9),
-    ];
+    const inventory=()=>this.scene.children.filter(o=>o.name.startsWith('Retained')).map(o=>({name:o.name,position:o.position.toArray(),rotation:o.rotation.toArray(),scale:o.scale.toArray(),material:o.material?.uuid}));
+    const before=inventory();
+    for(const old of this.legacyRoom)this.scene.remove(old);
+    const {createClassroom}=await import('./canonical-room/src/classroom.js');
+    this.room=createClassroom();await this.room.ready;
+    const anchor=this.room.anchors.GameAnchor_Lever.position;
+    this.room.root.scale.setScalar(40);
+    this.room.root.position.set(-anchor.x*40,-.12-anchor.y*40,-anchor.z*40);
+    this.scene.add(this.room.root);
+    this.roomInventory={before,after:inventory(),anchor:'GameAnchor_Lever',source:'28e31ff0fbf06ee5fd9fe58cb499f0ef0d757f9a'};
+    this.scene.userData.roomIntegration=this.roomInventory;
+    this.scene.fog=null;
   }
   setState(state) {
     this.state = { ...state };
@@ -43,21 +46,14 @@ export class LeverScene extends WorkshopScene {
     this.draw();
   }
   highlight(part) {
-    this.hovered = part;
-    for (const mesh of this.meshes || []) {
-      mesh.material.emissive.set(
-        mesh.userData.part && mesh.userData.part === (part || this.selected)
-          ? 0x376b2a
-          : 0,
-      );
-      mesh.material.emissiveIntensity = 0.35;
-      if (this.identifying && mesh.userData.part) {
-        const picked = this.identifyFeedback?.role === mesh.userData.part;
-        mesh.material.emissive.set(picked ? (this.identifyFeedback.correct ? 0x36c36d : 0xed5252) : 0x75cfff);
-        mesh.material.emissiveIntensity = 0.6;
-      }
+    this.hovered=part;
+    for(const cue of this.apparatus?.cues??[]){
+      const role=cue.userData.cueRole,picked=this.identifyFeedback?.role===role;
+      cue.visible=this.identifying||role===(part||this.selected);
+      cue.material.color.set(this.identifying?(picked?(this.identifyFeedback.correct?0x36c36d:0xed5252):0x75cfff):0x78ad82);
+      cue.material.opacity=this.identifying?.5:.24;
     }
-    this.dirty = true;
+    this.dirty=true;
   }
   setIdentification(active, feedback) {
     this.identifying = active;
@@ -117,13 +113,6 @@ export class LeverScene extends WorkshopScene {
   }
   draw() {
     if (!this.moving) return;
-    this.scene.fog.near = Math.max(
-      65,
-      this.camera.position.distanceTo(this.controls.target) + 35,
-    );
-    this.scene.fog.far = this.scene.fog.near + 80;
-    for (const o of this.classroom || [])
-      o.visible = this.camera.position.z > -28;
     if (this.state) this.apparatus?.update(this.state, this.motion.angle);
     this.scene.updateMatrixWorld(true);
     this.renderer.render(this.scene, this.camera);
@@ -187,7 +176,7 @@ export class LeverScene extends WorkshopScene {
     }
     const b = boundsAt(far);
     this.controls.maxDistance = Math.max(75, far * 2);
-    this.camera.far = Math.max(220, far * 3);
+    this.camera.far = Math.max(900, far * 3);
     this.camera.setViewOffset(w, h,
       (b.left + b.right - area.left - area.right) / 2,
       (b.top + b.bottom - area.top - area.bottom) / 2, w, h);
@@ -233,7 +222,7 @@ export class LeverScene extends WorkshopScene {
       ? 1
       : -1;
   }
-  beginDrag(event, part, kind = "position") {
+  beginDrag(event, part, kind = "auto") {
     if (event.button !== 0 || !event.isPrimary || !this.state) return false;
     this.select(part);
     // Weights slide along the tilted beam; the support moves horizontally.
@@ -249,7 +238,7 @@ export class LeverScene extends WorkshopScene {
     const dx = b.x - a.x,
       dy = b.y - a.y,
       denom = dx * dx + dy * dy;
-    if (kind === "position" && denom < 1600) {
+    if (part === "fulcrum" && denom < 1600) {
       this.callbacks.onNotice?.(
         "Use Side view or the position controls to move along the beam.",
       );
@@ -259,7 +248,7 @@ export class LeverScene extends WorkshopScene {
     event.stopImmediatePropagation();
     this.drag = {
       part,
-      kind,
+      kind:part === "fulcrum" ? "position" : kind,
       pointerId: event.pointerId,
       startX: event.clientX,
       startY: event.clientY,
@@ -305,13 +294,10 @@ export class LeverScene extends WorkshopScene {
         const d = this.drag;
         if (!d || d.pointerId !== e.pointerId) return;
         e.preventDefault();
+        if(d.kind === "auto")d.kind=gestureKind(e.clientX-d.startX,e.clientY-d.startY);
+        if(d.kind === "auto")return;
         const field = d.kind === "mass" ? massKey(d.part) : d.part;
-        const delta =
-          d.kind === "mass"
-            ? (d.startY - e.clientY) * 5
-            : (((e.clientX - d.startX) * d.dx + (e.clientY - d.startY) * d.dy) /
-                d.denom) *
-              500;
+        const delta=gestureDelta(d,e.clientX,e.clientY);
         const next =
           d.kind === "mass"
             ? setMass(this.state, d.part, d.startState[field] + delta)

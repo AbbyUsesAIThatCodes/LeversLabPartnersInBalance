@@ -1,0 +1,3 @@
+
+# Frozen room blobs retain their canonical bytes.
+src/canonical-room/** -text

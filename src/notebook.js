@@ -65,7 +65,7 @@ export function evaluatePart(book,part,workbench) {
  const t=latestTrial(book,part.trial?part.id:part.requiresTrial);
  const designState=part.trial?t?.setup.state:state;
  if(part.design&&designState){
-  if(!valid(designState)||designState.fulcrum!==0||designState.loadMass<2*designState.effortMass)failures.push('The recorded design needs legal coordinates, a centered fulcrum, and load mass at least twice effort mass.');
+  if(!valid(designState)||designState.fulcrum!==0||designState.loadMass<2*designState.effortMass)failures.push('The recorded design needs legal coordinates, a centered fulcrum, and load grams at least twice the effort g-equivalent setting.');
   if(part.setup){for(const [key,want] of Object.entries({loadMass:state.loadMass,effortMass:state.effortMass,loadArm:arm(state,'load'),effortArm:arm(state,'effort')})){if(Number(values.shared?.[key])!==want)failures.push('Recorded '+key+' must match your own setup.');}}
  }
  if(part.trial||part.requiresTrial){
@@ -77,7 +77,7 @@ export function evaluatePart(book,part,workbench) {
    if(part.trial&&(!sameState(state,t.setup.state)||book.trials.some(x=>x.part===part.id&&!x.completedAt)))missing.push('Release and record a completed trial for this current arrangement.');
    const observation=values.shared?.observation;
    if(observation&&observation!=={balance:'Level',load:'Load Side Down',effort:'Effort Side Down'}[t.result])failures.push('Your observation differs from the recorded apparatus result. Review the trial.');
-   if(values.shared?.finalMass!==undefined&&Number(values.shared.finalMass)!==t.setup.state.effortMass)failures.push('Final mass must match the recorded trial.');
+   if(values.shared?.finalMass!==undefined&&Number(values.shared.finalMass)!==t.setup.state.effortMass)failures.push('Final effort push must match the recorded trial.');
    if(part.id==='Q13c'&&Number(values.shared?.arm)!==t.setup.effortArm)failures.push('The arm must match your successful lifting trial.');
   }
  }
@@ -137,6 +137,8 @@ export function parseBackup(text,{build=null,catalog=QUESTION_REVISIONS}={}){
   if(!obj(e)||!str(e.type,100)||!str(e.at,50)||!['A','B'].includes(e.driver)||!KNOWN_PARTS[e.part])fail();
   if(e.type==='part-checked'&&(!KNOWN_PARTS[e.id]||e.id!==e.part||!checkValid(e.check)||!wb(e.setup)||!answersValid(e.id,e.answers)))fail();
   if(e.type==='identify-picked'&&(!['effort','load','fulcrum'].includes(e.picked)||!['effort','load','fulcrum'].includes(e.expected)||typeof e.correct!=='boolean'||e.correct!==(e.picked===e.expected)||!Number.isInteger(e.streak)||e.streak<0||e.streak>3||(!e.correct&&e.streak!==0)))fail();
+  if(['prediction-recorded','prediction-stale'].includes(e.type)&&(!str(e.predictionId,100)||!b.guided?.predictions.some(p=>p.id===e.predictionId&&p.source===e.source&&p.target===e.target)))fail();
+  if(e.type==='calibration-response'&&!['push','hand'].includes(e.value))fail();
   if(e.type==='control-change'&&(!valid(e.before)||!valid(e.after)||typeof e.held!=='boolean'))fail();
   if(['trial-completed','trial-interrupted'].includes(e.type)&&(!str(e.trialId,100)||!b.trials.some(t=>t.id===e.trialId&&t.part===e.part)))fail();
   if(e.type==='session-settings'&&(!obj(e.team)||!['solo','pair'].includes(e.team.mode)||!Array.isArray(e.team.learners)||e.team.learners.length!==2||e.team.learners.some((l,i)=>!obj(l)||l.id!==['A','B'][i]||!str(l.label,80))))fail();

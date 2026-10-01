@@ -1,3 +1,4 @@
+import {handSVG} from './hand-svg.js';
 import { LeverScene } from "./scene.js";
 import {
   ROLES,
@@ -26,7 +27,7 @@ import { fmt, helpTip, setTip, describeTooltips, renderMath, installTooltips } f
 import { mountLearning } from './learning.js';
 let learning = null;
 let identifying = false, identifyFeedback = null;
-const candidateNames = {load:'Crate', effort:'Hanging Mass', fulcrum:'Support'};
+const candidateNames = {load:'Hanging Weight', effort:'Pressing Hand', fulcrum:'Support'};
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)],
   cap = (s) => s[0].toUpperCase() + s.slice(1);
@@ -61,12 +62,12 @@ function notice(message) {
   notice.timer = setTimeout(() => $("#toast").classList.remove("show"), 3500);
 }
 for (const role of OBJECTS) {
-  const name = cap(role);
+  const name = cap(role), quantity=role==='effort'?'Push (g-equivalent)':'Mass (g)', quantityName=role==='effort'?'Push':'Mass';
   $(`#panel-${role}`).innerHTML =
     `<div class="role-heading"><h2 id="heading-${role}">${name}</h2>${helpTip(role, name)}</div>
-    <div class="quantity-heading"><label for="mass-${role}">Mass (g)</label>${helpTip("g", `${name} Mass Units`)}</div>
-    <div class="quantity-row"><input id="mass-${role}" type="number" min="25" max="1000" step="25" aria-label="${name} Mass in Grams"><div class="quick-actions"><button data-scale="${role},mass,0.5" aria-label="Halve ${name} Mass">÷ 2</button><button data-scale="${role},mass,2" aria-label="Double ${name} Mass">× 2</button></div></div>
-    <input id="mass-slider-${role}" type="range" min="25" max="1000" step="25" aria-label="${name} Mass">
+    <div class="quantity-heading"><label for="mass-${role}">${quantity}</label>${helpTip(role==='effort'?'g-equivalent':'g', `${name} ${quantityName} Units`)}</div>
+    <div class="quantity-row"><input id="mass-${role}" type="number" min="25" max="1000" step="25" aria-label="${name} ${quantity}"><div class="quick-actions"><button data-scale="${role},mass,0.5" aria-label="Halve ${name} ${quantityName}">÷ 2</button><button data-scale="${role},mass,2" aria-label="Double ${name} ${quantityName}">× 2</button></div></div>
+    <input id="mass-slider-${role}" type="range" min="25" max="1000" step="25" aria-label="${name} ${quantityName}">
     <div class="quantity-heading"><label for="distance-${role}">Distance From Fulcrum (mm)</label>${helpTip("arm", `${name} Arm Length`)}</div>
     <div class="quantity-row"><input id="distance-${role}" type="number" step="25" aria-label="${name} Arm in Millimeters"><div class="quick-actions"><button data-scale="${role},distance,0.5" aria-label="Halve ${name} Arm">÷ 2</button><button data-scale="${role},distance,2" aria-label="Double ${name} Arm">× 2</button></div></div>
     <input id="distance-slider-${role}" type="range" step="25" aria-label="${name} Arm">
@@ -142,7 +143,7 @@ function keyboardStep(role, key) {
       setMass(
         state,
         role,
-        state[massKey(role)] + (key === "ArrowUp" ? 25 : -25),
+        state[massKey(role)] + (key === "ArrowDown" ? 25 : -25),
       ),
     );
 }
@@ -157,7 +158,7 @@ function render() {
     for (const prefix of ["mass", "mass-slider"]) {
       const input = $(`#${prefix}-${role}`);
       input.value = state[massKey(role)];
-      input.setAttribute("aria-valuetext", `${state[massKey(role)]} grams`);
+      input.setAttribute("aria-valuetext", `${state[massKey(role)]} ${role==='effort'?'g-equivalent':'grams'}`);
     }
     for (const prefix of ["distance", "distance-slider"]) {
       const input = $(`#${prefix}-${role}`);
@@ -172,7 +173,7 @@ function render() {
     $(`#force-${role}`).textContent =
       `Downward force: ${fmt(measures(state)[role + "Force"])} N`;
     $(`[data-tag="${role}"]`).innerHTML =
-      `<span class="tag-title">${cap(role)} <span class="tag-mass">· ${state[massKey(role)]} g</span></span><small>${arm(state, role)} mm from fulcrum</small>`;
+      `<span class="tag-title">${cap(role)} <span class="tag-mass">· ${state[massKey(role)]} ${role==='effort'?'g-equivalent':'g'}</span></span><small>${arm(state, role)} mm from fulcrum</small>`;
   }
   const [min, max] = positionBounds(state, "fulcrum");
   for (const id of ["fulcrum-position", "fulcrum-slider"]) {
@@ -186,7 +187,7 @@ function render() {
     );
   }
   $('[data-tag="fulcrum"]').innerHTML =
-    `Fulcrum<small>${state.fulcrum} mm on beam</small>`;
+    `Fulcrum<small>${state.fulcrum} mm on beam</small>${held?'<small class="pause-badge">Paused For Setup And Prediction</small>':''}`;
   $("#coordinates").textContent =
     `Beam coordinates: Load ${state.load} mm · Fulcrum ${state.fulcrum} mm · Effort ${state.effort} mm.`;
   $("#hold").textContent = held ? "Release" : "Hold Level";
@@ -326,15 +327,9 @@ function drawFallback() {
   $("#fallback-svg").innerHTML =
     `<path d="M${px - 18} 360L${px} 195L${px + 18} 360Z" fill="${colors.fulcrum}"/><path data-beam d="M${ends[0].x} ${ends[0].y}L${ends[1].x} ${ends[1].y}" stroke="#839a94" stroke-width="12"/>${OBJECTS.map(
       (role) => {
-        const p = point(state[role]),
-          size = Math.cbrt(state[massKey(role)] / 100),
-          gold = role === "load";
-        // SVG y points down: rotate only the crate by -angle. Its bottom sits
-        // on the beam stroke's top edge, six units from the beam axis.
-        const body = gold
-          ? `<g data-body="load" transform="translate(${p.x} ${p.y}) rotate(${-angle * 180 / Math.PI})"><rect data-crate x="${-size * 10}" y="${-6 - size * 18}" width="${size * 20}" height="${size * 18}" fill="#bf8630"/><path d="M${-size * 10} ${-6 - size * 14}h${size * 20}M${-size * 10} ${-6 - size * 4}h${size * 20}" stroke="#e9ba61" stroke-width="2"/></g>`
-          : `<g data-body="effort"><path d="M${p.x} ${p.y}v32" stroke="#927449" stroke-width="4"/><rect x="${p.x - size * 12}" y="${p.y + 32}" width="${size * 24}" height="${size * 16}" rx="6" fill="#257e73"/></g>`;
-        return `<g data-object="${role}" data-coordinate="${state[role]}">${body}<circle data-application-point="${role}" cx="${p.x}" cy="${p.y}" r="3" fill="${colors[role]}"/><text x="${p.x}" y="${p.y - 80}" text-anchor="middle" fill="${colors[role]}" font-size="21" font-weight="bold">${cap(role)} · ${state[massKey(role)]} g</text><text x="${p.x}" y="${p.y - 59}" text-anchor="middle" fill="${colors[role]}" font-size="18">${arm(state, role)} mm</text></g>`;
+          const p=point(state[role]),size=Math.cbrt(state.loadMass/100);
+          const body=role==='load'?`<g data-body="load"><path d="M${p.x} ${p.y}v32" stroke="#927449" stroke-width="4"/><rect x="${p.x-size*12}" y="${p.y+32}" width="${size*24}" height="${size*16}" rx="6" fill="#bf8630"/></g>`:`<g data-body="effort" transform="rotate(${-angle*180/Math.PI} ${p.x} ${p.y})">${handSVG(p.x,p.y-6,.8)}</g>`;
+          return `<g data-object="${role}" data-coordinate="${state[role]}">${body}<circle data-application-point="${role}" cx="${p.x}" cy="${p.y}" r="3" fill="${colors[role]}"/><text x="${p.x}" y="${p.y-90}" text-anchor="middle" fill="${colors[role]}" font-size="19" font-weight="bold">${cap(role)}: ${state[massKey(role)]} ${role==='effort'?'g-equivalent':'g'}</text><text x="${p.x}" y="${p.y-69}" text-anchor="middle" fill="${colors[role]}" font-size="18">${arm(state,role)} mm</text></g>`;
       },
     ).join(
       "",
@@ -344,10 +339,10 @@ function drawFallback() {
     $('#fallback-svg').querySelectorAll('text').forEach(text => text.remove());
     for (const role of ROLES) {
       const p = role === 'fulcrum' ? {x:px,y:285} : point(state[role]);
-      const y = p.y + (role === 'effort' ? 52 : role === 'load' ? -30 : 0);
+      const y = p.y + (role === 'load' ? 52 : role === 'effort' ? -30 : 0);
       const picked = identifyFeedback?.role === role;
       const fill = picked ? (identifyFeedback.correct ? '#72dc94' : '#ff9494') : '#b4e5ff';
-      $('#fallback-svg').insertAdjacentHTML('beforeend', `<g data-identify-role="${role}" role="button" tabindex="0" aria-label="${candidateNames[role]}"><rect x="${p.x-48}" y="${y-24}" width="96" height="48" rx="10" fill="${fill}" fill-opacity=".75" stroke="#174d68" stroke-width="3"/><text x="${p.x}" y="${y+5}" text-anchor="middle" font-size="13" font-weight="bold">${candidateNames[role]}</text></g>`);
+      $('#fallback-svg').insertAdjacentHTML('beforeend', `<g data-identify-role="${role}" role="button" tabindex="0" aria-label="${candidateNames[role]}"><rect x="${p.x-48}" y="${y-24}" width="96" height="48" rx="10" fill="transparent" stroke="${fill}" stroke-width="8"/><text x="${p.x}" y="${y+5}" text-anchor="middle" font-size="13" font-weight="bold" dy="48">${candidateNames[role]}</text></g>`);
     }
   }
   updateStatus();
@@ -469,7 +464,7 @@ $("#swap").addEventListener("click", () => {
   scene?.finishDrag();
   setState(swapPositions(state));
   $("#announcement").textContent =
-    `Positions and control panels exchanged. ${state.load < state.effort ? "Load controls left; Effort controls right" : "Effort controls left; Load controls right"}. Load keeps ${state.loadMass} grams; Effort keeps ${state.effortMass} grams.`;
+    `Positions and control panels exchanged. ${state.load < state.effort ? "Load controls left; Effort controls right" : "Effort controls left; Load controls right"}. Load keeps ${state.loadMass} grams; Effort keeps its ${state.effortMass} g-equivalent push.`;
 });
 $("#hold").addEventListener("click", () => {
   if (held && learning?.beforeRelease() === false) return;
@@ -642,6 +637,7 @@ try {
   unavailable();
 }
 learning = mountLearning({
+  pauseCue: message => { $('#beam-status').title=message; },
   identify: (active, feedback) => { identifying=active;identifyFeedback=feedback;scene?.setIdentification(active,feedback);render(); },
   get: () => ({ state: { ...state }, held }),
   motion: () => ({ ...(ready ? scene.motion : fallbackMotion) }),

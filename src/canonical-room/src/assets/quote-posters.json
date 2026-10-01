@@ -1,0 +1,284 @@
+{
+  "sourceFilename": "Quotes Document.pdf",
+  "sourceSha256": "c45b352fd8aff78b6f41c19dcad74961bad8794c8b50308dea97f3b26b34c31f",
+  "sourcePages": 39,
+  "includedPages": [
+    1,
+    38
+  ],
+  "excludedPages": [
+    39
+  ],
+  "atlasWidth": 3072,
+  "atlasHeight": 1536,
+  "atlasSha256": "710da79b2a3424ee8bad13637c1df18bb9cbf040c2510247f5e124fe776f9e70",
+  "atlasBytes": 1054803,
+  "entries": [
+    {
+      "page": 1,
+      "x": 4,
+      "y": 4,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 2,
+      "x": 388,
+      "y": 4,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 3,
+      "x": 772,
+      "y": 4,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 4,
+      "x": 1156,
+      "y": 4,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 5,
+      "x": 1540,
+      "y": 4,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 6,
+      "x": 1924,
+      "y": 4,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 7,
+      "x": 2308,
+      "y": 4,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 8,
+      "x": 2692,
+      "y": 4,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 9,
+      "x": 4,
+      "y": 308,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 10,
+      "x": 388,
+      "y": 308,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 11,
+      "x": 772,
+      "y": 308,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 12,
+      "x": 1156,
+      "y": 308,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 13,
+      "x": 1540,
+      "y": 308,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 14,
+      "x": 1924,
+      "y": 308,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 15,
+      "x": 2308,
+      "y": 308,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 16,
+      "x": 2692,
+      "y": 308,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 17,
+      "x": 4,
+      "y": 612,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 18,
+      "x": 388,
+      "y": 612,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 19,
+      "x": 772,
+      "y": 612,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 20,
+      "x": 1156,
+      "y": 612,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 21,
+      "x": 1540,
+      "y": 612,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 22,
+      "x": 1924,
+      "y": 612,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 23,
+      "x": 2308,
+      "y": 612,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 24,
+      "x": 2692,
+      "y": 612,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 25,
+      "x": 4,
+      "y": 916,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 26,
+      "x": 388,
+      "y": 916,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 27,
+      "x": 772,
+      "y": 916,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 28,
+      "x": 1156,
+      "y": 916,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 29,
+      "x": 1540,
+      "y": 916,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 30,
+      "x": 1924,
+      "y": 916,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 31,
+      "x": 2308,
+      "y": 916,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 32,
+      "x": 2692,
+      "y": 916,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 33,
+      "x": 4,
+      "y": 1220,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 34,
+      "x": 388,
+      "y": 1220,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 35,
+      "x": 772,
+      "y": 1220,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 36,
+      "x": 1156,
+      "y": 1220,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 37,
+      "x": 1540,
+      "y": 1220,
+      "width": 376,
+      "height": 291
+    },
+    {
+      "page": 38,
+      "x": 1924,
+      "y": 1220,
+      "width": 376,
+      "height": 291
+    }
+  ]
+}

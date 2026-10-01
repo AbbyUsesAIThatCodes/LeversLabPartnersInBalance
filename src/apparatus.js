@@ -131,71 +131,31 @@ export function createApparatus() {
     anchor.add(weight);
     weights[role] = weight;
     if (role === "load") {
-      // Bottom at local y=0: scale about the contact plane, then seat on the rail.
-      // It is fixed to its selected beam position (no sliding/tipping model).
-      block(
-        weight,
-        0.9,
-        0.85,
-        0.9,
-        COLORS.load,
-        0,
-        0.425,
-        0,
-        role,
-        "gold-crate",
-      );
-      for (const y of [0.08, 0.77])
-        block(weight, 0.92, 0.065, 0.92, 0xe9ba61, 0, y, 0, role, "crate-band");
-      for (const x of [-0.3, 0.3])
-        block(
-          weight,
-          0.055,
-          0.85,
-          0.925,
-          brass,
-          x,
-          0.425,
-          0,
-          role,
-          "crate-band",
-        );
+      cylinder(anchor,0.055,1.15,0xc4d1cc,0,-0.575,0,role,"load-cord");
+      mesh(anchor,new THREE.TorusGeometry(0.2,0.065,8,24),brass,[0,-1.27,0],role,"load-hook");
+      cylinder(anchor,0.12,0.23,brass,0,-1.48,0,role,"load-neck");
+      cylinder(weight,0.48,0.55,COLORS.load,0,-0.275,0,role,"hanging-load");
+      for(const y of [0,-0.55])cylinder(weight,0.53,0.08,brass,0,y,0,role,"weight-rim");
     } else {
-      cylinder(
-        anchor,
-        0.055,
-        1.15,
-        0xc4d1cc,
-        0,
-        -0.575,
-        0,
-        role,
-        "effort-cord",
-      );
-      mesh(
-        anchor,
-        new THREE.TorusGeometry(0.2, 0.065, 8, 24),
-        brass,
-        [0, -1.27, 0],
-        role,
-        "effort-hook",
-      );
-      cylinder(anchor, 0.12, 0.23, brass, 0, -1.48, 0, role, "effort-neck");
-      cylinder(
-        weight,
-        0.48,
-        0.55,
-        COLORS.effort,
-        0,
-        -0.275,
-        0,
-        role,
-        "teal-weight",
-      );
-      for (const y of [0, -0.55])
-        cylinder(weight, 0.53, 0.08, brass, 0, y, 0, role, "weight-rim");
+      // Original stylized hand. Palm rests on the rail; fingers and forearm
+      // extend across its depth. The force setting never changes hand size.
+      const skin=0x75452f;
+      const palm=mesh(weight,new THREE.SphereGeometry(1,24,16),skin,[0,.28,0],role,"contacting-palm");
+      palm.scale.set(.67,.28,.83);
+      for(const [x,length] of [[-.48,.68],[-.16,.94],[.16,1.02],[.48,.82]]){
+        const finger=mesh(weight,new THREE.CapsuleGeometry(.17,length,6,12),skin,[x,.19,-.66-length/2],role,"finger");
+        finger.rotation.x=Math.PI/2;
+      }
+      const thumb=mesh(weight,new THREE.CapsuleGeometry(.2,.65,6,12),skin,[-.76,.25,-.25],role,"thumb");thumb.rotation.z=-.8;thumb.rotation.x=1.0;
+      const wrist=mesh(weight,new THREE.CapsuleGeometry(.44,.75,8,16),skin,[0,.59,1.0],role,"wrist");wrist.rotation.x=.9;
+      const forearm=mesh(weight,new THREE.CapsuleGeometry(.5,2.4,8,16),skin,[0,1.5,2.45],role,"forearm");forearm.rotation.x=.9;
+      for(const m of weight.children){m.material.metalness=0;m.material.roughness=.8;}
     }
   }
+  // Back-face shells extend outside each original surface without tinting it.
+  const cues=[];
+  for(const original of pickable){const shell=new THREE.Mesh(original.geometry,new THREE.MeshBasicMaterial({color:0x75cfff,side:THREE.BackSide,transparent:true,opacity:.5,depthWrite:false}));shell.scale.setScalar(1.18);shell.visible=false;shell.userData.cueRole=original.userData.part;original.add(shell);cues.push(shell);}
+
   function update(state, angle) {
     const pivot = state.fulcrum / SCALE;
     moving.position.set(pivot, HEIGHT, 0);
@@ -206,14 +166,15 @@ export function createApparatus() {
       const anchor = attachments[role],
         size = Math.cbrt(state[massKey(role)] / 100);
       anchor.position.set((state[role] - state.fulcrum) / SCALE, 0, 0);
-      anchor.rotation.z = role === "load" ? 0 : -angle;
-      weights[role].scale.setScalar(size);
-      weights[role].position.y = role === "load" ? BEAM_TOP : -1.6;
+      anchor.rotation.z = role === "load" ? -angle : 0;
+      weights[role].scale.setScalar(role === "load" ? size : 1);
+      weights[role].position.y = role === "load" ? -1.6 : BEAM_TOP;
     }
     moving.updateMatrixWorld(true);
     base.updateMatrixWorld(true);
   }
   return {
+    cues,
     moving,
     base,
     beam,

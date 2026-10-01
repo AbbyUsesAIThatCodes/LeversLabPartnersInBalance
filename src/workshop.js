@@ -90,7 +90,7 @@ export class WorkshopScene {
       this.glowMaterials[key].emissive.set(0x31ae44);
       this.glowMaterials[key].emissiveIntensity = 0.42;
     }
-    this.makeRoom();
+    await this.makeRoom();
     this.moving = new THREE.Group();
     this.base = new THREE.Group();
     this.scene.add(this.moving, this.base);
@@ -155,13 +155,14 @@ export class WorkshopScene {
     table.castShadow = true;
     table.receiveShadow = true;
     this.scene.add(table);
+    this.legacyRoom = [floor, table];
     const mat = new THREE.Mesh(
       new THREE.BoxGeometry(29, 0.08, 12),
       new THREE.MeshStandardMaterial({ color: 0x426663, roughness: 1 }),
     );
     mat.position.set(0, -0.07, 0);
     mat.receiveShadow = true;
-    this.scene.add(mat);
+    mat.name="RetainedCuttingMat";this.scene.add(mat);
     // Fine, quiet cutting-mat lines, beneath the lever.
     const points = [];
     for (let x = -14; x <= 14; x++)
@@ -178,12 +179,12 @@ export class WorkshopScene {
         opacity: 0.13,
       }),
     );
-    this.scene.add(grid);
-    this.box(4, 0.13, 4.9, 0xece8d6, -18, 0.02, -3);
-    this.box(3.8, 0.06, 4.7, 0xfffae9, -18, 0.13, -3);
+    grid.name="RetainedMatGrid";this.scene.add(grid);
+    this.box(4, 0.13, 4.9, 0xece8d6, -18, 0.02, -3).name="RetainedPaperPad";
+    this.box(3.8, 0.06, 4.7, 0xfffae9, -18, 0.13, -3).name="RetainedPaperSheet";
     // Paper top is y = 0.16; the pencil rests on it and stays inside its edges.
     const pencil = this.box(0.17, 0.17, 4, 0xd4aa56, -18, 0.245, -3);
-    pencil.rotation.y = 0.4;
+    pencil.rotation.y = 0.4;pencil.name="RetainedPencil";
     // A simple saguaro silhouette: a rounded stem and two upward arms.
     const cactus = new THREE.Group();
     cactus.position.set(-18, 0, -10);

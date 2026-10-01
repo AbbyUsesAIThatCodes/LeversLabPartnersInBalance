@@ -143,3 +143,8 @@ was read. See docs/SAVE-COMPATIBILITY.md. Full guided UI/browser validation is p
 
 The guided sequence, embedded instruction, flat question index, setup-bound prediction records, and schema-2 migration foundation now pass all 45 current unit tests, including the five integrity regressions. This is a source checkpoint, not a completed preview. The hand/load visuals, force-label audit, frozen room integration, and current-revision browser runs remain. The Library room helper failed with Windows os.setxattr unavailable; canonical public source files will be retrieved at the supplied frozen revision and hash-verified. The remote does not block this work.
 
+
+## Integrated Guided Source
+
+The new hanging-load/contacting-hand apparatus, constant-size push semantics, downward-to-increase gestures, updated force controls/help/report, and frozen room adapter are implemented. All 45 existing/current unit tests passed before four focused guided-prediction regressions were added. Frozen room files match all eight canonical hashes. The mat/pad/pencil inventory is retained. Browser validation for this revision is next; prior build evidence is not claimed for these changes.
+

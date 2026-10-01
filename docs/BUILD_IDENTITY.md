@@ -2,7 +2,7 @@
 
 `release.json` is authoritative: development `0.1.0`, **Partners In Balance**,
 slug `Partners-In-Balance`. Version must match `package.json`. The new notebook
-uses schema 1 and its own storage key; incompatible saves require migration or a
+uses schema 2 and its own storage key; incompatible saves require migration or a
 schema change. No classroom release has been accepted.
 
 Canonical ID: `<version>_<codename>_<scope>_build-<ordinal>_<UTC>_g<revision>[-dirty-<fingerprint>]_web`.
