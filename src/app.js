@@ -217,7 +217,7 @@ function updateStatus(isHeld = held, motion = ready ? scene.motion : fallbackMot
 }
 // The same measured clear area drives the camera, labels, and diagram.
 // Controls occupy a left rail; question work stays in the bottom dock.
-let layoutFrame=0;
+let layoutFrame=0,lastLayoutKey='';
 function clearArea() {
   const app=$('#app'), pane=$('#notebook'), math=$('#math-panel');
   const top=$('#top').getBoundingClientRect().bottom;
@@ -241,7 +241,7 @@ function viewBounds(){
 }
 function scheduleLayout(){
   if(layoutFrame)return;
-  layoutFrame=requestAnimationFrame(()=>{layoutFrame=0;clearArea();if(ready)scene.resize(false,true);else if(fallback)drawFallback();});
+  layoutFrame=requestAnimationFrame(()=>{layoutFrame=0;const area=viewBounds(),key=JSON.stringify([innerWidth,innerHeight,area]);if(ready&&key!==lastLayoutKey){scene.resize(false,true);lastLayoutKey=key;}else if(ready)scene.dirty=true;else if(fallback)drawFallback();});
 }
 
 function onFrame({ positions, angle, velocity, held: isHeld }) {
