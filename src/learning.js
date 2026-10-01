@@ -32,7 +32,7 @@ export function mountLearning(app){
  function selectPart(id,preserveCurrent=true,carry=false){indexOpen=false;referenceOpen=false;if(isIdentify(id))id=identifyOrder[Math.min(identifyStreak(book),2)];interrupt();if(preserveCurrent)storeWorkbench();book.mode='challenge';book.part=id;changes=[];
   const w=!carry&&book.workbenches[id]?book.workbenches[id]:snapshot(app.get().state,true);loadWorkbench({...w,held:true});book.workbenches[id]=snapshot(app.get().state,true);app.math(false);
   if(book.guided.startedAt){const part=PART_BY_ID[id];book.guided.teaching[id]={lesson:part.lesson,at:stamp(),contentRevision:book.assignment.questions[id]};supportViewed(book,'embedded',part.lesson,id);}
-  render();pane.scrollTop=0;pane.querySelector('.notebook-content')?.scrollTo(0,0);persist();
+  render();pane.scrollTop=0;const content=pane.querySelector('.notebook-content');if(content)content.scrollTop=0;persist();
  }
  function resumeNotebook(){sharedSession(book);book.mode='challenge';revalidateChecks(book);selectPart(book.part,false);}
  function refreshCheckStatus(){if(book.mode!=='challenge'||indexOpen)return;const out=$('#lab-feedback');if(out)out.innerHTML=feedbackHTML(book.checks[book.part]);}
