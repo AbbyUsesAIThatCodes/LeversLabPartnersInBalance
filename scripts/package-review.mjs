@@ -9,6 +9,7 @@ const reviews={
  'recovery-review':['verification.json'],
  'correctness-review':['verification.json'],
  'weighted-pointer':['verification.json'],
+ 'print-review':['verification.json'],
 };
 for(const folder of Object.keys(reviews)){
  const result=JSON.parse(await readFile(path.join('artifacts',folder,'verification.json'),'utf8'));

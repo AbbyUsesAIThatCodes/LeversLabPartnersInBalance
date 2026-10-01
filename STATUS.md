@@ -1,119 +1,110 @@
 # Lever Lab: Partners In Balance
 
-## Saved Review Checkpoint
+## Current Review
 
-Build 007 is on hold for student use. The five reported defects are fixed in
-`03a1174448141d1d9f13c83546278f1c2c0fddb1`; build 009 passed 34 unit tests,
-dedicated regressions in both renderers, complete paired/solo 68-row flows,
-recovery, physics/control regression, and native report printing. Independent
-recheck remains pending. Library replacement is intentionally paused for the
-user's newly approved interface simplification.
+Build 011 is ready for the user's playtest and independent recheck. It fixes all
+five reproduced build-007 defects and implements the user's simpler graphical,
+anonymous classwork interface. Build 007 remains superseded and on hold.
 
-Latest approved scope: compact upper-left version with a real PR only when one
-exists; full build identity remains in artifacts, console, and export. Anonymous
-shared classwork replaces partner/session controls. Keep autosave/recovery and
-offer the final download after all packet evidence is recorded. Hide internal
-IDs and dropdown navigation; add Hide Notebook / Show Notebook, Question Index
-with lever icons, and Return To Question from Learn. Identify Parts uses an
-Effort-Load-Fulcrum sequence, all candidates cued equally, with a three-correct
-streak and keyboard access. Keep all 68 coverage rows, original/revised evidence,
-and honest teacher-review status for writing and sketches. No deployment.
+App source: `07c125517aad08eaf6d3e7cac40a209ced71f286` (clean when built).
+Full identity: `0.1.0_Partners-In-Balance_local-1e3bd62e_build-011_20261001T002116Z_g07c125517aad_web`.
+Subsequent documentation and packaging checkpoints do not relabel this artifact.
 
-The complete required R06 scope is implemented: Part 1 Q1-Q8, Part 2 Q9-Q14,
-66 question subparts plus Intro and Routine, and Learn T0-T12. Optional A-E is
-excluded. Free Play retains the original room, controls, physics, and fallback.
-The source model changed only its local-storage key to isolate this game.
+The compact upper-left display is `0.1.0 Local Review`; no PR number is invented.
+The full identity remains in console output, manifest, exports, and filenames.
 
-The replacement interface is saved in `04d72545d27b3504617498266f954b401c632852`.
-Build 010 passed 35 unit tests, the graphical notebook browser slice, dedicated
-correctness regressions in both renderers, and recovery tests. Its full packet
-walkthrough is in progress. A final small contrast correction is queued for the
-next immutable build. Neither new UI artifact is claimed classroom-ready.
+## Implemented And Verified
 
-The Library and port 4200 still contain build 007, which remains on hold until
-replacement verification and upload complete. Repository creation remains pending
-the user's empty LeverLab repository; there is no PR or deployment.
+- All 68 required rows: Intro, Routine, and 66 subparts across both six-page R06
+  packets (Q1-Q8 and Q9-Q14). All 13 tutorials remain accessible. Optional A-E is excluded.
+- Effort / Load / Fulcrum identification uses equal blue cues, apparatus clicks,
+  keyboard buttons, green/red plus written feedback, and three consecutive correct
+  choices. An error resets the streak and preserves the attempt.
+- Anonymous shared classwork; no partner names, roles, or timer UI. The teacher
+  guides partnership routines externally. Imported earlier responses remain recoverable.
+- Hide Notebook / Show Notebook, graphical Question Index, and exact Return To
+  Question from Learn. No internal subpart IDs or navigation dropdowns are displayed.
+- Required evidence is checked automatically. Explanations and drawings retain
+  honest teacher-review status; predictions are not graded for correctness.
+- Browser autosave, validated restore, and recovery copy. Final readable HTML work
+  download appears after all required evidence; JSON retains machine-readable data.
+- Original 3D room, fallback diagram, physics, camera, and controls are preserved.
 
-## Review Evidence
+35 unit tests pass. Exact build 011 passed:
 
-- `artifacts/full-packet-review/verification.json`: paired WebGL and solo diagram
-  walkthroughs, all 68 rows and all 13 tutorials, individual responses, Q7 retry
-  history and actual Q7-to-Q11 linkage, Q12 force comparisons, Q13 limits,
-  non-default Q14 design/sketch, full download and validated restore.
-- `artifacts/notebook-review/verification.json`: exact Learn return, prediction
-  gate, factual corrections, local downloads, reload, roles, responsive screenshots.
-- `artifacts/recovery-review/verification.json`: interrupted trials, retained
-  predictions, separate retry, pointer drawing/Undo, corrupt-save recovery,
-  retained Free Play state, and two off-center swaps.
-- `artifacts/weighted-pointer/verification.json`: inherited physics, visible build
-  identity, all role drags, continuous motion, cancellation, Help, reduced animation,
-  WebGL/fallback parity, and context loss.
-- `artifacts/print-review/verification.json`: native browser print expansion and
-  restoration of evidence sections. The machine-readable appendix is not printed.
+- `artifacts/full-packet-review/verification.json`: two complete 68-row runs,
+  WebGL and diagram, all T0-T12 locations, incorrect factual answers and exact
+  tutorial return, Q7 retries and Q7-to-Q11 traceability, Q12 reciprocal force
+  comparisons, Q13 legal lift limits, Q14 own design/sketch, final export and restore.
+- `artifacts/correctness-review/verification.json`: pending Reset interruption,
+  restored apparatus preservation, Q14 recorded-trial constraints, stale-check
+  invalidation, malformed-event rejection, and conservative support logging.
+- `artifacts/notebook-review/verification.json`: graphical/keyboard streaks,
+  anonymous UI, compact identity, prediction gate, exact Learn return, recovery,
+  gated final download, and laptop/projector/portrait screenshots.
+- `artifacts/recovery-review/verification.json`: interrupted reload, original
+  prediction/retry, pointer sketch/Undo, unreadable save retention, two off-center swaps.
+- `artifacts/weighted-pointer/verification.json`: preserved continuous motion,
+  drag/cancel, Hold/Help/reduced motion, smallest imbalance, fallback/context-loss parity.
+- `artifacts/print-review/verification.json`: native print expands all evidence
+  sections, then restores the interactive layout. Machine appendix stays out of print.
 
-Synthetic browser responses are test fixtures, not model explanations. Automated
-checks establish software behavior and recorded coverage, not teaching quality,
-individual mastery, HQSD approval, or readiness for classroom deployment.
+No browser errors or external runtime requests occurred in the full UI runs.
+Synthetic responses are test fixtures, not model explanations. These checks do not
+establish teaching quality, official approval, mastery, or classroom readiness.
 
-## Source And Remote State
+## Delivered Files And Local Preview
 
-Local branch: `work/01-local-learning-foundation`. The independent Git copy retains
-complete ancestry from `AbbyUsesAIThatCodes/LeversLoadEffortDistance` at
-`9bfce52767e51ae728ffa9fec717264c554d026b`. The source checkout and live game are
-unchanged. Its local push URL is disabled. This is a history-preserving copy,
-not a claimed GitHub fork-network relationship.
+The same three Library items were replaced successfully at version 1. Their full
+filenames, file IDs, SHA-256 hashes, and local paths are recorded in
+`artifacts/library-replace-20260930/confirmed-deliverables.json`.
 
-The approved new repository is `AbbyUsesAIThatCodes/LeverLab`; remote creation is
-being handled by the parent task and is still pending here. No repository, issue,
-or PR URL has been created in this checkout. There is no configured remote.
-Automatic approval review previously rejected credential-helper access; do not
-retry it. Use supported authenticated repository creation when available.
+- ZIP: `libfile_b5341add39fc819197cb64a7f01bedc9`
+- Graphical Identification: `libfile_4abd580955888191bd72908f5f32e64d`
+- Shared Design Evidence: `libfile_ff0ef5b87fe081919fe1c14698970f2c`
 
-`review-baseline` points to isolated baseline commit `237912e`.
-Before a first push, verify the new repository has Actions disabled and Pages
-unconfigured. Push only sanitized baseline/working branches, never all historical
-refs. The inherited workflow is inert at `docs/upstream/pages.yml.disabled`;
-no active `.github/workflows` YAML remains. Keep one bounded draft PR at a time.
-No merge, deployment, email, or auto-merge is authorized.
+ZIP: `output/0.1.0_Partners-In-Balance_local-1e3bd62e_build-011_20261001T002116Z_g07c125517aad_web.zip`
+ZIP SHA-256: `52fb9b97d4b1e82a8a8d6daef23173b524a16bed79b907bfadbf92853c3d3868`; 1,961,493 bytes, 37 files.
+The ZIP contains the runnable game, screenshots, synthetic completed reports and
+backups, exact-build test evidence, source record, coverage inventory, and retained licenses.
 
-## Authority And Boundaries
+Confirmed on JESS_PC: http://127.0.0.1:4200/ (build 011, process 25100).
+`artifacts/FINAL-PREVIEW.json` records the server and package. No public deployment.
+The ZIP starts with `node serve-review.mjs` after extraction; Node.js 22+ is needed,
+with no npm install or internet. No StartReview launcher was present. Port 4199 is
+an older local preview; use 4200 on this computer and back up before changing addresses.
 
-The exact R06 key and goal map are pinned to EES PR #78 commit
-`bea8b69fe00fe989f418b985cb3f8005f0b4d41f`. Local teacher audit sources stay outside
-this repository. Source identification came from the key and teacher guide;
-the student PDF text contained no embedded game hyperlink. No proprietary publisher
-source text or real student identities belong in the game or test fixtures.
+Library writes succeeded. Local extended attributes are unsupported by Windows
+Python; the authoritative returned identity/version mappings are retained in JSON.
 
-No top-level source license was present. Preserve existing notices and bundled
-Comic Neue/Three.js licenses without inventing a license grant.
+## Source, Remote, And Remaining Gates
 
-Work is local to the browser, with autosave and validated JSON backup/restore.
-Each learner owns predictions, explanations, and drawings; shared apparatus events
-retain driver attribution. The teacher calls role switches. Predictions are not
-graded for correctness, and open reasoning/sketch quality remains teacher review.
-The printable HTML export includes originals, revisions, drawings, trials,
-role history, help visits, and embedded machine-readable data. Download is not
-Classroom submission: attach the file and select Turn In manually. The simulation
-does not certify physical assembly or testing.
+Source: `AbbyUsesAIThatCodes/LeversLoadEffortDistance` at
+`9bfce52767e51ae728ffa9fec717264c554d026b`. Complete Git ancestry is preserved.
+The source checkout/live game is unchanged; its local push URL is disabled.
+No top-level source license was present. Existing Comic Neue/Three.js licenses
+and notices were retained; no new license grant is invented.
 
-Next milestone: collect thorough teacher playtest feedback, then create the new
-repository/issue/draft PR through supported GitHub capabilities. No public
-deployment is authorized.
+Branch: `work/01-local-learning-foundation`; sanitized baseline `review-baseline`
+at `237912e4a5db4b50201d41059ab28e553b96acb7`. There is no configured remote.
+The parent is awaiting the user's empty `AbbyUsesAIThatCodes/LeverLab` repository.
+No repository, issue, or PR URL has been created. Keep one bounded draft PR at a time.
+Before any first push, verify Actions disabled and Pages unconfigured. Push only
+sanitized branches, never all historical refs. The inherited workflow is inert
+at `docs/upstream/pages.yml.disabled`; no active Actions workflow is present.
 
-Known review limits: real classroom use and assistive-technology review remain
-human tasks. The floating notebook can cover apparatus labels; See Workbench
-collapses it. Printing includes complete evidence history and can be lengthy:
-the deliberately revision-heavy synthetic solo run printed to 104 pages. The
-interactive self-contained HTML report is the primary review file.
+Independent recheck and thorough user playtesting remain pending. No merge,
+deployment, email, auto-merge, or claim of classroom approval is authorized.
+The user writes their own communications. Earlier automatic approval rejected
+credential-helper access; it was not retried. Use supported GitHub capabilities only.
 
-## Graphical Interface Checkpoint
+R06 authority is EES PR #78 commit `bea8b69fe00fe989f418b985cb3f8005f0b4d41f`.
+Teacher audit sources remain outside the repository. No proprietary packet text
+or real student identity is included. The user-approved anonymous UI supersedes
+the original individual-partner interface requirement while retaining all content.
 
-The revised anonymous graphical UI is coded. All 35 unit tests pass, including
-identification streak reset and Learn return. The five correctness repairs remain
-covered. Browser walkthroughs and refreshed playable packaging are next; no new
-Library artifact or deployment is claimed at this checkpoint.
-
-
-Build 010 completed both full 68-row renderer flows successfully. Final build
-adds the selected-answer contrast correction and refreshed review guidance.
-
+Attach the downloaded work in Google Classroom and select Turn In manually.
+The game has no accounts, telemetry, or student server records; download does not
+verify submission. Physical building/testing remains a separate experience.
+The notebook can cover apparatus labels; Hide Notebook clears the view. Full
+print evidence histories can be long; the interactive HTML is the primary work file.

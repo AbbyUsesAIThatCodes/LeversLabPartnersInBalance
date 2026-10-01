@@ -25,7 +25,7 @@ state transitions; their passing results did not establish edge-case correctness
    support exposures, before replacing the open notebook.
 
 Top-level Learn, linked tutorials, general Help, tooltips, expanded vocabulary,
-and Math views now record conservative support exposure with learner/context
+and Math views now record conservative support exposure with question/context
 attribution. Reports include those records and explicitly state that missing logs
 do not establish independent performance. Older builds may have incomplete logs.
 
@@ -38,7 +38,7 @@ diagram mode. Reset clicks are dispatched within one browser task so the test
 always interrupts before the minimum settling interval; slower automation must
 not accidentally test a Reset after the result already completed.
 
-The complete paired/solo walkthrough, notebook/recovery checks, physics/control
+The complete anonymous walkthrough in both renderers, notebook/recovery checks, physics/control
 regression, and coverage inventory are rerun against the final artifact. Exact
 build-specific results live in the review ZIP. See STATUS.md for the delivered
 build, source revision, and remaining independent/teacher review boundary.

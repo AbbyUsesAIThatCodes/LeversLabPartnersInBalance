@@ -82,6 +82,6 @@ try {
   }
   await verifyBeamMotion(browser, url, watch);
   assert.deepEqual(errors, []);
-  await writeFile("artifacts/weighted-pointer/verification.json", JSON.stringify({ buildId: manifest.id, passed: true, checks: ["reported arrangement", "settling status", "smallest imbalance", "WebGL and SVG", "laptop and projector", "continuous drags and cancellations", "Hold and Help", "reduced animation", "WebGL loss", "visible complete Lever Lab build identity"] }, null, 2));
+  await writeFile("artifacts/weighted-pointer/verification.json", JSON.stringify({ buildId: manifest.id, passed: true, checks: ["reported arrangement", "settling status", "smallest imbalance", "WebGL and SVG", "laptop and projector", "continuous drags and cancellations", "Hold and Help", "reduced animation", "WebGL loss", "compact visible version with full retained build identity"] }, null, 2));
   console.log(`PASS: weighted pointer browser review ${manifest.id}`);
 } finally { await browser?.close(); server.kill(); }
