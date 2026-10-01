@@ -1,9 +1,24 @@
 # Lever Lab: Partners In Balance
 
-## Current Guided Review — Build 014
+## Current Repair Source - Final Browser Recheck Pending
 
-The guided assignment is ready for the user's thorough playtest and independent
-review. App source: `439abfc7261ecb2db6f1d9b7307b5da94bbef209` (clean when built).
+Build 014 is on hold for student use. The four independently reported edge cases
+are fixed in `004a751a99a472d4223d2c7f1c528004c125b895`; all 54 unit tests pass.
+Validated intermediate candidate identity:
+`0.1.0_Partners-In-Balance_local-1e3bd62e_build-015_20261001T025418Z_g004a751a99a4_web`.
+Build 015 passed both full 68-row guided flows, all four review edge cases, the
+previous five browser integrity regressions, migration, and graphical preview.
+A related synthetic regression then exposed generated learner-name prefixes in
+historical check metadata. This report-only correction now passes all 55 unit
+tests. Responses and original backups are preserved. A new clean build will
+repeat the browser checks before packaging.
+Independent recheck is required before another Library replacement. Library
+version 2 and build 014 remain preserved. No deployment or remote action occurred.
+
+## Preserved Guided Review - Build 014
+
+This preserved artifact is superseded by the repair candidate above and is on
+hold for student use. App source: `439abfc7261ecb2db6f1d9b7307b5da94bbef209` (clean when built).
 Full identity: `0.1.0_Partners-In-Balance_local-1e3bd62e_build-014_20261001T022507Z_g439abfc7261e_web`.
 Later documentation/test-harness checkpoints do not relabel this artifact.
 

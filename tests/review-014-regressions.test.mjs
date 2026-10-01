@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {mount} from './helpers/learning-harness.mjs';
-import {createNotebook,snapshot,response,parseBackup,NOTEBOOK_KEY,event} from '../src/notebook.js';
+import {createNotebook,snapshot,response,parseBackup,NOTEBOOK_KEY,event,checkPart} from '../src/notebook.js';
 import {recordPrediction} from '../src/guided.js';
 import {PART_BY_ID} from '../src/curriculum.js';
 import {DEFAULT} from '../src/model.js';
@@ -24,6 +24,12 @@ test('returning to a completed Q7 setup cannot reuse a trial from before the int
 test('the complete HTML report sanitizes historical session names without changing the source backup',()=>{
  const b=createNotebook();b.team.learners[0].label='Synthetic Old Partner Alpha';b.team.learners[1].label='Synthetic Old Partner Beta';event(b,'session-settings',{team:structuredClone(b.team)});b.archivedQuestions.Q99a={answers:{},history:[],trials:[],events:[structuredClone(b.events[0])]};
  const original=JSON.stringify(b),html=reportHTML(b);assert.equal(html.includes('Synthetic Old Partner'),false);assert.equal(JSON.stringify(b),original);assert.ok(html.includes('Shared Classwork'));
+});
+test('anonymous report history removes generated name prefixes while retaining authored evidence',()=>{
+ const b=createNotebook();b.team.learners[0].label='Synthetic Prior Learner';event(b,'session-settings',{team:structuredClone(b.team)});
+ response(b,'Q12f','reason','Synthetic authored explanation.','A');checkPart(b,PART_BY_ID.Q12f,snapshot(DEFAULT));
+ const check=structuredClone(b.checks.Q12f);b.completionHistory.Q12f=[{contentRevision:1,check}];b.archivedQuestions.Q99a={answers:{},history:[],trials:[],events:[],check:structuredClone(check)};
+ b.team.learners[0].label='Shared Classwork';const original=JSON.stringify(b),html=reportHTML(b);assert.equal(html.includes('Synthetic Prior Learner'),false);assert.ok(html.includes('Synthetic authored explanation.'));assert.equal(JSON.stringify(b),original);
 });
 test('mount and later autosaves cannot replace legacy bytes while the migration archive is blocked; retry recovers',async()=>{
  const b=seed('Q12a',DEFAULT);b.schema=1;for(const key of ['assignment','originalBuild','currentBuild','migrations','archivedQuestions','completionHistory','representation'])delete b[key];const raw=JSON.stringify(b);let blocked=true;

@@ -8,6 +8,7 @@ const reviews={
  'guided-full':['verification.json','WebGL-complete-backup.json','WebGL-complete-work.html','Diagram-complete-backup.json','Diagram-complete-work.html','WebGL-design.png','Diagram-design.png','WebGL-report.png','Diagram-report.png'],
  'guided-correctness':['verification.json'],
  'guided-migration':['verification.json'],
+ 'review-014-edges':['verification.json','WebGL-revised-design.json','Diagram-revised-design.json','WebGL-retested-row.json','Diagram-retested-row.json'],
 };
 for(const folder of Object.keys(reviews)){
  const result=JSON.parse(await readFile(path.join('artifacts',folder,'verification.json'),'utf8'));
