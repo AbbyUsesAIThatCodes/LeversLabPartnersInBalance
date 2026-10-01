@@ -1,5 +1,13 @@
 # Lever Lab: Partners In Balance
 
+## New Revision In Progress
+
+The latest user direction supersedes the three-mode UI and previous apparatus
+representation. See `docs/GUIDED-ASSIGNMENT.md` for the saved semantic decision and
+bounded plan. Work proceeds locally; the room integration waits for the parent's
+frozen ClassroomVirtualization handoff. Build 011 below is the prior validated
+preview, not an implementation of this new direction.
+
 ## Current Review
 
 Build 011 is ready for the user's playtest and independent recheck. It fixes all
