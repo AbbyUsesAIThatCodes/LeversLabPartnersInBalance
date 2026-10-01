@@ -89,7 +89,7 @@ export function evaluatePart(book,part,workbench) {
   if(!productState)missing.push('Choose a real saved balanced Q7 trial, or recreate one in Q7.');
   else {const m=measures(productState);for(const [key,want] of Object.entries({loadMass:productState.loadMass,effortMass:productState.effortMass,loadArm:m.loadArm,effortArm:m.effortArm,loadProduct:m.loadMoment,effortProduct:m.effortMoment})){if(Number(values.shared?.[key])!==want)failures.push(key+' does not match the selected source arrangement.');}}
  }
- if(part.designPrediction){const design=book.workbenches.Q14a?.state;if(!design)missing.push('Save your Q14a arrangement first.');else {const m=measures(design);if(Number(values.shared?.loadProduct)!==m.loadMoment||Number(values.shared?.effortProduct)!==m.effortMoment)failures.push('The products must represent your own Q14 design.');}}
+ if(part.designPrediction){const design=book.workbenches.Q14a?workbench?.state??book.workbenches.Q14a.state:null;if(!design)missing.push('Save your Q14a arrangement first.');else {const m=measures(design);if(Number(values.shared?.loadProduct)!==m.loadMoment||Number(values.shared?.effortProduct)!==m.effortMoment)failures.push('The products must represent your own Q14 design.');}}
  const status=failures.length?'Try Again':missing.length?'In Progress':review.length?'Recorded · Teacher Review':'Checked';
  return {status,failures,missing,review,at:stamp(),complete:!failures.length&&!missing.length};
 }
@@ -116,7 +116,7 @@ export function parseBackup(text,{build=null,catalog=QUESTION_REVISIONS}={}){
  const ownerValid=(f,owner)=>f.personal?['A','B'].includes(owner):owner==='shared';
  const answersValid=(id,owners)=>{if(!KNOWN_PARTS[id]||!obj(owners))return false;for(const [owner,answers]of Object.entries(owners)){if(!obj(answers))return false;for(const [key,value]of Object.entries(answers)){const f=KNOWN_PARTS[id].fields.find(f=>f.key===key);if(!f||!ownerValid(f,owner)||!fieldValue(f,value))return false;}}return true;};
  if(b.schema===SCHEMA){
-  if(!obj(b.assignment)||b.assignment.appId!==APP_ID||b.assignment.id!==ASSIGNMENT_ID||!Number.isInteger(b.assignment.version)||b.assignment.version<1||b.assignment.version>CONTENT_VERSION||!obj(b.assignment.questions)||Object.entries(b.assignment.questions).some(([id,v])=>!(/^(Q\d+[a-z]\d*|Intro|Routine)$/).test(id)||!Number.isInteger(v)||v<1))fail();
+  if(!obj(b.assignment)||b.assignment.appId!==APP_ID||b.assignment.id!==ASSIGNMENT_ID||!Number.isInteger(b.assignment.version)||b.assignment.version<1||b.assignment.version>CONTENT_VERSION||!obj(b.assignment.questions)||Object.entries(b.assignment.questions).some(([id,v])=>!(/^(Q\d+[a-z]\d*|Intro|Routine)$/).test(id)||!Number.isInteger(v)||v<1||(catalog[id]!==undefined&&v>catalog[id])))fail();
   if(!str(b.originalBuild,300)||!str(b.currentBuild,300)||!Array.isArray(b.migrations)||!obj(b.archivedQuestions)||!obj(b.completionHistory))fail();
   for(const m of b.migrations)if(!obj(m)||!str(m.at,50)||!Number.isInteger(m.fromSchema)||m.toSchema!==SCHEMA||!str(m.fromBuild,300)||!str(m.toBuild,300)||!['changed','added','retired'].every(k=>Array.isArray(m[k])&&m[k].every(id=>str(id,100))))fail();
   for(const [id,a] of Object.entries(b.archivedQuestions))if(!str(id,100)||!obj(a)||!obj(a.answers)||!['history','trials','events'].every(k=>Array.isArray(a[k])&&a[k].every(obj)))fail();
@@ -131,6 +131,7 @@ export function parseBackup(text,{build=null,catalog=QUESTION_REVISIONS}={}){
  for(const [id,t] of Object.entries(b.tutorials))if(!LESSONS.some(l=>l.id===id)||!obj(t)||('note' in t&&!str(t.note))||('drawing' in t&&!validateDrawing(t.drawing))||('completedAt' in t&&!str(t.completedAt,50)))fail();
  for(const t of b.trials)if(!obj(t)||!str(t.id,100)||!KNOWN_PARTS[t.part]?.trial||!wb(t.setup)||!['A','B'].includes(t.driver)||!str(t.startedAt,50)||!(t.result===null||['balance','load','effort'].includes(t.result))||typeof t.settled!=='boolean'||typeof t.interrupted!=='boolean'||!obj(t.predictions)||!Array.isArray(t.changes))fail();
  for(const t of b.trials){const p=KNOWN_PARTS[t.part],source=p.prediction===true?p.id:p.prediction;if(source?!answersValid(source,t.predictions):Object.keys(t.predictions).length)fail();if(t.completedAt!==null&&!str(t.completedAt,50))fail();if(t.settled&&(t.result!==measures(t.setup.state).direction||!t.completedAt))fail();for(const c of t.changes)if(!obj(c)||!wb(c.before)||!wb(c.after)||!str(c.at,50)||!['A','B'].includes(c.driver))fail();}
+ for(const t of b.trials)if(t.predictionId!==undefined&&t.predictionId!==null){const p=b.guided?.predictions.find(p=>p.id===t.predictionId);if(!p||p.target!==t.part||!sameState(p.setup.state,t.setup.state)||JSON.stringify(p.answers)!==JSON.stringify(t.predictions))fail();}
  for(const h of b.history){if(!obj(h)||!KNOWN_PARTS[h.id]||!str(h.key,100)||!str(h.at,50)||!['A','B'].includes(h.driver))fail();const f=KNOWN_PARTS[h.id].fields.find(f=>f.key===h.key);if(!f||!ownerValid(f,h.owner)||!fieldValue(f,h.value)||(h.previous!==''&&!fieldValue(f,h.previous)))fail();}
  const checkValid=ch=>obj(ch)&&str(ch.status,100)&&typeof ch.complete==='boolean'&&str(ch.at,50)&&['failures','missing','review'].every(k=>Array.isArray(ch[k])&&ch[k].every(v=>str(v)));
  for(const e of b.events){
@@ -155,11 +156,11 @@ export function loadNotebook(storage,build){
   raw=storage.getItem(NOTEBOOK_KEY);if(!raw)return {book:createNotebook(build),error:null,recovery:null,fresh:true};
   const book=parseBackup(raw,{build});
   const source=JSON.parse(raw),changed=source.schema!==book.schema||JSON.stringify(source.assignment)!==JSON.stringify(book.assignment);
-  const saved=changed?saveNotebook(storage,book):{ok:true};
+  const saved=changed?saveNotebook(storage,book,{preserveOriginal:'migration-original'}):{ok:true};
   return {book,error:saved.ok?null:saved.error,recovery:null,fresh:false,migrationPending:!saved.ok};
  }catch(e){return {book:createNotebook(build),error:e.message,recovery:raw,fresh:false};}
 }
-export function saveNotebook(storage,book){
+export function saveNotebook(storage,book,{preserveOriginal=null}={}){
  const stage=NOTEBOOK_KEY+'.staged',previous=NOTEBOOK_KEY+'.previous';let original=null,wrote=false;
  try{
   if(book.schema!==SCHEMA)throw Error('Migrate the notebook before saving.');
@@ -167,7 +168,7 @@ export function saveNotebook(storage,book){
   original=storage.getItem(NOTEBOOK_KEY);
   storage.setItem(stage,encoded);
   const staged=storage.getItem(stage);if(staged!==encoded)throw Error('Staged save differs.');parseBackup(staged);
-  if(original!==null)storage.setItem(previous,original);
+  if(original!==null){if(preserveOriginal)storage.setItem(NOTEBOOK_KEY+'.'+preserveOriginal,original);storage.setItem(previous,original);}
   storage.setItem(NOTEBOOK_KEY,staged);wrote=true;
   if(storage.getItem(NOTEBOOK_KEY)!==staged)throw Error('Save verification failed.');
   storage.removeItem?.(stage);

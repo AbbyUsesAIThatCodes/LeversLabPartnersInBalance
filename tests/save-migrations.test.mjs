@@ -31,3 +31,10 @@ test('corrupt and unsupported future saves are never overwritten',()=>{
 test('anonymous reports omit structured partner names while portable historical backup remains intact',()=>{
  const b=createNotebook();b.team.learners[0].label='Synthetic Partner A';b.events.push({team:structuredClone(b.team)});const copy=anonymousReportNotebook(b);assert.equal(copy.team.learners[0].label,'Shared Classwork');assert.equal(copy.events[0].team.learners[0].label,'Shared Classwork');assert.equal(b.team.learners[0].label,'Synthetic Partner A');
 });
+
+test('pre-update raw backup survives later autosaves; future question revisions fail safely',()=>{
+ const raw=JSON.stringify(fixture('synthetic-build-011')),store=storage(raw),loaded=loadNotebook(store,'guided');
+ assert.equal(store.getItem(NOTEBOOK_KEY+'.migration-original'),raw);
+ response(loaded.book,'Q12a','ima','2');assert.equal(saveNotebook(store,loaded.book).ok,true);assert.equal(store.getItem(NOTEBOOK_KEY+'.migration-original'),raw);
+ const future=createNotebook();future.assignment.questions.Q12a=99;assert.throws(()=>parseBackup(JSON.stringify(future)));
+});

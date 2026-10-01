@@ -148,3 +148,8 @@ The guided sequence, embedded instruction, flat question index, setup-bound pred
 
 The new hanging-load/contacting-hand apparatus, constant-size push semantics, downward-to-increase gestures, updated force controls/help/report, and frozen room adapter are implemented. All 45 existing/current unit tests passed before four focused guided-prediction regressions were added. Frozen room files match all eight canonical hashes. The mat/pad/pencil inventory is retained. Browser validation for this revision is next; prior build evidence is not claimed for these changes.
 
+
+## Guided Build 013 Validation And Final Corrections
+
+Build 013 completed both full 68-row browser walkthroughs, including Q7-to-Q11 selection, Q12 comparisons, Q13 lifting, Q14 drawing/revisions, final report and restore. Both renderers passed all five integrity browser regressions. Subsequent bounded corrections synchronize notebook/main controls, retain a downloadable pre-update raw copy across autosaves, validate new prediction links/future question revisions, and turn the hand for a clearer silhouette. All 50 unit tests pass. The next build will repeat the affected guided browser suites before packaging; no old build evidence is substituted.
+

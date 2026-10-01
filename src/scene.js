@@ -113,6 +113,12 @@ export class LeverScene extends WorkshopScene {
   }
   draw() {
     if (!this.moving) return;
+    if(this.room){
+      const camera=this.room.root.worldToLocal(this.camera.position.clone()),left=camera.x< -3.5,back=camera.z>7;
+      this.room.groups.LeftWall.visible=!left;this.room.groups.BackWall.visible=!back;
+      if(this.room.groups.Ceiling)this.room.groups.Ceiling.visible=camera.y<3.6;
+      for(const o of this.room.groups.Decor.children)o.visible=!(o.userData.wall==='left'&&left||o.userData.wall==='back'&&back);
+    }
     if (this.state) this.apparatus?.update(this.state, this.motion.angle);
     this.scene.updateMatrixWorld(true);
     this.renderer.render(this.scene, this.camera);

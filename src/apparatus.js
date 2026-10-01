@@ -168,6 +168,7 @@ export function createApparatus() {
       anchor.position.set((state[role] - state.fulcrum) / SCALE, 0, 0);
       anchor.rotation.z = role === "load" ? -angle : 0;
       weights[role].scale.setScalar(role === "load" ? size : 1);
+      if(role === "effort")weights[role].rotation.y=state.effort>state.fulcrum?Math.PI/2:-Math.PI/2;
       weights[role].position.y = role === "load" ? -1.6 : BEAM_TOP;
     }
     moving.updateMatrixWorld(true);

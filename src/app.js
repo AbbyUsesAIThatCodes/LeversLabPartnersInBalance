@@ -625,6 +625,9 @@ try {
   });
   await scene.init();
   ready = true;
+  $("#app").dataset.roomSource=scene.roomInventory.source;
+  $("#app").dataset.roomPropsPreserved=String(JSON.stringify(scene.roomInventory.before)===JSON.stringify(scene.roomInventory.after));
+  $("#app").dataset.roomPosters=String(scene.room.groups.Decor.children.filter(o=>o.name.startsWith("QuotePoster_")).length);
   scene.reduced = reduced;
   scene.setHeld(held);
   scene.setState(state);
