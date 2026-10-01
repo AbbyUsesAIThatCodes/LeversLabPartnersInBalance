@@ -1,7 +1,7 @@
 import { DEFAULT, valid, arm, measures } from './model.js';
 import { PARTS, PART_BY_ID, LESSONS, REQUIRED_IDS } from './curriculum.js';
 import {REPRESENTATION,representationValid} from './representation.js';
-import {SAVE_SCHEMA,APP_ID,ASSIGNMENT_ID,CONTENT_VERSION,QUESTION_REVISIONS,assignmentRecord,migrateNotebook} from './save-contract.js';
+import {SAVE_SCHEMA,APP_ID,ASSIGNMENT_ID,CONTENT_VERSION,QUESTION_REVISIONS,assignmentRecord,guidanceRecord,migrateNotebook} from './save-contract.js';
 import {HISTORICAL_PARTS} from './question-history.js';
 const KNOWN_PARTS=Object.fromEntries(Object.entries({...HISTORICAL_PARTS,...PART_BY_ID}).map(([id,p])=>[id,{...p,fields:[...(HISTORICAL_PARTS[id]?.fields??[]).filter(f=>!p.fields.some(current=>current.key===f.key)),...p.fields]}]));
 export const NOTEBOOK_KEY='lever-lab-notebook-v1';
@@ -12,7 +12,7 @@ const clone=value=>structuredClone(value);
 export const stamp=()=>new Date().toISOString();
 export function createNotebook(build='Local Development') {
  const now=stamp();
- return {format:FORMAT,schema:SCHEMA,representation:REPRESENTATION,assignment:assignmentRecord(),originalBuild:build,currentBuild:build,migrations:[],archivedQuestions:{},completionHistory:{},id:globalThis.crypto.randomUUID(),createdAt:now,updatedAt:now,build,mode:'free',part:'Q1a',lesson:'T0',returnTo:null,team:{mode:'solo',learners:[{id:'A',label:'Shared Classwork'},{id:'B',label:'Earlier Imported Response'}],driver:'A',reminderMinutes:0,rotationStarted:null},answers:{},history:[],trials:[],events:[],checks:{},visits:[],tutorials:{},workbenches:{},freeWorkbench:{state:{...DEFAULT},held:true},coverage:{Intro:false,Routine:false}};
+ return {format:FORMAT,schema:SCHEMA,representation:REPRESENTATION,assignment:assignmentRecord(),guided:guidanceRecord(),originalBuild:build,currentBuild:build,migrations:[],archivedQuestions:{},completionHistory:{},id:globalThis.crypto.randomUUID(),createdAt:now,updatedAt:now,build,mode:'free',part:'Q1a',lesson:'T0',returnTo:null,team:{mode:'solo',learners:[{id:'A',label:'Shared Classwork'},{id:'B',label:'Earlier Imported Response'}],driver:'A',reminderMinutes:0,rotationStarted:null},answers:{},history:[],trials:[],events:[],checks:{},visits:[],tutorials:{},workbenches:{},freeWorkbench:{state:{...DEFAULT},held:true},coverage:{Intro:false,Routine:false}};
 }
 export const learners=book=>book.team.mode==='pair'?book.team.learners:book.team.learners.slice(0,1);
 export const ownerFor=(field,learner)=>field.personal?learner.id:'shared';
@@ -123,6 +123,10 @@ export function parseBackup(text,{build=null,catalog=QUESTION_REVISIONS}={}){
  }
  if(b.representation!==undefined&&!representationValid(b.representation))fail();
  for(const item of [...b.history,...b.events,...b.trials,...Object.values(b.workbenches)])if(item?.representation!==undefined&&!representationValid(item.representation))fail();
+ if(b.guided!==undefined){const g=b.guided;if(!obj(g)||!(g.startedAt===null||str(g.startedAt,50))||!str(g.calibrationChoice,100)||!obj(g.teaching)||!Array.isArray(g.predictions))fail();
+  for(const [id,t]of Object.entries(g.teaching))if(!KNOWN_PARTS[id]||!obj(t)||!str(t.at,50)||!str(t.lesson,20)||!Number.isInteger(t.contentRevision))fail();
+  for(const p of g.predictions)if(!obj(p)||!str(p.id,100)||!KNOWN_PARTS[p.source]||!KNOWN_PARTS[p.target]?.trial||!wb(p.setup)||!wb(p.originalSetup)||!str(p.at,50)||!(p.invalidatedAt===null||str(p.invalidatedAt,50))||!answersValid(p.source,p.answers))fail();
+ }
  for(const [id,owners] of Object.entries(b.answers))if(!answersValid(id,owners))fail();
  for(const [id,t] of Object.entries(b.tutorials))if(!LESSONS.some(l=>l.id===id)||!obj(t)||('note' in t&&!str(t.note))||('drawing' in t&&!validateDrawing(t.drawing))||('completedAt' in t&&!str(t.completedAt,50)))fail();
  for(const t of b.trials)if(!obj(t)||!str(t.id,100)||!KNOWN_PARTS[t.part]?.trial||!wb(t.setup)||!['A','B'].includes(t.driver)||!str(t.startedAt,50)||!(t.result===null||['balance','load','effort'].includes(t.result))||typeof t.settled!=='boolean'||typeof t.interrupted!=='boolean'||!obj(t.predictions)||!Array.isArray(t.changes))fail();
@@ -136,7 +140,7 @@ export function parseBackup(text,{build=null,catalog=QUESTION_REVISIONS}={}){
   if(e.type==='control-change'&&(!valid(e.before)||!valid(e.after)||typeof e.held!=='boolean'))fail();
   if(['trial-completed','trial-interrupted'].includes(e.type)&&(!str(e.trialId,100)||!b.trials.some(t=>t.id===e.trialId&&t.part===e.part)))fail();
   if(e.type==='session-settings'&&(!obj(e.team)||!['solo','pair'].includes(e.team.mode)||!Array.isArray(e.team.learners)||e.team.learners.length!==2||e.team.learners.some((l,i)=>!obj(l)||l.id!==['A','B'][i]||!str(l.label,80))))fail();
-  if(e.type==='support-viewed'&&(!['lesson','help','tooltip','reference','math'].includes(e.source)||!str(e.resource,2000)||!(e.from===null||KNOWN_PARTS[e.from])||!['free','learn','challenge'].includes(e.mode)||!Array.isArray(e.learners)||!e.learners.length||e.learners.length>2||e.learners.some(id=>!['A','B'].includes(id))))fail();
+  if(e.type==='support-viewed'&&(!['lesson','help','tooltip','reference','math','embedded'].includes(e.source)||!str(e.resource,2000)||!(e.from===null||KNOWN_PARTS[e.from])||!['free','learn','challenge'].includes(e.mode)||!Array.isArray(e.learners)||!e.learners.length||e.learners.length>2||e.learners.some(id=>!['A','B'].includes(id))))fail();
  }
  for(const v of b.visits)if(!obj(v)||!LESSONS.some(l=>l.id===v.lesson)||!(v.from===null||KNOWN_PARTS[v.from])||!str(v.at,50))fail();
  for(const [id,ch] of Object.entries(b.checks))if(!KNOWN_PARTS[id]||!checkValid(ch))fail();

@@ -9,6 +9,7 @@ export const CONTENT_VERSION=2;
 // Coordinate-only and unchanged IMA tasks retain their existing content revision.
 const revised=new Set(['Q1a','Q1b','Q1d','Q3d','Q4d','Q5b','Q5c','Q5d','Q6a','Q6b','Q6c','Q7a','Q7b1','Q7b2','Q7b3','Q7b4','Q7c','Q7d','Q8b1','Q8b2','Q8b3','Q8c','Q8e','Q9a','Q9b','Q9c','Q9d','Q9e','Q10b','Q10c','Q10e','Q11a','Q11b','Q11c','Q11d','Q13a','Q13b','Q13c','Q13d','Q14a','Q14b','Q14c','Q14d','Q14e']);
 export const QUESTION_REVISIONS=Object.freeze({Intro:2,Routine:2,...Object.fromEntries(PARTS.map(p=>[p.id,revised.has(p.id)?2:1]))});
+export const guidanceRecord=()=>({startedAt:null,calibrationChoice:'',teaching:{},predictions:[]});
 export const assignmentRecord=()=>({appId:APP_ID,id:ASSIGNMENT_ID,version:CONTENT_VERSION,questions:{...QUESTION_REVISIONS}});
 export function reconcileQuestions(book,catalog=QUESTION_REVISIONS){
  const before=book.assignment?.questions??Object.fromEntries(['Intro','Routine',...Object.keys(HISTORICAL_PARTS)].map(id=>[id,1]));
@@ -41,7 +42,7 @@ export function migrateNotebook(input,build=null,catalog=QUESTION_REVISIONS){
  if(book.returnTo&&!(book.returnTo in catalog))book.returnTo=null;
  book.schema=SAVE_SCHEMA;book.representation=REPRESENTATION;
  if(prior!==REPRESENTATION)book.previousRepresentation=prior;
- book.migrations??=[];
+ book.migrations??=[];book.guided??=guidanceRecord();
  if(fromSchema!==SAVE_SCHEMA||changes.changed.length||changes.added.length||changes.retired.length){
   const migration={at:new Date().toISOString(),fromSchema,toSchema:SAVE_SCHEMA,fromBuild,toBuild:book.currentBuild,fromRepresentation:prior,toRepresentation:REPRESENTATION,...changes};
   book.migrations.push(migration);

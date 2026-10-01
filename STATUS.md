@@ -138,3 +138,8 @@ schema-1 data migrates; semantic changes require another look while cosmetic cha
 retain completion. Staged validated saves retain original bytes under quota failure.
 Failed imports leave the current notebook/apparatus unchanged. No real student data
 was read. See docs/SAVE-COMPATIBILITY.md. Full guided UI/browser validation is pending.
+
+## Guided Sequence Checkpoint
+
+The guided sequence, embedded instruction, flat question index, setup-bound prediction records, and schema-2 migration foundation now pass all 45 current unit tests, including the five integrity regressions. This is a source checkpoint, not a completed preview. The hand/load visuals, force-label audit, frozen room integration, and current-revision browser runs remain. The Library room helper failed with Windows os.setxattr unavailable; canonical public source files will be retrieved at the supplied frozen revision and hash-verified. The remote does not block this work.
+
