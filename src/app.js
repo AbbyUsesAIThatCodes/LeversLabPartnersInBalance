@@ -361,7 +361,7 @@ function applyIdentification() {
   }
 }
 $('#fallback-svg').addEventListener('click', e => { const role=e.target.closest('[data-identify-role]')?.dataset.identifyRole; if(role)learning?.identifyPart(role); });
-$('#fallback-svg').addEventListener('keydown', e => { if(['Enter',' '].includes(e.key)){const role=e.target.closest('[data-identify-role]')?.dataset.identifyRole;if(role){e.preventDefault();learning?.identifyPart(role);}} });
+$('#fallback-svg').addEventListener('keydown', e => { if(['Enter',' '].includes(e.key)){const role=e.target.closest('[data-identify-role]')?.dataset.identifyRole;if(role){e.preventDefault();learning?.identifyPart(role);($(`#fallback-svg [data-identify-role="${role}"]`)??($('#notebook').hidden?$('#notebook-reopen'):$('#notebook [data-lab="next"]')))?.focus();}} });
 function fallbackFrame(time) {
   if (!fallback) return;
   const dt = fallbackTime === null ? 0 : (time - fallbackTime) / 1000;
@@ -554,8 +554,10 @@ for (const b of $$(".dialog-close"))
   });
 $("#help-dialog").addEventListener("close", holdScene);
 $("#reduced").checked = reduced;
+$('#app').dataset.reducedMotion=String(reduced);
 $("#reduced").addEventListener("change", () => {
   reduced = $("#reduced").checked;
+  $('#app').dataset.reducedMotion=String(reduced);
   if (ready) scene.reduced = reduced;
   save();
 });

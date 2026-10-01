@@ -47,7 +47,7 @@ export class LeverScene extends WorkshopScene {
   }
   highlight(part) {
     this.hovered=part;
-    this.apparatus?.attention.setRoles(this.identifying?ROLES:[part||this.selected]);
+    this.apparatus?.attention.setRoles(this.identifying?ROLES:[part||this.selected],this.identifying||!!part);
     this.dirty=true;
   }
   setIdentification(active, feedback) {
@@ -78,7 +78,7 @@ export class LeverScene extends WorkshopScene {
       }
     }
     const changed = this.drag ? false : this.controls.update();
-    const attentionChanged=this.apparatus?.attention.update(time,this.reduced,this.identifyFeedback,this.feedbackUntil);
+    const attentionChanged=this.apparatus?.attention.update(time,this.reduced||this.paused,this.identifyFeedback,this.feedbackUntil);
     if (changed || this.dirty || old !== this.motion.angle || attentionChanged) this.draw();
   }
   screenPositions() {

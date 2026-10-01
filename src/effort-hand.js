@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 // Original, compact child's hand: one continuous palm/wrist volume and five
 // articulated, tapered digits. All dimensions are visual; force never scales it.
-const SKIN=0x68412e,NAIL=0xae8070,CREASE=0x513324;
+const SKIN=0x68412e,NAIL=0x986b52,CREASE=0x563929;
 const vector=p=>new THREE.Vector3(...p);
 function section(curve,t){
  const center=curve.getPoint(t),tangent=curve.getTangent(t).normalize();
@@ -39,9 +39,9 @@ export function createEffortHand(add){
   const curve=new THREE.CatmullRomCurve3(points.map(vector)),profile=[[0,.78*r,.68*r],[.12,r,.90*r],[.30,1.05*r,.95*r],[.43,.84*r,.78*r],[.59,.92*r,.82*r],[.73,.76*r,.68*r],[.85,.78*r,.70*r],[.94,.57*r,.50*r],[1,.001,.001]];
   const m=surface(sculpt(curve,profile,28,14),SKIN,name+'-finger');m.userData.digit=name;skinMeshes.push(m);
   // A small softly squared nail follows the distal phalanx, not a painted stripe.
-  const frame=section(curve,.80),nail=new THREE.Shape();const w=r*.63,h=r*.93,k=.045;
+  const frame=section(curve,.76),nail=new THREE.Shape();const w=r*.45,h=r*.58,k=.03;
   nail.moveTo(-w+k,-h);nail.lineTo(w-k,-h);nail.quadraticCurveTo(w,-h,w,-h+k);nail.lineTo(w,h-k);nail.quadraticCurveTo(w,h,w-k,h);nail.lineTo(-w+k,h);nail.quadraticCurveTo(-w,h,-w,h-k);nail.lineTo(-w,-h+k);nail.quadraticCurveTo(-w,-h,-w+k,-h);
-  const geo=new THREE.ExtrudeGeometry(nail,{depth:.009,bevelEnabled:true,bevelThickness:.012,bevelSize:.022,bevelSegments:2,steps:1,curveSegments:4});
+  const geo=new THREE.ExtrudeGeometry(nail,{depth:.007,bevelEnabled:true,bevelThickness:.009,bevelSize:.012,bevelSegments:2,steps:1,curveSegments:4});
   const basis=new THREE.Matrix4().makeBasis(frame.across,frame.tangent,frame.outward);
   geo.applyMatrix4(basis);geo.translate(...frame.center.clone().addScaledVector(frame.outward,r*.73).toArray());
   const n=surface(geo,NAIL,name+'-nail');n.userData.noCue=true;details.push(n);
