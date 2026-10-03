@@ -1,3 +1,4 @@
+import {gestureKind,gestureDelta} from './gesture.js';
 import * as THREE from "three";
 import { WorkshopScene } from "./workshop.js";
 import {
@@ -15,18 +16,20 @@ import {
 import { createApparatus, HEIGHT, SCALE } from "./apparatus.js";
 
 export class LeverScene extends WorkshopScene {
-  makeRoom() {
+  async makeRoom() {
     super.makeRoom();
-    // Same classroom backdrop as the latest Mechanical Advantage workbench.
-    const wall = this.box(110, 48, 0.4, 0xd8dfd0, 0, 18, -32);
-    wall.castShadow = false;
-    wall.receiveShadow = false;
-    this.classroom = [
-      wall,
-      this.box(30, 12, 0.45, 0x847453, 1, 15, -31.6),
-      this.box(28.8, 10.8, 0.16, 0x355850, 1, 15, -31.3),
-      this.box(31, 0.35, 1.2, 0xae9a76, 1, 8.9, -30.9),
-    ];
+    const inventory=()=>this.scene.children.filter(o=>o.name.startsWith('Retained')).map(o=>({name:o.name,position:o.position.toArray(),rotation:o.rotation.toArray(),scale:o.scale.toArray(),material:o.material?.uuid}));
+    const before=inventory();
+    for(const old of this.legacyRoom)this.scene.remove(old);
+    const {createClassroom}=await import('./canonical-room/src/classroom.js');
+    this.room=createClassroom();await this.room.ready;
+    const anchor=this.room.anchors.GameAnchor_Lever.position;
+    this.room.root.scale.setScalar(40);
+    this.room.root.position.set(-anchor.x*40,-.12-anchor.y*40,-anchor.z*40);
+    this.scene.add(this.room.root);
+    this.roomInventory={before,after:inventory(),anchor:'GameAnchor_Lever',source:'28e31ff0fbf06ee5fd9fe58cb499f0ef0d757f9a'};
+    this.scene.userData.roomIntegration=this.roomInventory;
+    this.scene.fog=null;
   }
   setState(state) {
     this.state = { ...state };
@@ -43,16 +46,15 @@ export class LeverScene extends WorkshopScene {
     this.draw();
   }
   highlight(part) {
-    this.hovered = part;
-    for (const mesh of this.meshes || []) {
-      mesh.material.emissive.set(
-        mesh.userData.part && mesh.userData.part === (part || this.selected)
-          ? 0x376b2a
-          : 0,
-      );
-      mesh.material.emissiveIntensity = 0.35;
-    }
-    this.dirty = true;
+    this.hovered=part;
+    this.apparatus?.attention.setRoles(this.identifying?ROLES:[part||this.selected],this.identifying||!!part);
+    this.dirty=true;
+  }
+  setIdentification(active, feedback) {
+    this.identifying = active;
+    if(feedback!==this.identifyFeedback)this.feedbackUntil=performance.now()+1000;
+    this.identifyFeedback = feedback;
+    this.highlight(null);
   }
   frame(time) {
     if (!this.active) {
@@ -76,7 +78,8 @@ export class LeverScene extends WorkshopScene {
       }
     }
     const changed = this.drag ? false : this.controls.update();
-    if (changed || this.dirty || old !== this.motion.angle) this.draw();
+    const attentionChanged=this.apparatus?.attention.update(time,this.reduced||this.paused,this.identifyFeedback,this.feedbackUntil);
+    if (changed || this.dirty || old !== this.motion.angle || attentionChanged) this.draw();
   }
   screenPositions() {
     if (!this.state || !this.apparatus) return {};
@@ -107,13 +110,12 @@ export class LeverScene extends WorkshopScene {
   }
   draw() {
     if (!this.moving) return;
-    this.scene.fog.near = Math.max(
-      65,
-      this.camera.position.distanceTo(this.controls.target) + 35,
-    );
-    this.scene.fog.far = this.scene.fog.near + 80;
-    for (const o of this.classroom || [])
-      o.visible = this.camera.position.z > -28;
+    if(this.room){
+      const camera=this.room.root.worldToLocal(this.camera.position.clone()),left=camera.x< -3.5,back=camera.z>7;
+      this.room.groups.LeftWall.visible=!left;this.room.groups.BackWall.visible=!back;
+      if(this.room.groups.Ceiling)this.room.groups.Ceiling.visible=camera.y<3.6;
+      for(const o of this.room.groups.Decor.children)o.visible=!(o.userData.wall==='left'&&left||o.userData.wall==='back'&&back);
+    }
     if (this.state) this.apparatus?.update(this.state, this.motion.angle);
     this.scene.updateMatrixWorld(true);
     this.renderer.render(this.scene, this.camera);
@@ -136,10 +138,12 @@ export class LeverScene extends WorkshopScene {
     };
     const apparatus = this.apparatus || createApparatus();
     const points = [];
-    for (const angle of [-STOP, 0, STOP]) {
-      apparatus.update(this.state || DEFAULT, angle);
+    const configurations=[this.state||DEFAULT];
+    for(const fulcrum of [-175,0,175])for(const swapped of [false,true])configurations.push({loadMass:1000,effortMass:1000,load:swapped?250:-250,effort:swapped?-250:250,fulcrum});
+    for (const state of configurations) for (const angle of [-STOP, 0, STOP]) {
+      apparatus.update(state, angle);
       for (const root of [apparatus.moving, apparatus.base]) root.traverse((object) => {
-        if (!object.geometry) return;
+        if (!object.geometry || object.userData.attention) return;
         object.geometry.computeBoundingBox();
         const box = object.geometry.boundingBox;
         for (const x of [box.min.x, box.max.x])
@@ -155,7 +159,7 @@ export class LeverScene extends WorkshopScene {
     });
     this.camera.clearViewOffset();
     this.controls.target.set(0, 5.8, 0);
-    const direction = new THREE.Vector3(side ? 0 : 6, side ? 2 : 28, 51).normalize();
+    const direction = new THREE.Vector3(side ? 0 : 10, side ? 2 : 28, 51).normalize();
     const boundsAt = (distance) => {
       this.camera.position.copy(this.controls.target).addScaledVector(direction, distance);
       this.camera.lookAt(this.controls.target);
@@ -177,7 +181,7 @@ export class LeverScene extends WorkshopScene {
     }
     const b = boundsAt(far);
     this.controls.maxDistance = Math.max(75, far * 2);
-    this.camera.far = Math.max(220, far * 3);
+    this.camera.far = Math.max(900, far * 3);
     this.camera.setViewOffset(w, h,
       (b.left + b.right - area.left - area.right) / 2,
       (b.top + b.bottom - area.top - area.bottom) / 2, w, h);
@@ -198,10 +202,10 @@ export class LeverScene extends WorkshopScene {
   sideCamera() {
     this.fitCamera(true);
   }
-  resize(reset = false) {
+  resize(reset = false, force = false) {
     const w = this.host.clientWidth, h = this.host.clientHeight;
     if (!w || !h) return;
-    if (!reset && this.lastSize?.w === w && this.lastSize?.h === h) return;
+    if (!reset && !force && this.lastSize?.w === w && this.lastSize?.h === h) return;
     const offset = this.camera.position.clone().sub(this.controls.target);
     const zoom = this.fitDistance ? offset.length() / this.fitDistance : 1;
     this.renderer.setSize(w, h, false);
@@ -223,7 +227,7 @@ export class LeverScene extends WorkshopScene {
       ? 1
       : -1;
   }
-  beginDrag(event, part, kind = "position") {
+  beginDrag(event, part, kind = "auto") {
     if (event.button !== 0 || !event.isPrimary || !this.state) return false;
     this.select(part);
     // Weights slide along the tilted beam; the support moves horizontally.
@@ -239,7 +243,7 @@ export class LeverScene extends WorkshopScene {
     const dx = b.x - a.x,
       dy = b.y - a.y,
       denom = dx * dx + dy * dy;
-    if (kind === "position" && denom < 1600) {
+    if (part === "fulcrum" && denom < 1600) {
       this.callbacks.onNotice?.(
         "Use Side view or the position controls to move along the beam.",
       );
@@ -249,7 +253,7 @@ export class LeverScene extends WorkshopScene {
     event.stopImmediatePropagation();
     this.drag = {
       part,
-      kind,
+      kind:part === "fulcrum" ? "position" : kind,
       pointerId: event.pointerId,
       startX: event.clientX,
       startY: event.clientY,
@@ -270,6 +274,11 @@ export class LeverScene extends WorkshopScene {
       "pointerdown",
       (e) => {
         const p = this.hit(e);
+        if (p && this.callbacks.onIdentify?.(p)) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          return;
+        }
         if (p) this.beginDrag(e, p);
       },
       true,
@@ -290,13 +299,10 @@ export class LeverScene extends WorkshopScene {
         const d = this.drag;
         if (!d || d.pointerId !== e.pointerId) return;
         e.preventDefault();
+        if(d.kind === "auto")d.kind=gestureKind(e.clientX-d.startX,e.clientY-d.startY);
+        if(d.kind === "auto")return;
         const field = d.kind === "mass" ? massKey(d.part) : d.part;
-        const delta =
-          d.kind === "mass"
-            ? (d.startY - e.clientY) * 5
-            : (((e.clientX - d.startX) * d.dx + (e.clientY - d.startY) * d.dy) /
-                d.denom) *
-              500;
+        const delta=gestureDelta(d,e.clientX,e.clientY);
         const next =
           d.kind === "mass"
             ? setMass(this.state, d.part, d.startState[field] + delta)

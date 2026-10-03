@@ -1,0 +1,113 @@
+/* One header, a left control rail, and a bottom notebook share measured space. */
+#app { --notebook-height:clamp(210px,36dvh,350px); --rail-width:clamp(344px,31vw,420px); }
+#top { padding:0; background:#e4e9ddeb; border-bottom:1px solid #a7b8a455; }
+header { display:grid; grid-template-columns:minmax(270px,350px) minmax(0,1fr); align-items:center; gap:12px; padding:8px 14px; }
+.brand { min-width:0; font-size:17px; gap:7px; }
+.brand > span { font-size:26px; }
+.brand small { font-size:11px; }
+#build-summary { font-size:11px; }
+#lab-navigation { padding:2px 0 0; gap:6px; font-size:11px; }
+#lab-navigation strong { font-size:11px; }
+#save-status { max-width:none; font-size:10px; }
+.header-controls { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:6px; min-width:0; }
+.header-controls .actions,.header-controls .tools { display:contents; }
+.header-controls button,.header-controls .tools button { min-height:34px; padding:6px 9px; font-size:13px; }
+.header-controls .camera-controls { gap:5px; }
+.header-controls label { display:flex; align-items:center; gap:4px; font-size:12px; }
+.header-controls select { max-width:165px; padding:5px; font-size:13px; }
+#beam-status { min-width:93px; padding:6px 9px; font-size:13px; }
+
+#controls-panel { top:calc(var(--toolbar-bottom,100px) + 10px); left:12px; right:auto; bottom:calc(var(--dock-reserve,12px) + 12px); width:var(--rail-width); height:auto; max-height:none; overflow-y:auto; overflow-x:hidden; pointer-events:auto; overscroll-behavior:auto; scrollbar-gutter:stable; border-radius:14px; }
+#object-controls { display:grid; grid-template-columns:1fr 1fr; gap:7px; height:auto; max-height:none; overflow:visible; }
+#controls-panel .control-card { position:relative; top:auto; left:auto; transform:none; width:100%; max-height:none; overflow:visible; padding:6px 8px; margin:0 0 8px; }
+#controls-panel .role-heading,#object-controls h2 { position:static; }
+#controls-panel .quantity-row { display:grid; grid-template-columns:minmax(60px,1fr) auto; gap:6px; }
+#controls-panel .quick-actions button { min-width:35px; }
+#controls-panel #panel-fulcrum { display:grid; grid-template-columns:auto 1fr; gap:4px 9px; }
+#controls-panel #fulcrum-slider { grid-column:1 / -1; }
+#controls-panel #panel-fulcrum .panel-heading { display:flex; }
+#controls-panel .fulcrum-value { margin:5px 0; }
+#controls-panel #fulcrum-position { width:76px; }
+#controls-panel .control-card input[type=number],#controls-panel .quick-actions button { min-height:34px; font-size:16px; }
+#controls-panel .control-card input[type=range] { height:22px; }
+#controls-panel .quantity-heading { min-height:27px; }
+#controls-panel .quantity-heading label { font-size:12px; }
+#controls-panel .control-card h2 { font-size:18px; }
+#controls-panel .control-card p.force-reading { font-size:11px; }
+#controls-panel .control-card .help-tip { min-width:25px; min-height:25px; font-size:13px; }
+
+#notebook { top:auto; bottom:12px; left:12px; right:12px; width:auto; height:var(--notebook-height); padding:0; overflow:hidden; border-radius:16px; }
+.notebook-heading { position:relative; top:auto; margin:0; min-height:43px; padding:7px 12px; justify-content:flex-start; gap:9px; border-bottom:1px solid #bdcdb4; background:#fffdf3; }
+.notebook-heading button { font-size:12px; padding:5px 9px; }
+.notebook-content { height:calc(100% - 43px); overflow:auto; overscroll-behavior:auto; scrollbar-gutter:stable; padding:12px 18px 22px; scroll-padding:12px; }
+.notebook-content:focus-visible { outline-offset:-3px; }
+.notebook-columns { display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr); gap:24px; max-width:1500px; margin:auto; }
+.question-lesson,.question-response { min-width:0; }
+#notebook h2 { font-size:21px; }
+#notebook p { margin:7px 0; }
+#notebook h3 { margin:6px 0; }
+.teaching-card { margin:8px 0; padding:9px 11px; font-size:14px; }
+.worked-example { font-size:12px; }
+.identify-choices { margin:6px 0; }
+.identify-choices button { padding:5px 9px; min-height:74px; }
+.identify-choices .part-icon { width:34px; height:34px; margin-bottom:3px; }
+#notebook .question-grid { grid-template-columns:repeat(auto-fill,minmax(145px,1fr)); }
+#notebook .question-tile { min-height:114px; }
+#notebook[data-view=reference] .notebook-content { padding-right:max(20px,12vw); }
+#notebook-reopen { top:auto; right:14px; bottom:14px; }
+
+footer { top:auto; bottom:12px; left:auto; right:12px; width:min(390px,38vw); height:var(--notebook-height); padding:0; z-index:23; }
+footer:has(#math-panel[hidden]) { display:none!important; }
+#math-panel { height:100%; max-height:100%; overflow:auto; background:#fffdf3f5; border:1px solid #b4c3ad; border-radius:14px; padding:10px; }
+#app.math-open #notebook { right:calc(min(390px,38vw) + 24px); }
+#app.math-open .notebook-columns { grid-template-columns:1fr; gap:12px; }
+#math-panel .math-grid,#math-panel .conversion-grid { display:block; }
+#math-panel .math-cell + .math-cell { padding:10px 0 0; border-left:0; }
+#math-panel .math-topline,#math-panel .math-tabs { flex-wrap:wrap; }
+#math-panel .math-notes { gap:5px; flex-wrap:wrap; }
+#math-panel .math-notes button { font-size:12px; }
+
+/* Diagram and floating labels use the camera's measured clear rectangle. */
+#app #fallback,#app.controls-open #fallback { inset:auto; left:var(--clear-left,16px); top:var(--clear-top,110px); width:var(--clear-width,calc(100% - 32px)); height:var(--clear-height,50%); padding:0; }
+#app #fallback-svg,#app.controls-open #fallback-svg { width:100%; height:calc(100% - 22px); max-height:none; min-height:0; }
+.part-tag { min-width:0; max-width:calc((var(--clear-width,100vw) - 24px)/3); font-size:15px; }
+.part-tag small { font-size:11px; }
+.part-tag .pause-badge { max-width:155px; font-size:11px; }
+
+@media(max-height:650px) and (min-width:761px) {
+ #app { --notebook-height:210px; }
+ header { padding:5px 12px; }
+ .brand small { font-size:10px; }
+ .header-controls { gap:4px; }
+ .header-controls button,.header-controls .tools button { min-height:30px; padding:4px 7px; }
+}
+@media(max-width:760px) {
+ #app { --rail-width:min(205px,37vw); --notebook-height:clamp(230px,38dvh,320px); }
+ header { grid-template-columns:1fr; gap:5px; padding:6px 9px; }
+ .brand { justify-content:flex-start; font-size:15px; }
+ .brand > div { display:flex; flex-wrap:wrap; align-items:baseline; gap:3px 9px; }
+ .brand small { display:none; }
+ #lab-navigation { width:100%; }
+ .header-controls { justify-content:flex-start; gap:4px; }
+ .header-controls button,.header-controls .tools button { min-height:30px; font-size:11px; padding:4px 6px; }
+ #beam-status { font-size:11px; min-width:76px; }
+ .header-controls select { max-width:135px; font-size:11px; }
+ #controls-panel { left:6px; }
+ #controls-panel #object-controls,#controls-panel #panel-fulcrum { display:block; }
+ #controls-panel .control-card { padding:5px; }
+ #controls-panel .quantity-row { grid-template-columns:1fr; gap:1px; }
+ #controls-panel .control-card h2 { font-size:16px; }
+ #controls-panel .quantity-heading label { font-size:11px; }
+ #controls-panel .fulcrum-value { display:block; }
+ #controls-panel #fulcrum-position { width:100%; }
+ #notebook { left:6px; right:6px; bottom:6px; }
+ .notebook-content { padding:10px 12px 18px; }
+ .notebook-columns { grid-template-columns:1fr; gap:10px; }
+ .part-tag { white-space:normal; overflow-wrap:anywhere; font-size:11px; padding:4px; }
+ .part-tag small,.part-tag .pause-badge { font-size:10px; }
+ .part-tag .part-icon { width:20px; height:20px; }
+ .notebook-heading { padding:7px; gap:5px; }
+ .notebook-heading button { font-size:11px; padding:5px; }
+ footer { width:45vw; right:6px; bottom:6px; }
+ #app.math-open #notebook { right:calc(45vw + 12px); }
+}

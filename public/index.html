@@ -7,6 +7,8 @@
     <title>Lever Lab: Partners In Balance</title>
     <link rel="icon" href="./favicon.svg" />
     <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./notebook.css" />
+    <link rel="stylesheet" href="./layout.css" />
   </head>
   <body>
     <main id="app">
@@ -16,9 +18,10 @@
             <span aria-hidden="true">⚖</span>
             <div>
               <b>Lever Lab: Partners In Balance</b
-              ><small>Predict. Release. Explain. · v__RELEASE_VERSION__</small>
+              ><small>Predict. Release. Explain.</small><strong id="build-summary">__DISPLAY_ID__</strong>
             </div>
           </div>
+          <div class="header-controls">
           <div class="actions">
             <button
               id="controls-toggle"
@@ -35,8 +38,7 @@
             ><button id="help">Help</button
             ><button id="fullscreen">Full Screen</button>
           </div>
-        </header>
-        <div id="build-identity" aria-label="Build Identifier">__BUILD_ID__</div>
+
         <nav class="tools" aria-label="Workbench Controls">
           <output id="beam-status" aria-live="polite">Held Level</output
           ><button id="hold" aria-pressed="true">Release</button
@@ -58,6 +60,9 @@
           </div>
           <button id="workbench-help" class="help-tip" type="button" aria-label="Move and Adjust Help">?</button>
         </nav>
+          </div>
+        </header>
+        <div id="build-identity" aria-label="Build Identifier" hidden>__BUILD_ID__</div>
       </div>
       <div id="stage">
         <div id="scene"><p class="loading">Setting up your workbench…</p></div>
@@ -66,9 +71,9 @@
             id="fallback-svg"
             viewBox="0 0 800 430"
             role="img"
-            aria-label="Lever diagram showing the load above the beam and effort hanging below"
+            aria-label="Lever diagram showing the hanging load and contacting hand effort"
           ></svg>
-          <p>Diagram View · use Controls to change masses and distances.</p>
+          <p>Diagram View · use Controls to change load mass, effort push, and distances.</p>
         </div>
         <svg id="leaders" aria-hidden="true"></svg>
         <div id="tags"></div>
@@ -169,77 +174,15 @@
       <p><b>Quick Help:</b> hover or focus a dotted term or ? button to read
         its explanation. Click or tap to keep it open; click or tap again,
         tap elsewhere, or press Escape to dismiss it.</p>
-      <ol>
-        <li>
-          Use <b>Controls</b> to change either mass or its distance from the
-          fulcrum. Drag the gold Load, teal Effort, purple Fulcrum, or their
-          labels along the beam.
-        </li>
-        <li>
-          <b>Hold Level</b> and <b>Hide Math</b> let you predict. Release to see
-          which side goes down, then reveal the calculation. While released,
-          the beam keeps responding as you move objects; grabbing alone does
-          not level it. When the turning effects match, the weighted pointer gently
-          returns the beam to level. Watch for Settling… followed by Balanced.
-        </li>
-        <li>
-          <b>Swap Positions</b> exchanges exact beam coordinates. Each object
-          keeps its own mass, color, shape, and role. The fulcrum stays still.
-          Swap twice to return.
-        </li>
-      </ol>
-      <p>
-        <b>Controls:</b> the gold Load and teal Effort panels follow their
-        objects’ beam positions when swapped. Orbiting the camera does not
-        exchange panels. On a narrow screen, the controls share a bottom dock;
-        close it to return to the math. Arm lengths are measured from the
-        fulcrum, with a minimum of 75 mm. Masses and distances use 25 g and
-        25 mm steps. Negative fulcrum coordinates are toward the beam’s marked
-        left end. The fulcrum stays between the objects.
-      </p>
-      <p>
-        <b>Keyboard:</b> Tab to a role label, then use left/right arrows to move
-        across the screen. Up/down changes Load or Effort mass. Sliders, number
-        boxes, and ½/2× buttons are also available. Drag the background to
-        orbit; scroll or pinch to zoom. Side View and Fit View restore useful
-        views.
-      </p>
-      <p>
-        <b>Forces and Motion:</b> the gold Load rests directly on the beam and
-        tilts with it; the teal hanging Effort pulls through its cord. Both applied forces
-        point down, even when an object moves up. These descriptions fit this
-        apparatus, not every possible lever.
-      </p>
-      <p>
-        <b>Balance Pointer:</b> the brass-and-purple pointer is fixed to the beam
-        and rotates with it. Its 250 g bob sits 125 mm below the axle when level.
-        Gravity pulls it back toward its alignment mark. It moves with the
-        fulcrum and contributes no turning effect at level. Small differences
-        between the load and effort can settle at a small tilt.
-      </p>
-      <p>
-        <b>Ideal Model:</b> the Load, Effort, and pointer bob have mass. The beam,
-        cord, pointer rod, and other attachments are massless; the pivot is ideal. The crate stays fixed
-        at its selected beam position without sliding or tipping independently.
-        It represents a downward point load at the labeled beam-axis point.
-        The model does not simulate the full crate’s center of mass or the extra
-        torque its height would produce when tilted. Both load and effort forces act
-        vertically through their labeled points; arrows show force direction.
-      </p>
-      <p>
-        <b>Distance and Motion:</b> arms run along the beam from the fulcrum to
-        each force point. When tilted, both horizontal moment arms shrink by
-        cos(angle). The pointer adds a restoring turning effect when tilted,
-        while the equation for level balance stays the same. The math panel shows
-        turning effects at level. Motion uses an illustrative point-mass inertia
-        and damping, limited to ±12°; it is not a calibrated acceleration
-        simulation.
-      </p>
-      <p><b>Mechanical Advantage:</b> IMA is effort-arm length divided by
-        load-arm length. Load force divided by effort force equals IMA only
-        at ideal balance. A longer effort arm needs less effort force to
-        balance the same load. The two masses experience the same gravity,
-        so comparing mass × arm length gives the same balance prediction.</p>
+      <ol><li><b>Set Up:</b> All controls stay usable. The beam pauses while you change load mass, effort push, or distances. Drag sideways to move a part; drag down to increase its setting, or up to decrease it.</li>
+      <li><b>Predict And Test:</b> Record a prediction to begin the test automatically. After changing the arrangement, record a new prediction. Earlier predictions and trials stay in your work.</li>
+      <li><b>Observe:</b> Wait for the recorded result. A moving beam passing through level is not yet balanced. Write what you actually saw.</li></ol>
+      <p><b>Load And Effort:</b> Gravity pulls the hanging load downward. The constant-size hand supplies a downward push. A setting of 100 g-equivalent means a force equal to the weight of a 100 g object (0.981 N), not the mass of the hand. No manual conversion is required.</p>
+      <p><b>Keyboard:</b> Tab to a part label. Left/right arrows move it; down/up increases/decreases load mass or effort push. Number boxes, sliders, and halve/double buttons are also available. Drag the background to orbit; scroll or pinch to zoom.</p>
+      <p><b>Swap Positions:</b> Exchanges application coordinates while keeping load mass, effort push, and roles. Swap twice to return. The fulcrum stays between both points, with arms at least 75 mm. Coordinates and settings snap to 25-unit steps.</p>
+      <p><b>Ideal Model:</b> Both applied forces point down through the labeled application points. The massless beam, cord, and pointer rod turn on an ideal pivot. A 250 g balance-pointer bob 125 mm below the axle supplies restoring torque when tilted. The hand supplies force without adding modeled mass or inertia. Motion uses illustrative damping and 12-degree stops, not a calibrated acceleration simulation.</p>
+      <p><b>Balance And Advantage:</b> Compare load grams times load arm with effort g-equivalent times effort arm; these products are not SI torque. IMA is effort arm divided by load arm. At ideal balance only, load weight divided by required effort force equals IMA.</p>
+      <p><b>Your Work:</b> Autosave belongs to this browser profile and address. Use Question Index, then Recover Saved Work, to download or restore a portable copy. Your completed report includes reasoning and sketches for teacher review. Physical building and testing remain separate.</p>
       <label class="check-label"
         ><input id="reduced" type="checkbox" /> Reduce Animation</label
       ><button class="primary dialog-close">Back to the Workbench</button>

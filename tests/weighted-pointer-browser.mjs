@@ -39,8 +39,8 @@ try {
     const angle = () => page.locator("#app").evaluate(e => Number(e.dataset.angle));
     const status = () => page.locator("#beam-status").innerText();
     assert.equal(await page.locator("#build-identity").textContent(), manifest.id);
-    assert.equal(await page.locator("#build-identity").isHidden(), true);
-    assert.equal(await page.locator("#build-identity").boundingBox(), null);
+    assert.equal(await page.locator("#build-identity").isVisible(), false);
+    assert.ok(await page.locator("#build-summary").boundingBox());
     if (mode === "true") await click("#side");
     await click("#controls-toggle");
     await click("#hold");
@@ -82,6 +82,6 @@ try {
   }
   await verifyBeamMotion(browser, url, watch);
   assert.deepEqual(errors, []);
-  await writeFile("artifacts/weighted-pointer/verification.json", JSON.stringify({ buildId: manifest.id, passed: true, checks: ["reported arrangement", "settling status", "smallest imbalance", "WebGL and SVG", "laptop and projector", "continuous drags and cancellations", "Hold and Help", "reduced animation", "WebGL loss", "preserved hidden build identity"] }, null, 2));
+  await writeFile("artifacts/weighted-pointer/verification.json", JSON.stringify({ buildId: manifest.id, passed: true, checks: ["reported arrangement", "settling status", "smallest imbalance", "WebGL and SVG", "laptop and projector", "continuous drags and cancellations", "Hold and Help", "reduced animation", "WebGL loss", "compact visible version with full retained build identity"] }, null, 2));
   console.log(`PASS: weighted pointer browser review ${manifest.id}`);
 } finally { await browser?.close(); server.kill(); }

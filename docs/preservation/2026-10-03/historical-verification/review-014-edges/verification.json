@@ -1,0 +1,30 @@
+{
+  "build": "0.1.0_Partners-In-Balance_local-1e3bd62e_build-023_20261001T124833Z_g380fe0ba3313_web",
+  "passed": true,
+  "runs": [
+    {
+      "renderer": "WebGL",
+      "passed": true,
+      "checks": [
+        "Q14 retry product controls use shared ownership and reload validly",
+        "Q7 out-and-back edit requires a new trial across reload",
+        "Migration quota protects original bytes through edits, downloads, and blocked restore",
+        "Migration retry archives exact original bytes before saving in-memory progress",
+        "Final anonymous HTML omits structured historical names while backup retains them"
+      ],
+      "errors": []
+    },
+    {
+      "renderer": "Diagram",
+      "passed": true,
+      "checks": [
+        "Q14 retry product controls use shared ownership and reload validly",
+        "Q7 out-and-back edit requires a new trial across reload",
+        "Migration quota protects original bytes through edits, downloads, and blocked restore",
+        "Migration retry archives exact original bytes before saving in-memory progress",
+        "Final anonymous HTML omits structured historical names while backup retains them"
+      ],
+      "errors": []
+    }
+  ]
+}

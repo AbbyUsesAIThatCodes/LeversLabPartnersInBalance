@@ -10,6 +10,7 @@ Apply [Build Identity](docs/BUILD_IDENTITY.md) to every artifact-producing
 invocation. Use `npm run build` and its manifest-derived output folder; never
 invent or reuse a PR build ordinal. Test with `npm test`, then run focused
 browser checks for changed interactions on student laptop/projector dimensions.
-Show the full Lever Lab build identity; the upstream display exception applied
-only to the original game. Keep local identities until a real PR exists.
+Per the user's explicit playtest direction, show compact version plus Local Review
+in the upper left until a real PR exists, then version-PRnumber. Preserve the full
+identity in the console, manifest, export, artifact names, and documentation.
 Use Title Case for new or edited interface headings and feature titles.

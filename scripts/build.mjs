@@ -8,7 +8,9 @@ await rm("dist", { recursive: true, force: true });
 await mkdir("dist/assets", { recursive: true });
 await cp("public", "dist", { recursive: true });
 const html = await readFile("dist/index.html", "utf8");
-await writeFile("dist/index.html", html.replace("__BUILD_ID__", manifest.id).replace("__RELEASE_VERSION__", manifest.version));
+const realPR = /^pr-(\d+)$/.exec(manifest.scope);
+const displayIdentity = realPR ? `${manifest.version}-PR${realPR[1]}` : `${manifest.version} Local Review`;
+await writeFile("dist/index.html", html.replace("__BUILD_ID__", manifest.id).replace("__RELEASE_VERSION__", manifest.version).replace("__DISPLAY_ID__", displayIdentity));
 await writeFile("dist/build-manifest.json", JSON.stringify(manifest, null, 2) + "\n");
 await copyFile(
   "node_modules/@fontsource/comic-neue/files/comic-neue-latin-400-normal.woff2",

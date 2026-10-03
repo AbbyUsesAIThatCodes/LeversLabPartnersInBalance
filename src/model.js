@@ -1,5 +1,6 @@
 // Adapted from ThreeKindsOfLevers and MechanicalAdvantage; see docs/PROVENANCE.md.
-// Coordinates are signed mm along the beam. Identity and mass belong to roles.
+// Coordinates are signed mm along the beam. The load has mass; effort is an
+// applied downward force. The legacy effortMass key stores g-equivalent calibration.
 export const ROLES = Object.freeze(["load", "fulcrum", "effort"]);
 export const OBJECTS = Object.freeze(["load", "effort"]);
 export const LIMIT = 250,
@@ -37,6 +38,9 @@ export const PRESETS = Object.freeze({
   }),
 });
 export const massKey = (role) => `${role}Mass`;
+export const effortEquivalentGrams = state => state.effortMass;
+export const effortPushNewtons = state => effortEquivalentGrams(state) / 1000 * GRAVITY;
+export const loadWeightNewtons = state => state.loadMass / 1000 * GRAVITY;
 export const arm = (state, role) => Math.abs(state[role] - state.fulcrum);
 export function valid(state) {
   return (
@@ -115,8 +119,8 @@ export function measures(state) {
     effortArm = arm(state, "effort");
   const loadMoment = state.loadMass * loadArm,
     effortMoment = state.effortMass * effortArm;
-  const loadForce = (state.loadMass / 1000) * GRAVITY,
-    effortForce = (state.effortMass / 1000) * GRAVITY;
+  const loadForce = loadWeightNewtons(state),
+    effortForce = effortPushNewtons(state);
   return {
     loadArm,
     effortArm,
@@ -134,11 +138,12 @@ export function measures(state) {
           : "effort",
     ima: effortArm / loadArm,
     neededMass: loadMoment / effortArm,
+    neededEquivalentGrams: loadMoment / effortArm,
     forceRatio: loadForce / effortForce,
   };
 }
-// Ideal vertical point loads at labeled beam-axis points, not mesh centers of
-// mass (including the seated crate's height). Positive rotation raises +x.
+// Vertical load weight and applied hand force act at labeled beam-axis points.
+// Positive rotation raises +x. The hand's geometry has no simulated mass.
 export function appliedTorque(state, angle = 0) {
   return (
     ((-(
@@ -173,11 +178,8 @@ export function advance(state, motion, seconds) {
   const elapsed = Math.min(seconds, 0.1),
     count = Math.ceil(elapsed * 240),
     dt = elapsed / count;
-  const inertia = OBJECTS.reduce(
-    (sum, role) =>
-      sum + (state[massKey(role)] / 1000) * (arm(state, role) / 1000) ** 2,
-    POINTER.mass / 1000 * (POINTER.length / 1000) ** 2,
-  );
+  const inertia = state.loadMass / 1000 * (arm(state, 'load') / 1000) ** 2
+    + POINTER.mass / 1000 * (POINTER.length / 1000) ** 2;
   const damping = 2 * POINTER.dampingRatio * Math.sqrt(POINTER_STIFFNESS / inertia);
   let { angle, velocity } = motion;
   for (let i = 0; i < count; i++) {

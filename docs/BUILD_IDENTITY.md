@@ -1,68 +1,34 @@
-# Build Identity
+# Lever Lab Build Identity
 
-## Identity Contract
+`release.json` is authoritative: development `0.1.0`, **Partners In Balance**,
+slug `Partners-In-Balance`. Version must match `package.json`. The new notebook
+uses schema 2 and its own storage key; incompatible saves require migration or a
+schema change. No classroom release has been accepted.
 
-`release.json` is the release record; its version must match `package.json`.
-Version 0.1.0 remains in development under the existing **Integrated Core**
-roadmap milestone, now used consistently as the release codename. Its slug is
-`Integrated-Core`. The classroom release remains Issue #3. This change preserves
-the save schema and storage key. A future accepted release can increment the
-minor version for features, patch for compatible corrections, or major for a
-breaking established compatibility contract; do not relabel historical builds.
+Canonical ID: `<version>_<codename>_<scope>_build-<ordinal>_<UTC>_g<revision>[-dirty-<fingerprint>]_web`.
+Every artifact-producing invocation reserves a new ordinal. Local scopes and
+counters use the inherited atomic allocator under `.git/build-identity/`.
+UTC is captured once before bundling. Full SHA, dirty state, and input fingerprint
+are recorded. Retesting an artifact preserves its ID. No PR ordinal is invented.
 
-Canonical identity:
-`<version>_<codename-slug>_<scope>_build-<ordinal>_<UTC>_g<12-char-SHA>[-dirty-<fingerprint>]_web`
+| Surface | Location | Check |
+| --- | --- | --- |
+| Release | `release.json`, `package.json` | Build consistency gate |
+| Local Ordinals | `scripts/build-identity.mjs`, `.git/build-identity/` | Concurrent allocator test |
+| Console | `scripts/build.mjs` | Full start/success/failure ID |
+| Artifact | `artifacts/builds/<ID>/` | `scripts/verify-build.mjs` |
+| Visible UI | `public/index.html`, `#build-summary` | Compact version and Local Review or real PR; full ID retained hidden |
+| Manifest/Report | `build-manifest.json`, `BUILD_REPORT.md` | Consistency verifier |
+| Current Review | `artifacts/current-build.json` | Matches immutable manifest |
+| Student Export | `src/report.js` | Full packet browser checks verify embedded data and build |
+| Review ZIP | `scripts/package-review.mjs`, `output/<ID>.zip` | Requires matching browser evidence; ID in filename |
+| CI/Deployment | None active | No authorized Actions or Pages |
 
-Every artifact-producing invocation reserves an ordinal before bundling. CI
-uses the `build-identity-ledger` branch and `build-ledger.json`, updated with the
-GitHub Contents API's SHA compare-and-swap. Each PR has its own `pr-N` counter;
-main has its own counter. Reservations survive reruns, rebases, and failed
-builds, with their history in ledger commits. Concurrent conflicts retry rather
-than reusing a number. The build job alone needs contents write permission.
-PR builds never publish Pages; the ledger branch has no deployment trigger.
+The user explicitly approved the compact game-display exception below.
+The inherited remote allocator is dormant; no workflow is authorized to invoke it.
 
-Local invocations use a clearly labeled UUID scope and an atomic lock/counter
-in `.git/build-identity/`. They do not claim a PR ordinal. Re-cloning creates a
-new local scope. Fork PRs use an explicit local scope because their read-only
-credential cannot reserve a shared ordinal. A stuck local lock fails closed;
-remove it only after verifying no allocator is active. Reservations are retained
-if later build stages fail.
+## Approved Compact Game Display
 
-The UTC timestamp is captured once immediately before metadata injection.
-The manifest retains full source SHA, dirty state, a SHA-256 fingerprint of
-build inputs, target, CI built commit, and PR head where available. Console,
-HTML, manifest, report, and artifact name are derived from that same object.
-Retesting, downloading, or deploying an existing artifact keeps its identity.
-
-### On-Screen Display Exception
-
-At the owner's request on September 29, 2026, this game's full build designation
-stays hidden for a cleaner classroom interface. Keep `#build-identity` hidden
-without reserving layout space; do not restore a visible badge or overlay.
-The complete ID remains in the page source, manifest, report, build console,
-and artifact name. This overrides the standing prominent-display requirement
-for this game only; all other build identity requirements still apply.
-
-## Identifier Location Inventory
-
-| Surface | Location and Mechanism | Verification | Status |
-| --- | --- | --- | --- |
-| Release Record | `release.json`; package version consistency gate | Build rejects mismatches | Implemented |
-| Shared Ordinals | `build-identity-ledger:build-ledger.json`; atomic SHA updates | CI reservation and manifest ledger commit | Implemented; CI verifies access |
-| Local Ordinals | `.git/build-identity/ledger.json`; exclusive directory lock | Concurrent allocation test | Implemented |
-| Build Console | `npm run build`, `scripts/build.mjs` | Full ID at start, success/failure | Implemented |
-| CI Console and Summary | `.github/workflows/pages.yml`; generated report | Same manifest and `GITHUB_STEP_SUMMARY` | Implemented |
-| Distribution Directory | `artifacts/builds/<full-ID>/` | `scripts/verify-build.mjs` | Implemented |
-| Downloadable CI Artifact | Review Build upload, named with full ID | Workflow artifact name | Implemented |
-| Hidden Game Metadata | `public/index.html` / `#build-identity`, with `hidden` | Browser verifies full text, hidden state, and no layout box | Implemented; owner-approved display exception |
-| Manifest and Current Report | Distribution `build-manifest.json`, `BUILD_REPORT.md`; `artifacts/current-build.json` | Consistency verifier | Implemented |
-| README and Roadmap | Links to this contract and generated report locations | Review | Implemented |
-| PR Handoff | PR description and `.github/pull_request_template.md` | Exact review ID plus verification results | Implemented |
-| Contributor Instructions | `AGENTS.md` | Links to this inventory | Implemented |
-| Deployed Record | Hosted `/build-manifest.json` and `/BUILD_REPORT.md`, carried with Pages artifact | Read after an authorized deployment | Implemented for future deployments; this PR does not deploy |
-| IDE Export | No separate IDE build/export entrypoint exists | N/A | N/A |
-
-The generated report inside a review artifact is authoritative for that artifact.
-The hosted manifest identifies the currently deployed build independently.
-Generated reports and dist files are ignored: do not commit them and rebuild in
-an attempt to make an ID describe its own generated timestamp commit.
+The user explicitly requested compact version plus Local Review in the upper left,
+or version-PRnumber once an actual PR exists. The full identity stays in the
+console, build manifest, exports, artifact filenames, and review documentation.

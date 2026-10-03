@@ -1,123 +1,65 @@
-# Levers: Load, Effort, and Distance
+# Lever Lab: Partners In Balance
 
-An independent classroom lever game: a **gold Load** sits on and tilts with the beam,
-and a **teal Effort** hangs below the beam. Change either mass, change either arm,
-move the purple fulcrum, predict the result, and release the beam.
+Separate local-first development game based on the unchanged
+[source game](docs/LEVERLAB-SOURCE.md). Full Git ancestry, physics, camera controls, fonts, and fallback diagram are retained.
+The guided revision uses a hanging load, a calibrated hand push, and the frozen
+ClassroomVirtualization room; the mat, paper pad, and pencil remain.
 
-Version **0.1.0** implements the integrated core in
-[Issue #2](https://github.com/AbbyUsesAIThatCodes/LeversLoadEffortDistance/issues/2).
-It still needs the classroom readiness work in
-[Issue #3](https://github.com/AbbyUsesAIThatCodes/LeversLoadEffortDistance/issues/3).
-See the [Roadmap](docs/ROADMAP.md). Review builds identify the existing
-**Integrated Core** milestone with a full build ID retained in the page source,
-build manifest, and report. The designation is hidden from the game interface.
-See [Build Identity](docs/BUILD_IDENTITY.md) for the release record and inventory.
-
-## Explore
-
-- **Controls** opens number boxes, sliders, and halve/double buttons for each
-  object's mass and arm length. The gold **Load** panel starts left, the teal
-  **Effort** panel starts right, and both follow their objects when swapped.
-  The fulcrum has one shared strip. Camera orbit never exchanges the panels.
-  Phone and portrait-tablet layouts use a scrollable bottom dock; closing it
-  restores the previous math visibility. **Show Math** switches back directly.
-  Escape or **Hide Controls** closes all controls and returns focus to the
-  toggle. See the [Control Layout Review](docs/CONTROL-LAYOUT.md).
-- Drag an object, the fulcrum, or a floating role label. The fulcrum always stays
-  between the objects. Tab to a label and use left/right arrows to move across
-  the screen; up/down changes that object's mass.
-- **Swap Positions** exchanges the objects' exact coordinates, keeping each
-  object's mass, mesh, color, role, and label. The fulcrum stays fixed. The arm
-  lengths exchange. Swap twice to return to the original arrangement.
-- **Hold Level** and **Hide Math** support predictions. Release tests the current
-  turning effects. A held arrangement stays held after swapping; a released
-  arrangement responds from its current tilt and motion, including while
-  dragging. Grabbing or releasing alone does not level the beam. The weighted
-  **Balance Pointer** returns matching turning effects smoothly to level. The
-  status shows **Settling…** until it is level and nearly stationary. Small
-  imbalances settle at a visible tilt; larger ones reach a travel stop.
-  See [Weighted Pointer Review](docs/WEIGHTED-POINTER.md).
-- **Balance & Advantage** compares mass × distance, IMA, and required effort mass.
-  **Grams → Newtons** expands SI conversions. Hover or focus dotted terms and
-  **?** buttons for explanations. Click/tap to keep help open; repeat, press
-  Escape, or tap elsewhere to dismiss. **Help** still opens the complete guide.
-  The actual force ratio equals IMA only at ideal balance. See the
-  [Compact Menus and Tooltip Review](docs/TOOLTIPS.md).
-- Orbit/zoom freely, or use **Side View** and **Fit View**. Panels are overlays;
-  opening them never resizes the full-window 3D viewport or resets your camera.
-  Presets fit the current arrangement through its full travel, with space for
-  labels and overlays. See the [Camera Framing Review](docs/CAMERA-FRAMING.md).
-- If WebGL is unavailable or lost, the diagram, math, presets, swap, hold/release,
-  and numeric controls still work. Storage failure does not prevent use.
+**Development build for thorough teacher playtesting.** All 68 target coverage
+rows (Intro, Routine, and 66 question subparts) and tutorials T0-T12 are implemented.
+Complete shared-classwork browser walkthroughs have passed in both renderers. Automated checks do not
+grade open reasoning or establish classroom readiness. See [Status](STATUS.md)
+for the exact tested build and [Teacher Review](docs/TEACHER-REVIEW.md) for playtests.
 
 ## Run Locally
 
-Use Node.js 22 or later:
+Node.js 22+: `npm ci`, `npm test`, `npm run build`, then `npm run dev`.
+Open `http://127.0.0.1:4173/LeverLab/`. Serve over HTTP, not `file://`.
+On Windows restricted environments, unit checks can use
+`node --test --test-isolation=none tests/*.test.mjs`.
+`node tests/guided-preview-browser.mjs` checks the introduction, graphical parts,
+room provenance, retained props, controls, gestures, and flat Question Index.
+`node tests/guided-full-browser.mjs` completes all 68 coverage rows in both renderers.
+`node tests/correctness-browser.mjs` repeats the five integrity regressions.
+`node tests/guided-migration-browser.mjs` imports an actual prior-build synthetic
+notebook and verifies retained work, recoverable original bytes, and future rejection.
+Set `CHROMIUM_EXECUTABLE` to an installed Chrome executable when needed.
 
-```sh
-npm ci
-npm run build
-npm run dev
-```
+For a packaged review, extract the complete ZIP and run `StartReview.cmd` on Windows
+or `node serve-review.mjs` with Node.js 22+.
+That package needs no npm install or internet connection. Browser storage belongs
+to the exact address; download a backup before changing a preview port.
 
-Open <http://localhost:4173/LeversLoadEffortDistance/> or
-<http://localhost:4173/>. Serve `dist/` over HTTP, not `file://`. Each build also creates an immutable
-`artifacts/builds/<full-ID>/` folder containing `build-manifest.json` and
-`BUILD_REPORT.md`; `artifacts/current-build.json` identifies the latest local
-review build. Run `node scripts/verify-build.mjs` to check identity consistency.
+## Learning And Evidence
 
-```sh
-npm test
-npx playwright install chromium
-npm run test:browser
-node tests/weighted-pointer-browser.mjs
-```
+One guided assignment embeds T0-T12 teaching and worked examples into both
+six-page R06 packets, without Optional A-E. One anonymous notebook
+works for a classwork partnership or someone working independently. Classroom
+handles identity; the teacher guides partner routines outside this interface.
+Predictions are never graded for correctness. Explanations/sketches need teacher
+review, not keyword grading. Completion records required evidence, not a mastery score.
 
-For headless Linux, `BROWSER_SOFTWARE_GL=1` enables software WebGL and
-`CHROMIUM_EXECUTABLE` can point to an existing compatible Chromium.
-`PORT` overrides the server port (4173 for development, 4178 in the browser check).
-Screenshots from browser checks go to ignored `artifacts/`.
+Identify Parts uses Effort, Load, and Fulcrum clicks with a three-correct streak,
+blue candidate cues, and keyboard access. Hide Notebook / Show Notebook clears
+the workbench. Question Index uses lever icons and distinguishes complete evidence
+from writing/sketches that need teacher review. Vocabulary returns to the current
+question without changing its setup. Controls remain usable while the beam pauses.
+Recording a prediction starts the test; changed setups require a fresh prediction.
+Effort is shown in g-equivalent with an automatic Newton readout, never as hand mass.
 
-## Bounds and Assumptions
+Browser autosave is separate from the original game. Question Index offers
+Recover Saved Work with validated JSON backup/restore. After all required evidence
+is recorded, Download Completed Work produces a self-contained HTML report with
+drawings, responses, history, review flags, and machine-readable data. Attach the
+file and select Turn In in Google Classroom; downloading is not submission.
 
-| Quantity                | Permitted Values                                                               |
-| ----------------------- | ------------------------------------------------------------------------------ |
-| Load and Effort masses  | 25–1,000 g, in 25 g steps                                                      |
-| Object beam coordinates | −250 to +250 mm, in 25 mm steps                                                |
-| Minimum arm length      | 75 mm                                                                          |
-| Fulcrum coordinate      | Between the objects, at least 75 mm from each; global extremes ±175 mm         |
-| Arm lengths             | Derived from coordinates; 75–425 mm, depending on the current fulcrum and side |
-| Beam motion             | ±12°, with illustrative damping                                                |
+No accounts, telemetry, runtime CDN, or student server storage. No names or roles
+are required. Simulation does not certify a physical build or test.
 
-The support and bounds keep the maximum masses above the work surface at both
-stops. The crate rests directly on the rail and tilts with it; the Effort stays
-vertical. The crate represents a point load at
-its labeled beam-axis coordinate, not a full rigid-body center-of-mass model.
-The modeled masses are the labeled Load and Effort plus a fixed 250 g pointer
-bob 125 mm below the axle when level. The beam, pointer rod, and other attachments
-are ideal and massless; the pivot is ideal. The pointer contributes no torque
-at level, so the classroom mass × distance equality is unchanged. Read
-[Model and Teaching Notes](docs/MODEL-AND-TEACHING.md) for support assumptions,
-force application points, torque, and motion limitations.
-See the [Load Contact Review](docs/LOAD-CONTACT.md) for Issue #8 comparisons.
+## Review Policy
 
-## Independent Identity and Review
-
-This game adapts [ThreeKindsOfLevers](https://github.com/AbbyUsesAIThatCodes/ThreeKindsOfLevers)
-and [MechanicalAdvantage](https://github.com/AbbyUsesAIThatCodes/MechanicalAdvantage).
-Exact source commits and adapted components are recorded in
-[Provenance](docs/PROVENANCE.md), with licenses in
-[Third-Party Notices](THIRD_PARTY_NOTICES.md).
-
-Changes are delivered as PRs for review before merging. After the Pages workflow
-is merged, changes to `main` run the model checks, build the game, and publish
-`dist/` through GitHub Actions. PR builds never deploy. Follow the
-[GitHub Pages Setup Guide](docs/DEPLOYMENT.md) for the initial settings and run.
-Neither source game is modified or deployed by this workflow. Classroom release
-verification remains in Issue #3; classroom virtualization belongs to Issue #4.
-
-All scripts, fonts, and visuals are bundled locally. No accounts, tracking,
-student data, or runtime CDN requests are used. This app saves its arrangement,
-hold setting, math visibility, and reduced-animation preference only under
-`levers-load-effort-distance-v1`. It does not read or overwrite the source games'
-saved state. Invalid saves revert to the safe default.
+No active workflow, merge, deployment, email, or auto-merge is authorized.
+Actions must be disabled and Pages absent before any initial remote push.
+The teacher must thoroughly playtest before public deployment.
+Preserve [notices](THIRD_PARTY_NOTICES.md), [provenance](docs/LEVERLAB-SOURCE.md),
+and [build identity](docs/BUILD_IDENTITY.md). No top-level license is invented.

@@ -1,5 +1,11 @@
 # Third-Party Notices
 
+Lever Lab: Partners In Balance is the owner's separate, history-preserving
+adaptation of LeversLoadEffortDistance commit
+`9bfce52767e51ae728ffa9fec717264c554d026b`. The original repository and live game
+are unchanged. Its notices below and complete bundled license files are retained.
+No top-level license grant is inferred or added. See `docs/LEVERLAB-SOURCE.md`.
+
 ## Shared Workshop Environment
 
 The classroom, table, cutting mat, cactus, lighting, and camera infrastructure
@@ -32,3 +38,14 @@ This game's visual/interaction foundation is ThreeKindsOfLevers commit
 SI explanations, and tooltip patterns are adapted from MechanicalAdvantage
 commit `d1c2ffb7d214793b01049832305e56a6ed54f249`.
 See `docs/PROVENANCE.md` for the component mapping and retained upstream lineage.
+
+## Frozen Classroom And Poster Art
+
+The guided revision imports eight unchanged canonical files from
+AbbyUsesAIThatCodes/ClassroomVirtualization at
+`28e31ff0fbf06ee5fd9fe58cb499f0ef0d757f9a`. The new room replaces the
+legacy room backdrop. The legacy mat, paper pad, pencil, and cactus are retained.
+See `docs/room-source/` for the manifest, exact hashes, and consumer handoff.
+The poster atlas contains approved user-supplied pages 1–38; no general
+redistribution license is inferred. Raw packets, source PDF, private photos,
+and student data are excluded.

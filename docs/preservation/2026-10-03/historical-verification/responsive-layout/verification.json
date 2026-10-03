@@ -1,0 +1,1363 @@
+{
+  "build": "0.1.0_Partners-In-Balance_local-1e3bd62e_build-023_20261001T124833Z_g380fe0ba3313_web",
+  "passed": true,
+  "runs": [
+    {
+      "renderer": "WebGL",
+      "passed": true,
+      "sizes": [
+        {
+          "width": 1920,
+          "height": 1080,
+          "boxes": {
+            "header": {
+              "left": 0,
+              "top": 0,
+              "right": 1920,
+              "bottom": 92.1875,
+              "width": 1920,
+              "height": 92.1875
+            },
+            "notebook": {
+              "left": 12,
+              "top": 718,
+              "right": 1908,
+              "bottom": 1068,
+              "width": 1896,
+              "height": 350
+            },
+            "controls": {
+              "left": 12,
+              "top": 102.1875,
+              "right": 432,
+              "bottom": 706,
+              "width": 420,
+              "height": 603.8125
+            },
+            "scroll": {
+              "left": 13,
+              "top": 763.390625,
+              "right": 1907,
+              "bottom": 1068.390625,
+              "width": 1894,
+              "height": 305
+            },
+            "overflow": false,
+            "buttons": [
+              {
+                "id": "controls-toggle",
+                "left": 744.015625,
+                "right": 848.96875,
+                "top": 28.59375,
+                "bottom": 62.59375
+              },
+              {
+                "id": "math-toggle",
+                "left": 854.96875,
+                "right": 945.203125,
+                "top": 28.59375,
+                "bottom": 62.59375
+              },
+              {
+                "id": "help",
+                "left": 951.203125,
+                "right": 998.96875,
+                "top": 28.59375,
+                "bottom": 62.59375
+              },
+              {
+                "id": "fullscreen",
+                "left": 1004.96875,
+                "right": 1095.65625,
+                "top": 28.59375,
+                "bottom": 62.59375
+              },
+              {
+                "id": "hold",
+                "left": 1200.65625,
+                "right": 1267.90625,
+                "top": 28.59375,
+                "bottom": 62.59375
+              },
+              {
+                "id": "swap",
+                "left": 1273.90625,
+                "right": 1385.109375,
+                "top": 28.59375,
+                "bottom": 62.59375
+              },
+              {
+                "id": "reset",
+                "left": 1391.109375,
+                "right": 1446.421875,
+                "top": 28.59375,
+                "bottom": 62.59375
+              },
+              {
+                "id": "preset",
+                "left": 1476.59375,
+                "right": 1631.59375,
+                "top": 29.59375,
+                "bottom": 61.59375
+              },
+              {
+                "id": "side",
+                "left": 1637.59375,
+                "right": 1719.375,
+                "top": 28.59375,
+                "bottom": 62.59375
+              },
+              {
+                "id": "orbit",
+                "left": 1724.375,
+                "right": 1795.125,
+                "top": 28.59375,
+                "bottom": 62.59375
+              },
+              {
+                "id": "fit",
+                "left": 1800.125,
+                "right": 1872,
+                "top": 28.59375,
+                "bottom": 62.59375
+              },
+              {
+                "id": "workbench-help",
+                "left": 1878,
+                "right": 1906,
+                "top": 28.59375,
+                "bottom": 62.59375
+              }
+            ]
+          },
+          "lever": {
+            "area": {
+              "left": 446,
+              "right": 1904,
+              "top": 162.1875,
+              "bottom": 698
+            },
+            "left": 775.8766151549756,
+            "right": 1569.5127724241077,
+            "top": 305.9285175040241,
+            "bottom": 674.6526847388751
+          }
+        },
+        {
+          "width": 1366,
+          "height": 768,
+          "boxes": {
+            "header": {
+              "left": 0,
+              "top": 0,
+              "right": 1366,
+              "bottom": 92.1875,
+              "width": 1366,
+              "height": 92.1875
+            },
+            "notebook": {
+              "left": 12,
+              "top": 479.53125,
+              "right": 1354,
+              "bottom": 756,
+              "width": 1342,
+              "height": 276.46875
+            },
+            "controls": {
+              "left": 12,
+              "top": 102.1875,
+              "right": 432,
+              "bottom": 467.53125,
+              "width": 420,
+              "height": 365.34375
+            },
+            "scroll": {
+              "left": 13,
+              "top": 524.921875,
+              "right": 1353,
+              "bottom": 756.390625,
+              "width": 1340,
+              "height": 231.46875
+            },
+            "overflow": false,
+            "buttons": [
+              {
+                "id": "controls-toggle",
+                "left": 464.421875,
+                "right": 569.375,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "math-toggle",
+                "left": 575.375,
+                "right": 665.609375,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "help",
+                "left": 671.609375,
+                "right": 719.375,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "fullscreen",
+                "left": 725.375,
+                "right": 816.0625,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "hold",
+                "left": 921.0625,
+                "right": 988.3125,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "swap",
+                "left": 994.3125,
+                "right": 1105.515625,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "reset",
+                "left": 1111.515625,
+                "right": 1166.828125,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "preset",
+                "left": 1197,
+                "right": 1352,
+                "top": 9.59375,
+                "bottom": 41.59375
+              },
+              {
+                "id": "side",
+                "left": 1083.59375,
+                "right": 1165.375,
+                "top": 48.59375,
+                "bottom": 82.59375
+              },
+              {
+                "id": "orbit",
+                "left": 1170.375,
+                "right": 1241.125,
+                "top": 48.59375,
+                "bottom": 82.59375
+              },
+              {
+                "id": "fit",
+                "left": 1246.125,
+                "right": 1318,
+                "top": 48.59375,
+                "bottom": 82.59375
+              },
+              {
+                "id": "workbench-help",
+                "left": 1324,
+                "right": 1352,
+                "top": 48.59375,
+                "bottom": 82.59375
+              }
+            ]
+          },
+          "lever": {
+            "area": {
+              "left": 446,
+              "right": 1350,
+              "top": 162.1875,
+              "bottom": 459.53125
+            },
+            "left": 676.8794021130092,
+            "right": 1116.1059707348502,
+            "top": 241.93584302858372,
+            "bottom": 447.00140121661923
+          }
+        },
+        {
+          "width": 1280,
+          "height": 720,
+          "boxes": {
+            "header": {
+              "left": 0,
+              "top": 0,
+              "right": 1280,
+              "bottom": 92.1875,
+              "width": 1280,
+              "height": 92.1875
+            },
+            "notebook": {
+              "left": 12,
+              "top": 448.8125,
+              "right": 1268,
+              "bottom": 708,
+              "width": 1256,
+              "height": 259.1875
+            },
+            "controls": {
+              "left": 12,
+              "top": 102.1875,
+              "right": 408.796875,
+              "bottom": 436.8125,
+              "width": 396.796875,
+              "height": 334.625
+            },
+            "scroll": {
+              "left": 13,
+              "top": 494.203125,
+              "right": 1267,
+              "bottom": 708.390625,
+              "width": 1254,
+              "height": 214.1875
+            },
+            "overflow": false,
+            "buttons": [
+              {
+                "id": "controls-toggle",
+                "left": 378.421875,
+                "right": 483.375,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "math-toggle",
+                "left": 489.375,
+                "right": 579.609375,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "help",
+                "left": 585.609375,
+                "right": 633.375,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "fullscreen",
+                "left": 639.375,
+                "right": 730.0625,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "hold",
+                "left": 835.0625,
+                "right": 902.3125,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "swap",
+                "left": 908.3125,
+                "right": 1019.515625,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "reset",
+                "left": 1025.515625,
+                "right": 1080.828125,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "preset",
+                "left": 1111,
+                "right": 1266,
+                "top": 9.59375,
+                "bottom": 41.59375
+              },
+              {
+                "id": "side",
+                "left": 997.59375,
+                "right": 1079.375,
+                "top": 48.59375,
+                "bottom": 82.59375
+              },
+              {
+                "id": "orbit",
+                "left": 1084.375,
+                "right": 1155.125,
+                "top": 48.59375,
+                "bottom": 82.59375
+              },
+              {
+                "id": "fit",
+                "left": 1160.125,
+                "right": 1232,
+                "top": 48.59375,
+                "bottom": 82.59375
+              },
+              {
+                "id": "workbench-help",
+                "left": 1238,
+                "right": 1266,
+                "top": 48.59375,
+                "bottom": 82.59375
+              }
+            ]
+          },
+          "lever": {
+            "area": {
+              "left": 422.796875,
+              "right": 1264,
+              "top": 162.1875,
+              "bottom": 428.8125
+            },
+            "left": 645.2023304586727,
+            "right": 1038.9472116820552,
+            "top": 233.69415124326667,
+            "bottom": 417.63711505709017
+          }
+        },
+        {
+          "width": 1280,
+          "height": 600,
+          "boxes": {
+            "header": {
+              "left": 0,
+              "top": 0,
+              "right": 1280,
+              "bottom": 85.1875,
+              "width": 1280,
+              "height": 85.1875
+            },
+            "notebook": {
+              "left": 12,
+              "top": 378,
+              "right": 1268,
+              "bottom": 588,
+              "width": 1256,
+              "height": 210
+            },
+            "controls": {
+              "left": 12,
+              "top": 95.1875,
+              "right": 408.796875,
+              "bottom": 366,
+              "width": 396.796875,
+              "height": 270.8125
+            },
+            "scroll": {
+              "left": 13,
+              "top": 423.390625,
+              "right": 1267,
+              "bottom": 588.390625,
+              "width": 1254,
+              "height": 165
+            },
+            "overflow": false,
+            "buttons": [
+              {
+                "id": "controls-toggle",
+                "left": 424.421875,
+                "right": 525.375,
+                "top": 10.09375,
+                "bottom": 40.09375
+              },
+              {
+                "id": "math-toggle",
+                "left": 529.375,
+                "right": 615.609375,
+                "top": 10.09375,
+                "bottom": 40.09375
+              },
+              {
+                "id": "help",
+                "left": 619.609375,
+                "right": 663.375,
+                "top": 10.09375,
+                "bottom": 40.09375
+              },
+              {
+                "id": "fullscreen",
+                "left": 667.375,
+                "right": 754.0625,
+                "top": 10.09375,
+                "bottom": 40.09375
+              },
+              {
+                "id": "hold",
+                "left": 855.0625,
+                "right": 918.3125,
+                "top": 10.09375,
+                "bottom": 40.09375
+              },
+              {
+                "id": "swap",
+                "left": 922.3125,
+                "right": 1029.515625,
+                "top": 10.09375,
+                "bottom": 40.09375
+              },
+              {
+                "id": "reset",
+                "left": 1033.515625,
+                "right": 1084.828125,
+                "top": 10.09375,
+                "bottom": 40.09375
+              },
+              {
+                "id": "preset",
+                "left": 1113,
+                "right": 1268,
+                "top": 9.09375,
+                "bottom": 41.09375
+              },
+              {
+                "id": "side",
+                "left": 1013.59375,
+                "right": 1091.375,
+                "top": 45.09375,
+                "bottom": 75.09375
+              },
+              {
+                "id": "orbit",
+                "left": 1096.375,
+                "right": 1163.125,
+                "top": 45.09375,
+                "bottom": 75.09375
+              },
+              {
+                "id": "fit",
+                "left": 1168.125,
+                "right": 1236,
+                "top": 45.09375,
+                "bottom": 75.09375
+              },
+              {
+                "id": "workbench-help",
+                "left": 1240,
+                "right": 1268,
+                "top": 45.09375,
+                "bottom": 75.09375
+              }
+            ]
+          },
+          "lever": {
+            "area": {
+              "left": 422.796875,
+              "right": 1264,
+              "top": 155.1875,
+              "bottom": 358
+            },
+            "left": 692.7541146628699,
+            "right": 992.1098679675744,
+            "top": 209.57602409647356,
+            "bottom": 349.58697951287434
+          }
+        },
+        {
+          "width": 1024,
+          "height": 600,
+          "boxes": {
+            "header": {
+              "left": 0,
+              "top": 0,
+              "right": 1024,
+              "bottom": 85.1875,
+              "width": 1024,
+              "height": 85.1875
+            },
+            "notebook": {
+              "left": 12,
+              "top": 378,
+              "right": 1012,
+              "bottom": 588,
+              "width": 1000,
+              "height": 210
+            },
+            "controls": {
+              "left": 12,
+              "top": 95.1875,
+              "right": 356,
+              "bottom": 366,
+              "width": 344,
+              "height": 270.8125
+            },
+            "scroll": {
+              "left": 13,
+              "top": 422.390625,
+              "right": 1011,
+              "bottom": 587.390625,
+              "width": 998,
+              "height": 165
+            },
+            "overflow": false,
+            "buttons": [
+              {
+                "id": "controls-toggle",
+                "left": 406.90625,
+                "right": 507.859375,
+                "top": 9.09375,
+                "bottom": 39.09375
+              },
+              {
+                "id": "math-toggle",
+                "left": 511.859375,
+                "right": 598.09375,
+                "top": 9.09375,
+                "bottom": 39.09375
+              },
+              {
+                "id": "help",
+                "left": 602.09375,
+                "right": 645.859375,
+                "top": 9.09375,
+                "bottom": 39.09375
+              },
+              {
+                "id": "fullscreen",
+                "left": 649.859375,
+                "right": 736.546875,
+                "top": 9.09375,
+                "bottom": 39.09375
+              },
+              {
+                "id": "hold",
+                "left": 837.546875,
+                "right": 900.796875,
+                "top": 9.09375,
+                "bottom": 39.09375
+              },
+              {
+                "id": "swap",
+                "left": 904.796875,
+                "right": 1012,
+                "top": 9.09375,
+                "bottom": 39.09375
+              },
+              {
+                "id": "reset",
+                "left": 519.109375,
+                "right": 570.421875,
+                "top": 45.09375,
+                "bottom": 75.09375
+              },
+              {
+                "id": "preset",
+                "left": 598.59375,
+                "right": 753.59375,
+                "top": 44.09375,
+                "bottom": 76.09375
+              },
+              {
+                "id": "side",
+                "left": 757.59375,
+                "right": 835.375,
+                "top": 45.09375,
+                "bottom": 75.09375
+              },
+              {
+                "id": "orbit",
+                "left": 840.375,
+                "right": 907.125,
+                "top": 45.09375,
+                "bottom": 75.09375
+              },
+              {
+                "id": "fit",
+                "left": 912.125,
+                "right": 980,
+                "top": 45.09375,
+                "bottom": 75.09375
+              },
+              {
+                "id": "workbench-help",
+                "left": 984,
+                "right": 1012,
+                "top": 45.09375,
+                "bottom": 75.09375
+              }
+            ]
+          },
+          "lever": {
+            "area": {
+              "left": 370,
+              "right": 1008,
+              "top": 155.1875,
+              "bottom": 358
+            },
+            "left": 538.3556771628699,
+            "right": 837.7114304675742,
+            "top": 209.57602409647356,
+            "bottom": 349.58697951287434
+          }
+        }
+      ],
+      "errors": [],
+      "checks": [
+        "all existing header controls retained",
+        "bottom notebook and left controls do not overlap",
+        "full apparatus including extreme positions",
+        "question index and reference return",
+        "long reasoning and keyboard sketch",
+        "hide/reopen and keyboard focus",
+        "reduced motion",
+        "math beside notebook",
+        "resize and reload continuity",
+        "complete build-020 work preserved"
+      ]
+    },
+    {
+      "renderer": "Diagram",
+      "passed": true,
+      "sizes": [
+        {
+          "width": 1920,
+          "height": 1080,
+          "boxes": {
+            "header": {
+              "left": 0,
+              "top": 0,
+              "right": 1920,
+              "bottom": 92.1875,
+              "width": 1920,
+              "height": 92.1875
+            },
+            "notebook": {
+              "left": 12,
+              "top": 718,
+              "right": 1908,
+              "bottom": 1068,
+              "width": 1896,
+              "height": 350
+            },
+            "controls": {
+              "left": 12,
+              "top": 102.1875,
+              "right": 432,
+              "bottom": 706,
+              "width": 420,
+              "height": 603.8125
+            },
+            "scroll": {
+              "left": 13,
+              "top": 763.390625,
+              "right": 1907,
+              "bottom": 1068.390625,
+              "width": 1894,
+              "height": 305
+            },
+            "overflow": false,
+            "buttons": [
+              {
+                "id": "controls-toggle",
+                "left": 744.015625,
+                "right": 848.96875,
+                "top": 28.59375,
+                "bottom": 62.59375
+              },
+              {
+                "id": "math-toggle",
+                "left": 854.96875,
+                "right": 945.203125,
+                "top": 28.59375,
+                "bottom": 62.59375
+              },
+              {
+                "id": "help",
+                "left": 951.203125,
+                "right": 998.96875,
+                "top": 28.59375,
+                "bottom": 62.59375
+              },
+              {
+                "id": "fullscreen",
+                "left": 1004.96875,
+                "right": 1095.65625,
+                "top": 28.59375,
+                "bottom": 62.59375
+              },
+              {
+                "id": "hold",
+                "left": 1200.65625,
+                "right": 1267.90625,
+                "top": 28.59375,
+                "bottom": 62.59375
+              },
+              {
+                "id": "swap",
+                "left": 1273.90625,
+                "right": 1385.109375,
+                "top": 28.59375,
+                "bottom": 62.59375
+              },
+              {
+                "id": "reset",
+                "left": 1391.109375,
+                "right": 1446.421875,
+                "top": 28.59375,
+                "bottom": 62.59375
+              },
+              {
+                "id": "preset",
+                "left": 1476.59375,
+                "right": 1631.59375,
+                "top": 29.59375,
+                "bottom": 61.59375
+              },
+              {
+                "id": "side",
+                "left": 1637.59375,
+                "right": 1719.375,
+                "top": 28.59375,
+                "bottom": 62.59375
+              },
+              {
+                "id": "orbit",
+                "left": 1724.375,
+                "right": 1795.125,
+                "top": 28.59375,
+                "bottom": 62.59375
+              },
+              {
+                "id": "fit",
+                "left": 1800.125,
+                "right": 1872,
+                "top": 28.59375,
+                "bottom": 62.59375
+              },
+              {
+                "id": "workbench-help",
+                "left": 1878,
+                "right": 1906,
+                "top": 28.59375,
+                "bottom": 62.59375
+              }
+            ]
+          },
+          "lever": null
+        },
+        {
+          "width": 1366,
+          "height": 768,
+          "boxes": {
+            "header": {
+              "left": 0,
+              "top": 0,
+              "right": 1366,
+              "bottom": 92.1875,
+              "width": 1366,
+              "height": 92.1875
+            },
+            "notebook": {
+              "left": 12,
+              "top": 479.53125,
+              "right": 1354,
+              "bottom": 756,
+              "width": 1342,
+              "height": 276.46875
+            },
+            "controls": {
+              "left": 12,
+              "top": 102.1875,
+              "right": 432,
+              "bottom": 467.53125,
+              "width": 420,
+              "height": 365.34375
+            },
+            "scroll": {
+              "left": 13,
+              "top": 524.921875,
+              "right": 1353,
+              "bottom": 756.390625,
+              "width": 1340,
+              "height": 231.46875
+            },
+            "overflow": false,
+            "buttons": [
+              {
+                "id": "controls-toggle",
+                "left": 464.421875,
+                "right": 569.375,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "math-toggle",
+                "left": 575.375,
+                "right": 665.609375,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "help",
+                "left": 671.609375,
+                "right": 719.375,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "fullscreen",
+                "left": 725.375,
+                "right": 816.0625,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "hold",
+                "left": 921.0625,
+                "right": 988.3125,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "swap",
+                "left": 994.3125,
+                "right": 1105.515625,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "reset",
+                "left": 1111.515625,
+                "right": 1166.828125,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "preset",
+                "left": 1197,
+                "right": 1352,
+                "top": 9.59375,
+                "bottom": 41.59375
+              },
+              {
+                "id": "side",
+                "left": 1083.59375,
+                "right": 1165.375,
+                "top": 48.59375,
+                "bottom": 82.59375
+              },
+              {
+                "id": "orbit",
+                "left": 1170.375,
+                "right": 1241.125,
+                "top": 48.59375,
+                "bottom": 82.59375
+              },
+              {
+                "id": "fit",
+                "left": 1246.125,
+                "right": 1318,
+                "top": 48.59375,
+                "bottom": 82.59375
+              },
+              {
+                "id": "workbench-help",
+                "left": 1324,
+                "right": 1352,
+                "top": 48.59375,
+                "bottom": 82.59375
+              }
+            ]
+          },
+          "lever": null
+        },
+        {
+          "width": 1280,
+          "height": 720,
+          "boxes": {
+            "header": {
+              "left": 0,
+              "top": 0,
+              "right": 1280,
+              "bottom": 92.1875,
+              "width": 1280,
+              "height": 92.1875
+            },
+            "notebook": {
+              "left": 12,
+              "top": 448.8125,
+              "right": 1268,
+              "bottom": 708,
+              "width": 1256,
+              "height": 259.1875
+            },
+            "controls": {
+              "left": 12,
+              "top": 102.1875,
+              "right": 408.796875,
+              "bottom": 436.8125,
+              "width": 396.796875,
+              "height": 334.625
+            },
+            "scroll": {
+              "left": 13,
+              "top": 494.203125,
+              "right": 1267,
+              "bottom": 708.390625,
+              "width": 1254,
+              "height": 214.1875
+            },
+            "overflow": false,
+            "buttons": [
+              {
+                "id": "controls-toggle",
+                "left": 378.421875,
+                "right": 483.375,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "math-toggle",
+                "left": 489.375,
+                "right": 579.609375,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "help",
+                "left": 585.609375,
+                "right": 633.375,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "fullscreen",
+                "left": 639.375,
+                "right": 730.0625,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "hold",
+                "left": 835.0625,
+                "right": 902.3125,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "swap",
+                "left": 908.3125,
+                "right": 1019.515625,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "reset",
+                "left": 1025.515625,
+                "right": 1080.828125,
+                "top": 8.59375,
+                "bottom": 42.59375
+              },
+              {
+                "id": "preset",
+                "left": 1111,
+                "right": 1266,
+                "top": 9.59375,
+                "bottom": 41.59375
+              },
+              {
+                "id": "side",
+                "left": 997.59375,
+                "right": 1079.375,
+                "top": 48.59375,
+                "bottom": 82.59375
+              },
+              {
+                "id": "orbit",
+                "left": 1084.375,
+                "right": 1155.125,
+                "top": 48.59375,
+                "bottom": 82.59375
+              },
+              {
+                "id": "fit",
+                "left": 1160.125,
+                "right": 1232,
+                "top": 48.59375,
+                "bottom": 82.59375
+              },
+              {
+                "id": "workbench-help",
+                "left": 1238,
+                "right": 1266,
+                "top": 48.59375,
+                "bottom": 82.59375
+              }
+            ]
+          },
+          "lever": null
+        },
+        {
+          "width": 1280,
+          "height": 600,
+          "boxes": {
+            "header": {
+              "left": 0,
+              "top": 0,
+              "right": 1280,
+              "bottom": 85.1875,
+              "width": 1280,
+              "height": 85.1875
+            },
+            "notebook": {
+              "left": 12,
+              "top": 378,
+              "right": 1268,
+              "bottom": 588,
+              "width": 1256,
+              "height": 210
+            },
+            "controls": {
+              "left": 12,
+              "top": 95.1875,
+              "right": 408.796875,
+              "bottom": 366,
+              "width": 396.796875,
+              "height": 270.8125
+            },
+            "scroll": {
+              "left": 13,
+              "top": 423.390625,
+              "right": 1267,
+              "bottom": 588.390625,
+              "width": 1254,
+              "height": 165
+            },
+            "overflow": false,
+            "buttons": [
+              {
+                "id": "controls-toggle",
+                "left": 424.421875,
+                "right": 525.375,
+                "top": 10.09375,
+                "bottom": 40.09375
+              },
+              {
+                "id": "math-toggle",
+                "left": 529.375,
+                "right": 615.609375,
+                "top": 10.09375,
+                "bottom": 40.09375
+              },
+              {
+                "id": "help",
+                "left": 619.609375,
+                "right": 663.375,
+                "top": 10.09375,
+                "bottom": 40.09375
+              },
+              {
+                "id": "fullscreen",
+                "left": 667.375,
+                "right": 754.0625,
+                "top": 10.09375,
+                "bottom": 40.09375
+              },
+              {
+                "id": "hold",
+                "left": 855.0625,
+                "right": 918.3125,
+                "top": 10.09375,
+                "bottom": 40.09375
+              },
+              {
+                "id": "swap",
+                "left": 922.3125,
+                "right": 1029.515625,
+                "top": 10.09375,
+                "bottom": 40.09375
+              },
+              {
+                "id": "reset",
+                "left": 1033.515625,
+                "right": 1084.828125,
+                "top": 10.09375,
+                "bottom": 40.09375
+              },
+              {
+                "id": "preset",
+                "left": 1113,
+                "right": 1268,
+                "top": 9.09375,
+                "bottom": 41.09375
+              },
+              {
+                "id": "side",
+                "left": 1013.59375,
+                "right": 1091.375,
+                "top": 45.09375,
+                "bottom": 75.09375
+              },
+              {
+                "id": "orbit",
+                "left": 1096.375,
+                "right": 1163.125,
+                "top": 45.09375,
+                "bottom": 75.09375
+              },
+              {
+                "id": "fit",
+                "left": 1168.125,
+                "right": 1236,
+                "top": 45.09375,
+                "bottom": 75.09375
+              },
+              {
+                "id": "workbench-help",
+                "left": 1240,
+                "right": 1268,
+                "top": 45.09375,
+                "bottom": 75.09375
+              }
+            ]
+          },
+          "lever": null
+        },
+        {
+          "width": 1024,
+          "height": 600,
+          "boxes": {
+            "header": {
+              "left": 0,
+              "top": 0,
+              "right": 1024,
+              "bottom": 85.1875,
+              "width": 1024,
+              "height": 85.1875
+            },
+            "notebook": {
+              "left": 12,
+              "top": 378,
+              "right": 1012,
+              "bottom": 588,
+              "width": 1000,
+              "height": 210
+            },
+            "controls": {
+              "left": 12,
+              "top": 95.1875,
+              "right": 356,
+              "bottom": 366,
+              "width": 344,
+              "height": 270.8125
+            },
+            "scroll": {
+              "left": 13,
+              "top": 422.390625,
+              "right": 1011,
+              "bottom": 587.390625,
+              "width": 998,
+              "height": 165
+            },
+            "overflow": false,
+            "buttons": [
+              {
+                "id": "controls-toggle",
+                "left": 406.90625,
+                "right": 507.859375,
+                "top": 9.09375,
+                "bottom": 39.09375
+              },
+              {
+                "id": "math-toggle",
+                "left": 511.859375,
+                "right": 598.09375,
+                "top": 9.09375,
+                "bottom": 39.09375
+              },
+              {
+                "id": "help",
+                "left": 602.09375,
+                "right": 645.859375,
+                "top": 9.09375,
+                "bottom": 39.09375
+              },
+              {
+                "id": "fullscreen",
+                "left": 649.859375,
+                "right": 736.546875,
+                "top": 9.09375,
+                "bottom": 39.09375
+              },
+              {
+                "id": "hold",
+                "left": 837.546875,
+                "right": 900.796875,
+                "top": 9.09375,
+                "bottom": 39.09375
+              },
+              {
+                "id": "swap",
+                "left": 904.796875,
+                "right": 1012,
+                "top": 9.09375,
+                "bottom": 39.09375
+              },
+              {
+                "id": "reset",
+                "left": 519.109375,
+                "right": 570.421875,
+                "top": 45.09375,
+                "bottom": 75.09375
+              },
+              {
+                "id": "preset",
+                "left": 598.59375,
+                "right": 753.59375,
+                "top": 44.09375,
+                "bottom": 76.09375
+              },
+              {
+                "id": "side",
+                "left": 757.59375,
+                "right": 835.375,
+                "top": 45.09375,
+                "bottom": 75.09375
+              },
+              {
+                "id": "orbit",
+                "left": 840.375,
+                "right": 907.125,
+                "top": 45.09375,
+                "bottom": 75.09375
+              },
+              {
+                "id": "fit",
+                "left": 912.125,
+                "right": 980,
+                "top": 45.09375,
+                "bottom": 75.09375
+              },
+              {
+                "id": "workbench-help",
+                "left": 984,
+                "right": 1012,
+                "top": 45.09375,
+                "bottom": 75.09375
+              }
+            ]
+          },
+          "lever": null
+        }
+      ],
+      "errors": [],
+      "checks": [
+        "all existing header controls retained",
+        "bottom notebook and left controls do not overlap",
+        "full apparatus including extreme positions",
+        "question index and reference return",
+        "long reasoning and keyboard sketch",
+        "hide/reopen and keyboard focus",
+        "reduced motion",
+        "math beside notebook",
+        "resize and reload continuity",
+        "complete build-020 work preserved"
+      ]
+    }
+  ],
+  "limits": [
+    "Software-rendered Chrome, not a physical Chromebook measurement.",
+    "Temporary camera instrumentation is excluded from the playable artifact."
+  ]
+}

@@ -1,5 +1,7 @@
 import * as THREE from "three";
 import { massKey, POINTER } from "./model.js";
+import {createEffortHand} from './effort-hand.js';
+import {createAttention} from './attention.js';
 export const HEIGHT = 9,
   SCALE = 25,
   BEAM_TOP = 0.42;
@@ -131,71 +133,17 @@ export function createApparatus() {
     anchor.add(weight);
     weights[role] = weight;
     if (role === "load") {
-      // Bottom at local y=0: scale about the contact plane, then seat on the rail.
-      // It is fixed to its selected beam position (no sliding/tipping model).
-      block(
-        weight,
-        0.9,
-        0.85,
-        0.9,
-        COLORS.load,
-        0,
-        0.425,
-        0,
-        role,
-        "gold-crate",
-      );
-      for (const y of [0.08, 0.77])
-        block(weight, 0.92, 0.065, 0.92, 0xe9ba61, 0, y, 0, role, "crate-band");
-      for (const x of [-0.3, 0.3])
-        block(
-          weight,
-          0.055,
-          0.85,
-          0.925,
-          brass,
-          x,
-          0.425,
-          0,
-          role,
-          "crate-band",
-        );
+      cylinder(anchor,0.055,1.15,0xc4d1cc,0,-0.575,0,role,"load-cord");
+      mesh(anchor,new THREE.TorusGeometry(0.2,0.065,8,24),brass,[0,-1.27,0],role,"load-hook");
+      cylinder(anchor,0.12,0.23,brass,0,-1.48,0,role,"load-neck");
+      cylinder(weight,0.48,0.55,COLORS.load,0,-0.275,0,role,"hanging-load");
+      for(const y of [0,-0.55])cylinder(weight,0.53,0.08,brass,0,y,0,role,"weight-rim");
     } else {
-      cylinder(
-        anchor,
-        0.055,
-        1.15,
-        0xc4d1cc,
-        0,
-        -0.575,
-        0,
-        role,
-        "effort-cord",
-      );
-      mesh(
-        anchor,
-        new THREE.TorusGeometry(0.2, 0.065, 8, 24),
-        brass,
-        [0, -1.27, 0],
-        role,
-        "effort-hook",
-      );
-      cylinder(anchor, 0.12, 0.23, brass, 0, -1.48, 0, role, "effort-neck");
-      cylinder(
-        weight,
-        0.48,
-        0.55,
-        COLORS.effort,
-        0,
-        -0.275,
-        0,
-        role,
-        "teal-weight",
-      );
-      for (const y of [0, -0.55])
-        cylinder(weight, 0.53, 0.08, brass, 0, y, 0, role, "weight-rim");
+      createEffortHand((geometry,color,xyz,name)=>mesh(weight,geometry,color,xyz,role,name));
     }
   }
+  const attention=createAttention(pickable,{load:weights.load,effort:weights.effort,fulcrum:base}),cues=attention.cues;
+
   function update(state, angle) {
     const pivot = state.fulcrum / SCALE;
     moving.position.set(pivot, HEIGHT, 0);
@@ -206,14 +154,17 @@ export function createApparatus() {
       const anchor = attachments[role],
         size = Math.cbrt(state[massKey(role)] / 100);
       anchor.position.set((state[role] - state.fulcrum) / SCALE, 0, 0);
-      anchor.rotation.z = role === "load" ? 0 : -angle;
-      weights[role].scale.setScalar(size);
-      weights[role].position.y = role === "load" ? BEAM_TOP : -1.6;
+      anchor.rotation.z = role === "load" ? -angle : 0;
+      weights[role].scale.setScalar(role === "load" ? size : 1);
+      if(role === "effort")weights[role].rotation.y=state.effort>state.fulcrum?Math.PI*.8:-Math.PI*.8;
+      weights[role].position.y = role === "load" ? -1.6 : BEAM_TOP;
     }
     moving.updateMatrixWorld(true);
     base.updateMatrixWorld(true);
   }
   return {
+    cues,
+    attention,
     moving,
     base,
     beam,

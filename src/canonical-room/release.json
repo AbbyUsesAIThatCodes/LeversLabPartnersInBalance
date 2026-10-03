@@ -1,0 +1,7 @@
+{
+  "version": "0.1.1",
+  "codename": "First Light",
+  "codenameSlug": "First-Light",
+  "status": "development",
+  "compatibility": "First Light 0.1.x; metre units and anchor names retained. Design anchor follows corrected desk placement. No saved-game format."
+}
