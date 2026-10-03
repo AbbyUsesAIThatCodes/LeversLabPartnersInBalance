@@ -1,0 +1,72 @@
+[
+  {
+    "path": ".gitattributes",
+    "bytes": 9,
+    "sha256": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992"
+  },
+  {
+    "path": "0.1.0_Partners-In-Balance_local-1e3bd62e_build-023_20261001T124833Z_g380fe0ba3313_web.zip",
+    "bytes": 7035455,
+    "sha256": "1951c957ead31f9735a8fcc15a6c307a404d4f9957b85dfdd8c4d747ef6cd03a"
+  },
+  {
+    "path": "0.1.0_Partners-In-Balance_local-1e3bd62e_build-023_20261001T124833Z_g380fe0ba3313_web_Desktop-Layout.png",
+    "bytes": 563863,
+    "sha256": "6579b1a15bdbba0b13e0b7176fe608ef54d3333cbe1beda1793b88b3b61972b9"
+  },
+  {
+    "path": "0.1.0_Partners-In-Balance_local-1e3bd62e_build-023_20261001T124833Z_g380fe0ba3313_web_Student-Laptop-Layout.png",
+    "bytes": 315446,
+    "sha256": "3e9dd6efeff1276c32f73b3ee296443db732ef6f24b02c20a2dbd1150205caf5"
+  },
+  {
+    "path": "CHECKPOINT.json",
+    "bytes": 1539,
+    "sha256": "8b406d9b5e8036e46340b884f795ab5c913870dc1f04d498e3cc282a959759a9"
+  },
+  {
+    "path": "current-build.json",
+    "bytes": 665,
+    "sha256": "540e36c452c3a24303b1b2005191df5d28f0937adf1ffd308454ae8b65f917fc"
+  },
+  {
+    "path": "historical-verification/guided-correctness/verification.json",
+    "bytes": 1206,
+    "sha256": "2c79a08d3d72e5e3f3cd8a1ba72c0a714bf0f74ed2ac60ab7bfa227c4aa27531"
+  },
+  {
+    "path": "historical-verification/guided-full/verification.json",
+    "bytes": 3084,
+    "sha256": "c012fd9fd8d80ae4d80983bd985f533c8c5d52481faf9b79afa1b2baeeddb2e9"
+  },
+  {
+    "path": "historical-verification/guided-migration/verification.json",
+    "bytes": 350,
+    "sha256": "e6dd52694002a745a2408dfab1308f2cccdf5406d3d41f29cd4e09017ac54c14"
+  },
+  {
+    "path": "historical-verification/guided-preview/verification.json",
+    "bytes": 348,
+    "sha256": "c879924fbf1300e9aee2b2eee3fafe28b8fee1be05da8932b153a51ff6a7aa23"
+  },
+  {
+    "path": "historical-verification/responsive-layout/verification.json",
+    "bytes": 38086,
+    "sha256": "90d28e465da6d15fe74b64899f4987f7e0280e01fb755f90170941ee4c53c552"
+  },
+  {
+    "path": "historical-verification/review-014-edges/verification.json",
+    "bytes": 1200,
+    "sha256": "7335888d6a4ca980ebac9e241102135c04f79ec0b02e5018242d220029c9f1e6"
+  },
+  {
+    "path": "ledger.json",
+    "bytes": 39,
+    "sha256": "24512879970ddad9e37543f3f326386f8441bc2936d875c02de21a53757405c8"
+  },
+  {
+    "path": "RESUME.md",
+    "bytes": 3167,
+    "sha256": "05993a8928e186cb97cbe78d2f0ca24e8c15efc3c2b1b47530cd063305b62214"
+  }
+]

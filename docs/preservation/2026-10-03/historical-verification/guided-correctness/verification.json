@@ -1,0 +1,34 @@
+{
+  "build": "0.1.0_Partners-In-Balance_local-1e3bd62e_build-023_20261001T124833Z_g380fe0ba3313_web",
+  "passed": true,
+  "runs": [
+    {
+      "renderer": "WebGL",
+      "passed": true,
+      "checks": [
+        "Reset interrupts pending trial",
+        "Interrupted autosave remains valid",
+        "Restore preserves non-default design in controls and reload",
+        "Malformed historical check rejected before replacement",
+        "Q14 validates recorded setup and requires retest after edits",
+        "Setup edit invalidates current status while preserving history",
+        "All support routes attributable and exported"
+      ],
+      "errors": []
+    },
+    {
+      "renderer": "Diagram",
+      "passed": true,
+      "checks": [
+        "Reset interrupts pending trial",
+        "Interrupted autosave remains valid",
+        "Restore preserves non-default design in controls and reload",
+        "Malformed historical check rejected before replacement",
+        "Q14 validates recorded setup and requires retest after edits",
+        "Setup edit invalidates current status while preserving history",
+        "All support routes attributable and exported"
+      ],
+      "errors": []
+    }
+  ]
+}

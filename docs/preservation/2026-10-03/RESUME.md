@@ -1,11 +1,36 @@
-# LeverLab Private Preservation Handoff
+# Lever Lab Preservation And Abigail Resume
 
-The exact original source branch is ready at `316717209035c017289d77db67951a4f3e17c680`; application build 023 uses `380fe0ba33133d36cfe7c465963cd8f19a6240c1`. No source rewriting or sanitization was needed. The original full history bundle is retained locally.
+The owner confirmed the public repository name **LeversLabPartnersInBalance** on October 3, 2026. This later direction supersedes older private-only and disable-Actions setup notes; no visibility or security setting was changed. The repository's initial README commit `a81852ce4bdba589428317c52fe7a3897ac908ce` remains untouched on `main`.
 
-GitHub `AbbyUsesAIThatCodes/LeverLab` was absent at the last check. Available connector tools cannot create repositories; no authenticated CLI or callable Computer Use runtime is available. A request to create an empty PRIVATE repository is pending. The later preservation instruction supersedes the old disable-Actions prerequisite: no settings change is needed because both sanitized push heads have no workflow YAML. Keep deployment unconfigured. Do not claim remote preservation until it succeeds and the remote heads are verified.
+## Original Source And History
 
-Once the private destination is verified, push only the sanitized baseline and reviewed heads. Do not mirror all refs or push inherited upstream main, which contains the original game's deployment workflow. Keep this repository distinct from LeversLoadEffortDistance. Suggested initial baseline: `237912e4a5db4b50201d41059ab28e553b96acb7` as main; implementation head `316717209035c017289d77db67951a4f3e17c680` on `work/01-local-learning-foundation`. Open one implementation draft PR with the evidence branch as an optional preservation follow-up. No merge, deployment or settings changes to existing repositories.
+- Exact final source: `316717209035c017289d77db67951a4f3e17c680`, branch `work/01-local-learning-foundation`.
+- Exact build 023 application source: `380fe0ba33133d36cfe7c465963cd8f19a6240c1`.
+- Sanitized baseline: `237912e4a5db4b50201d41059ab28e553b96acb7`, branch `review-baseline`.
+- Evidence branch: `preserve/jess-2026-10-03`; original source remains its ancestor.
+- Full ancestry is retained. Local complete-history bundles remain on Jess. No source reimplementation, source-history rewrite or changes to LeversLoadEffortDistance occurred.
 
-All 58 unit tests passed again on October 3 with Node 24 and process isolation disabled due to sandbox child-process restrictions. Historical browser validation remains historical. Build 023 was not rebuilt or relabeled. The included ledger preserves local scope `local-1e3bd62e`, ordinal 23. Use a fresh scope or the documented durable PR allocator for future builds.
+The implementation draft compares the evidence branch to `review-baseline`. User-created `main` has a separate initial history; integration into it remains a future explicitly reviewed action, not part of backup.
 
-Original review ZIP: `1951c957ead31f9735a8fcc15a6c307a404d4f9957b85dfdd8c4d747ef6cd03a`, 7,035,455 bytes, 58 valid entries. It remains in the original output folder and established Library item `libfile_b5341add39fc819197cb64a7f01bedc9` (previously confirmed version 5). No new Library upload is claimed.
+## Resume On Abigail
+
+```sh
+git clone --branch work/01-local-learning-foundation https://github.com/AbbyUsesAIThatCodes/LeversLabPartnersInBalance.git
+cd LeversLabPartnersInBalance
+git rev-parse HEAD
+git fetch origin preserve/jess-2026-10-03 review-baseline
+```
+
+Expected HEAD: `316717209035c017289d77db67951a4f3e17c680`. The evidence directory is available on `origin/preserve/jess-2026-10-03`; check out that branch separately to obtain the ZIP/screenshots and compare them with `CHECKSUMS.json`.
+
+## Original Build And Verification
+
+`0.1.0_Partners-In-Balance_local-1e3bd62e_build-023_20261001T124833Z_g380fe0ba3313_web`
+
+Original ZIP: 7,035,455 bytes, 58 valid entries, SHA-256 `1951c957ead31f9735a8fcc15a6c307a404d4f9957b85dfdd8c4d747ef6cd03a`. It is copied unchanged, not rebuilt or relabeled. The existing Library review identity/history remains unchanged. The package's completed-work JSON/HTML are synthetic automated fixtures, not student records.
+
+All 58 unit tests passed again on October 3 using Node 24 with process isolation disabled because of sandbox child-process restrictions. Browser evidence is the original build 023 evidence; no new local server or browser run was started. The included ledger retains `local-1e3bd62e`, ordinal 23. Future builds must use the documented allocator and correct new scope; the existing package remains a Local Review artifact even after a PR exists.
+
+## Boundaries
+
+Source history and package were screened for credential signatures, private-file candidates, oversized blobs and prohibited payloads. Retained notices attribute the approved canonical room/poster assets and bundled open-source libraries. Source packet PDFs, private photos, student records, auth data, caches and installed dependencies were not uploaded. Every pushed head has no active workflow YAML. No workflow, Pages deployment, merge or security-setting change was requested. Preservation does not establish classroom readiness.
