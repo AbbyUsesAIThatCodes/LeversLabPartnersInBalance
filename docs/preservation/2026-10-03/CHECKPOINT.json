@@ -1,0 +1,22 @@
+{
+  "sourceHead": "316717209035c017289d77db67951a4f3e17c680",
+  "appSource": "380fe0ba33133d36cfe7c465963cd8f19a6240c1",
+  "sourceBranch": "work/01-local-learning-foundation",
+  "sanitizedBaseline": "237912e4a5db4b50201d41059ab28e553b96acb7",
+  "build": "0.1.0_Partners-In-Balance_local-1e3bd62e_build-023_20261001T124833Z_g380fe0ba3313_web",
+  "artifact": "0.1.0_Partners-In-Balance_local-1e3bd62e_build-023_20261001T124833Z_g380fe0ba3313_web.zip",
+  "bytes": 7035455,
+  "sha256": "1951c957ead31f9735a8fcc15a6c307a404d4f9957b85dfdd8c4d747ef6cd03a",
+  "remoteStatus": "BLOCKED: private repository absent on 2026-10-03; source not claimed uploaded",
+  "localBundle": "LeverLab-original.bundle",
+  "unitTests": {
+    "passed": 58,
+    "date": "2026-10-03",
+    "runner": "Node 24 --test --test-isolation=none"
+  },
+  "exclusions": [
+    "Original history bundles stay local",
+    "No real student data, owner auth records, private browser profiles, packet source PDFs, dependency caches or node_modules",
+    "Original review ZIP remains at its established Library identity and local output path; no republishing before private destination exists"
+  ]
+}

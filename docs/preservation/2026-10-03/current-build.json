@@ -1,0 +1,19 @@
+{
+  "version": "0.1.0",
+  "codename": "Partners In Balance",
+  "codenameSlug": "Partners-In-Balance",
+  "status": "development",
+  "milestone": "Private local review of the separate Lever Lab project; no classroom release or deployment.",
+  "scope": "local-1e3bd62e",
+  "ordinal": 23,
+  "id": "0.1.0_Partners-In-Balance_local-1e3bd62e_build-023_20261001T124833Z_g380fe0ba3313_web",
+  "builtAt": "2026-10-01T12:48:33.647Z",
+  "target": "web",
+  "source": {
+    "sha": "380fe0ba33133d36cfe7c465963cd8f19a6240c1",
+    "dirty": false,
+    "fingerprint": "4bf0fb035ad23f168d5b94730d2f0b759bca0aa6236861faeb9ce6617c80b637",
+    "prHead": null,
+    "ciCommit": null
+  }
+}
