@@ -1,0 +1,627 @@
+import {partIcon} from './part-icons.js';
+import {handSVG} from './hand-svg.js';
+import { LeverScene } from "./scene.js";
+import {
+  ROLES,
+  OBJECTS,
+  DEFAULT,
+  PRESETS,
+  STORAGE_KEY,
+  arm,
+  massKey,
+  move,
+  step,
+  setMass,
+  setDistance,
+  distanceBounds,
+  positionBounds,
+  swapPositions,
+  measures,
+  valid,
+  restore,
+  restingAngle,
+  advance,
+  POINTER,
+  balanceStatus,
+} from "./model.js";
+import { fmt, helpTip, setTip, describeTooltips, renderMath, installTooltips } from "./math.js";
+import { mountLearning } from './learning.js';
+let learning = null;
+let identifying = false, identifyFeedback = null;
+const candidateNames = {load:'Hanging Weight', effort:'Pressing Hand', fulcrum:'Support'};
+const $ = (s) => document.querySelector(s),
+  $$ = (s) => [...document.querySelectorAll(s)],
+  cap = (s) => s[0].toUpperCase() + s.slice(1);
+const colors = { load: "#89500b", effort: "#176b61", fulcrum: "#714896" };
+const compactViewport = matchMedia(
+  "(max-width: 900px) and (min-height: 501px), (max-width: 700px)",
+);
+let saved;
+try {
+  saved = localStorage.getItem(STORAGE_KEY);
+} catch {}
+let { state, held, showMath, reduced } = restore(saved);
+reduced ||= matchMedia("(prefers-reduced-motion: reduce)").matches;
+let scene = null,
+  ready = false,
+  fallback = false,
+  selected = "load",
+  fallbackMotion = { angle: 0, velocity: 0 },
+  fallbackTime = null;
+function save() {
+  try {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ state, held, showMath, reduced }),
+    );
+  } catch {}
+}
+function notice(message) {
+  $("#toast").textContent = message;
+  $("#toast").classList.add("show");
+  clearTimeout(notice.timer);
+  notice.timer = setTimeout(() => $("#toast").classList.remove("show"), 3500);
+}
+for (const role of OBJECTS) {
+  const name = cap(role), quantity=role==='effort'?'Push (g-equivalent)':'Mass (g)', quantityName=role==='effort'?'Push':'Mass';
+  $(`#panel-${role}`).innerHTML =
+    `<div class="role-heading"><h2 id="heading-${role}">${name}</h2>${helpTip(role, name)}</div>
+    <div class="quantity-heading"><label for="mass-${role}">${quantity}</label>${helpTip(role==='effort'?'g-equivalent':'g', `${name} ${quantityName} Units`)}</div>
+    <div class="quantity-row"><input id="mass-${role}" type="number" min="25" max="1000" step="25" aria-label="${name} ${quantity}"><div class="quick-actions"><button data-scale="${role},mass,0.5" aria-label="Halve ${name} ${quantityName}">÷ 2</button><button data-scale="${role},mass,2" aria-label="Double ${name} ${quantityName}">× 2</button></div></div>
+    <input id="mass-slider-${role}" type="range" min="25" max="1000" step="25" aria-label="${name} ${quantityName}">
+    <div class="quantity-heading"><label for="distance-${role}">Distance From Fulcrum (mm)</label>${helpTip("arm", `${name} Arm Length`)}</div>
+    <div class="quantity-row"><input id="distance-${role}" type="number" step="25" aria-label="${name} Arm in Millimeters"><div class="quick-actions"><button data-scale="${role},distance,0.5" aria-label="Halve ${name} Arm">÷ 2</button><button data-scale="${role},distance,2" aria-label="Double ${name} Arm">× 2</button></div></div>
+    <input id="distance-slider-${role}" type="range" step="25" aria-label="${name} Arm">
+    <p class="force-reading"><span id="force-${role}"></span> ${helpTip("motion", `${name} Force and Motion`)}</p>`;
+}
+// Help is separate from input labels and drag targets, so opening it cannot
+// activate a neighboring control or begin an apparatus drag.
+for (const [id, key] of [["model-help", "model"], ["workbench-help", "controls"], ["forces-help", "motion"], ["fulcrum-help", "coordinate"]]) setTip($("#" + id), key);
+function orderControls() {
+  // Beam coordinates, never the camera or swap count, own the panel order.
+  // Move the existing nodes so keyboard order follows the visible arrangement.
+  const container = $("#object-controls");
+  const first = $(`#panel-${state.load < state.effort ? "load" : "effort"}`);
+  if (container.firstElementChild !== first) {
+    const focused = document.activeElement;
+    container.prepend(first);
+    if (container.contains(focused)) focused.focus({ preventScroll: true });
+  }
+}
+for (const role of ROLES) {
+  const tag = document.createElement("button");
+  tag.className = `part-tag ${role}`;
+  tag.dataset.tag = role;
+  tag.dataset.select = role;
+  tag.setAttribute("aria-label", `Select or Drag ${cap(role)}`);
+  $("#tags").append(tag);
+  tag.addEventListener("click", () => { if (!learning?.identifyPart(role)) select(role); });
+  tag.addEventListener("pointerdown", (e) => {
+    if (ready && !identifying) scene.beginDrag(e, role);
+  });
+  tag.addEventListener("keydown", (e) => {
+    if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) {
+      e.preventDefault();
+      keyboardStep(role, e.key);
+    }
+  });
+}
+function select(role) {
+  selected = role;
+  if (ready) scene.select(role);
+  renderSelection();
+}
+function renderSelection() {
+  for (const role of ROLES)
+    $(`[data-tag="${role}"]`).setAttribute(
+      "aria-pressed",
+      String(selected === role),
+    );
+}
+function setState(next, system = false) {
+  if (!valid(next)) return;
+  if (!system && learning?.allowChange(next) === false) return;
+  const previous = { ...state };
+  state = { ...next };
+  if (ready) scene.setState(state);
+  render();
+  save();
+  if (!system) learning?.changed(previous, state, held);
+}
+function keyboardStep(role, key) {
+  if (identifying) return;
+  select(role);
+  if (key === "ArrowLeft" || key === "ArrowRight")
+    setState(
+      step(
+        state,
+        role,
+        (key === "ArrowRight" ? 1 : -1) * (ready ? scene.screenSign() : 1),
+      ),
+    );
+  else if (role !== "fulcrum")
+    setState(
+      setMass(
+        state,
+        role,
+        state[massKey(role)] + (key === "ArrowDown" ? 25 : -25),
+      ),
+    );
+}
+function render() {
+  orderControls();
+  $("#preset").value =
+    Object.entries(PRESETS).find(([, s]) =>
+      Object.keys(DEFAULT).every((k) => s[k] === state[k]),
+    )?.[0] || "custom";
+  for (const role of OBJECTS) {
+    const [min, max] = distanceBounds(state, role);
+    for (const prefix of ["mass", "mass-slider"]) {
+      const input = $(`#${prefix}-${role}`);
+      input.value = state[massKey(role)];
+      input.setAttribute("aria-valuetext", `${state[massKey(role)]} ${role==='effort'?'g-equivalent':'grams'}`);
+    }
+    for (const prefix of ["distance", "distance-slider"]) {
+      const input = $(`#${prefix}-${role}`);
+      input.min = min;
+      input.max = max;
+      input.value = arm(state, role);
+      input.setAttribute(
+        "aria-valuetext",
+        `${arm(state, role)} millimeters from the fulcrum`,
+      );
+    }
+    $(`#force-${role}`).textContent =
+      `Downward force: ${fmt(measures(state)[role + "Force"])} N`;
+    $(`[data-tag="${role}"]`).innerHTML =
+      `<span class="tag-title">${cap(role)} <span class="tag-mass">· ${state[massKey(role)]} ${role==='effort'?'g-equivalent':'g'}</span></span><small>${arm(state, role)} mm from fulcrum</small>`;
+  }
+  const [min, max] = positionBounds(state, "fulcrum");
+  for (const id of ["fulcrum-position", "fulcrum-slider"]) {
+    const input = $("#" + id);
+    input.min = min;
+    input.max = max;
+    input.value = state.fulcrum;
+    input.setAttribute(
+      "aria-valuetext",
+      `${state.fulcrum} millimeters on the beam`,
+    );
+  }
+  $('[data-tag="fulcrum"]').innerHTML =
+    `Fulcrum<small>${state.fulcrum} mm on beam</small>${held?'<small class="pause-badge">Paused For Setup And Prediction</small>':''}`;
+  $("#coordinates").textContent =
+    `Beam coordinates: Load ${state.load} mm · Fulcrum ${state.fulcrum} mm · Effort ${state.effort} mm.`;
+  $("#hold").textContent = held ? "Release" : "Hold Level";
+  $("#hold").setAttribute("aria-pressed", String(held));
+  syncPanelVisibility();
+  $("#app").dataset.held = String(held);
+  for (const role of ROLES)
+    $(`[data-tag="${role}"]`).dataset.coordinate = state[role];
+  hideTip?.();
+  renderMath(state);
+  describeTooltips();
+  renderSelection();
+  applyIdentification();
+  updateStatus();
+  if (fallback) drawFallback();
+  if (ready) scene.dirty = true;
+}
+function updateStatus(isHeld = held, motion = ready ? scene.motion : fallbackMotion) {
+  const status = balanceStatus(state, motion, isHeld);
+  if ($("#beam-status").textContent !== status)
+    $("#beam-status").textContent = status;
+  $("#beam-status").classList.toggle(
+    "balanced",
+    status === "Balanced",
+  );
+}
+// The same measured clear area drives the camera, labels, and diagram.
+// Controls occupy a left rail; question work stays in the bottom dock.
+let layoutFrame=0,lastLayoutKey='';
+function clearArea() {
+  const app=$('#app'), pane=$('#notebook'), math=$('#math-panel');
+  const top=$('#top').getBoundingClientRect().bottom;
+  app.style.setProperty('--toolbar-bottom',`${top}px`);
+  const notebookBottom=pane&&!pane.hidden?innerHeight-pane.getBoundingClientRect().top:0;
+  const mathBottom=!math.hidden?innerHeight-$('footer').getBoundingClientRect().top:0;
+  const dock=Math.max(notebookBottom,mathBottom,12);
+  app.style.setProperty('--dock-reserve',`${dock}px`);
+  const rail=$('#controls-panel').getBoundingClientRect();
+  const left=!$('#controls-panel').hidden?rail.right+14:16;
+  const area={left,right:innerWidth-16,top:top+10,bottom:innerHeight-dock-12};
+  app.style.setProperty('--clear-left',`${area.left}px`);
+  app.style.setProperty('--clear-top',`${area.top}px`);
+  app.style.setProperty('--clear-width',`${Math.max(80,area.right-area.left)}px`);
+  app.style.setProperty('--clear-height',`${Math.max(80,area.bottom-area.top)}px`);
+  return area;
+}
+function viewBounds(){
+  const area=clearArea(),labels=Math.max(0,...$$('.part-tag').map(e=>e.getBoundingClientRect().height));
+  return {...area,top:area.top+labels+16,bottom:Math.max(area.top+labels+70,area.bottom-8)};
+}
+function scheduleLayout(){
+  if(layoutFrame)return;
+  layoutFrame=requestAnimationFrame(()=>{layoutFrame=0;const area=viewBounds(),key=JSON.stringify([innerWidth,innerHeight,area]);if(ready&&key!==lastLayoutKey){scene.resize(false,true);lastLayoutKey=key;}else if(ready)scene.dirty=true;else if(fallback)drawFallback();});
+}
+
+function onFrame({ positions, angle, velocity, held: isHeld }) {
+  updateStatus(isHeld, { angle, velocity });
+  $("#app").dataset.angle = angle;
+  if (!positions.load) return;
+  const area=clearArea(),top=area.top,bottom=area.bottom;
+  const parts = [...ROLES].sort((a, b) => positions[a].x - positions[b].x);
+  const tags = parts.map((p) => $(`[data-tag="${p}"]`));
+  const widths = tags.map((t) => t.getBoundingClientRect().width),
+    heights = tags.map((t) => t.getBoundingClientRect().height);
+  const left=area.left,right=area.right;
+  const xs = parts.map((p, i) =>
+    Math.max(
+      left + widths[i] / 2,
+      Math.min(right - widths[i] / 2, positions[p].x),
+    ),
+  );
+  for (let i = 1; i < 3; i++)
+    xs[i] = Math.max(xs[i], xs[i - 1] + (widths[i - 1] + widths[i]) / 2 + 8);
+  if (xs[2] + widths[2] / 2 > right) {
+    xs[2] = right - widths[2] / 2;
+    for (let i = 1; i >= 0; i--)
+      xs[i] = Math.min(xs[i], xs[i + 1] - (widths[i] + widths[i + 1]) / 2 - 8);
+  }
+  const maxHeight = Math.max(...heights);
+  const y = Math.max(
+    top + maxHeight + 8,
+    Math.min(
+      bottom - 12,
+      Math.min(...ROLES.map((p) => positions[p + "top"] ?? positions[p].y)) -
+        25,
+    ),
+  );
+  $("#leaders").innerHTML = parts
+    .map((role, i) => {
+      const point = positions[role];
+      tags[i].style.left = `${xs[i]}px`;
+      tags[i].style.top = `${y}px`;
+      return `<path d="M${xs[i]} ${y + 2}L${point.x} ${point.y}" stroke="${colors[role]}" stroke-width="1.5" fill="none" opacity=".7"/><circle data-point="${role}" cx="${point.x}" cy="${point.y}" r="4" fill="${colors[role]}" stroke="#fffcef"/>`;
+    })
+    .join("");
+}
+function drawFallback() {
+  const angle = fallbackMotion.angle,
+    scale = 0.96,
+    px = 400 + state.fulcrum * scale;
+  const point = (x) => ({
+    x: px + (x - state.fulcrum) * Math.cos(angle) * scale,
+    y: 195 - (x - state.fulcrum) * Math.sin(angle) * scale,
+  });
+  const ends = [point(-317.5), point(317.5)];
+  const pointerLength = POINTER.length * scale;
+  const pointerX = px + pointerLength * Math.sin(angle);
+  const pointerY = 195 + pointerLength * Math.cos(angle);
+  $("#fallback-svg").innerHTML =
+    `<path d="M${px - 18} 360L${px} 195L${px + 18} 360Z" fill="${colors.fulcrum}"/><path data-beam d="M${ends[0].x} ${ends[0].y}L${ends[1].x} ${ends[1].y}" stroke="#839a94" stroke-width="12"/>${OBJECTS.map(
+      (role) => {
+          const p=point(state[role]),size=Math.cbrt(state.loadMass/100);
+          const body=role==='load'?`<g data-body="load"><path d="M${p.x} ${p.y}v32" stroke="#927449" stroke-width="4"/><rect x="${p.x-size*12}" y="${p.y+32}" width="${size*24}" height="${size*16}" rx="6" fill="#bf8630"/></g>`:`<g data-body="effort" transform="rotate(${-angle*180/Math.PI} ${p.x} ${p.y})">${handSVG(p.x,p.y-6,.8)}</g>`;
+          return `<g data-object="${role}" data-coordinate="${state[role]}">${body}<circle data-application-point="${role}" cx="${p.x}" cy="${p.y}" r="3" fill="${colors[role]}"/><text x="${p.x}" y="${p.y-90}" text-anchor="middle" fill="${colors[role]}" font-size="19" font-weight="bold">${cap(role)}: ${state[massKey(role)]} ${role==='effort'?'g-equivalent':'g'}</text><text x="${p.x}" y="${p.y-69}" text-anchor="middle" fill="${colors[role]}" font-size="18">${arm(state,role)} mm</text></g>`;
+      },
+    ).join(
+      "",
+    )}<g data-balance-pointer role="img" aria-label="Weighted balance pointer"><path d="M${px} 195L${pointerX} ${pointerY}" stroke="#b68d46" stroke-width="5"/><circle data-pointer-bob cx="${pointerX}" cy="${pointerY}" r="13" fill="#b68d46"/><circle cx="${pointerX}" cy="${pointerY}" r="8" fill="${colors.fulcrum}"/></g><text x="${px}" y="386" text-anchor="middle" font-size="21" fill="${colors.fulcrum}">Fulcrum · ${state.fulcrum} mm</text>`;
+  $("#app").dataset.angle = angle;
+  if (identifying) {
+    $('#fallback-svg').querySelectorAll('text').forEach(text => text.remove());
+    for (const role of ROLES) {
+      const p = role === 'fulcrum' ? {x:px,y:285} : point(state[role]);
+      const y = p.y + (role === 'load' ? 52 : role === 'effort' ? -30 : 0);
+      const picked = identifyFeedback?.role === role;
+      const width=role==='fulcrum'?58:82,height=role==='fulcrum'?182:66,top=role==='fulcrum'?190:y-33;
+      const sparks=Array.from({length:8},(_,i)=>{const angle=i*Math.PI/4,dx=Math.cos(angle),dy=Math.sin(angle);return `<circle class="cue-spark" cx="${p.x+dx*(width/2+4)}" cy="${top+height/2+dy*(height/2+4)}" r="1.4" style="--dx:${dx*16}px;--dy:${dy*16}px;--delay:${-i*.36}s"/>`;}).join('');
+      $('#fallback-svg').insertAdjacentHTML('beforeend', `<g class="fallback-cue ${picked?(identifyFeedback.correct?'right':'wrong'):''}" data-identify-role="${role}" role="button" tabindex="0" aria-label="${candidateNames[role]}"><rect x="${p.x-width/2}" y="${top}" width="${width}" height="${height}" rx="13" fill="transparent"/><rect class="cue-outline" x="${p.x-width/2}" y="${top}" width="${width}" height="${height}" rx="13"/>${sparks}<text x="${p.x}" y="${top+height+19}" text-anchor="middle" font-size="13" font-weight="bold">${candidateNames[role]}</text></g>`);
+    }
+  }
+  updateStatus();
+}
+function applyIdentification() {
+  $('#app').dataset.identifying = String(identifying);
+  for (const role of ROLES) {
+    const tag = $(`[data-tag="${role}"]`), picked = identifyFeedback?.role === role;
+    tag.classList.toggle('identify-candidate', identifying);
+    tag.classList.toggle('right', identifying && picked && identifyFeedback.correct);
+    tag.classList.toggle('wrong', identifying && picked && !identifyFeedback.correct);
+    tag.setAttribute('aria-label', identifying ? candidateNames[role] : `Select or Drag ${cap(role)}`);
+    if (identifying) tag.innerHTML = partIcon(role)+`<span>${candidateNames[role]}</span>`;
+  }
+}
+$('#fallback-svg').addEventListener('click', e => { const role=e.target.closest('[data-identify-role]')?.dataset.identifyRole; if(role)learning?.identifyPart(role); });
+$('#fallback-svg').addEventListener('keydown', e => { if(['Enter',' '].includes(e.key)){const role=e.target.closest('[data-identify-role]')?.dataset.identifyRole;if(role){e.preventDefault();learning?.identifyPart(role);($(`#fallback-svg [data-identify-role="${role}"]`)??($('#notebook').hidden?$('#notebook-reopen'):$('#notebook [data-lab="next"]')))?.focus();}} });
+function fallbackFrame(time) {
+  if (!fallback) return;
+  const dt = fallbackTime === null ? 0 : (time - fallbackTime) / 1000;
+  fallbackTime = time;
+  const old = fallbackMotion.angle;
+  if (held) fallbackMotion = { angle: 0, velocity: 0 };
+  else if (!$("dialog[open]")) {
+    if (reduced)
+      fallbackMotion = { angle: restingAngle(state, fallbackMotion.angle), velocity: 0 };
+    else fallbackMotion = advance(state, fallbackMotion, dt);
+  }
+  if (old !== fallbackMotion.angle) drawFallback();
+  requestAnimationFrame(fallbackFrame);
+}
+function holdScene() {
+  if (ready) {
+    scene.setHeld(held);
+    scene.paused = !!$("dialog[open]");
+  }
+  if (held) fallbackMotion = { angle: 0, velocity: 0 };
+  if (fallback) drawFallback();
+}
+function syncPanelVisibility() {
+  const visible =
+    showMath && !(!$("#controls-panel").hidden && compactViewport.matches);
+  $("#math-panel").hidden = !visible;
+  $("#app").classList.toggle("math-open",visible);
+  scheduleLayout();
+  $("#math-toggle").textContent = visible ? "Hide Math" : "Show Math";
+  $("#math-toggle").setAttribute("aria-expanded", String(visible));
+}
+compactViewport.addEventListener("change", () => {
+  syncPanelVisibility();
+  if (ready) scene.dirty = true;
+});
+function showControls(show) {
+  $("#controls-panel").hidden = !show;
+  $("#app").classList.toggle("controls-open", show);
+  $("#controls-toggle").setAttribute("aria-expanded", String(show));
+  $("#controls-toggle").textContent = show ? "Hide Controls" : "Controls";
+  syncPanelVisibility();
+  hideTip();
+  if (show) {
+    $("#controls-panel").scrollTop=0;
+    for (const panel of $$("#object-controls, .control-card")) panel.scrollTop = 0;
+    $("#object-controls input").focus({ preventScroll: true });
+  } else $("#controls-toggle").focus({ preventScroll: true });
+  if (ready) scene.dirty = true;
+}
+for (const role of OBJECTS)
+  for (const kind of ["mass", "distance"])
+    for (const slider of [false, true]) {
+      const input = $(`#${kind}${slider ? "-slider" : ""}-${role}`);
+      input.addEventListener(slider ? "input" : "change", () => {
+        if (input.value === "" || !Number.isFinite(Number(input.value))) {
+          notice("Enter a number; the previous value is kept.");
+          render();
+          return;
+        }
+        const wanted = Number(input.value),
+          next =
+            kind === "mass"
+              ? setMass(state, role, wanted)
+              : setDistance(state, role, wanted);
+        const actual = kind === "mass" ? next[massKey(role)] : arm(next, role);
+        if (actual !== wanted)
+          notice(
+            `Adjusted to ${actual} ${kind === "mass" ? "g" : "mm"} within the available 25-unit steps and safe range.`,
+          );
+        setState(next);
+      });
+    }
+for (const id of ["fulcrum-position", "fulcrum-slider"])
+  $("#" + id).addEventListener(
+    id.endsWith("slider") ? "input" : "change",
+    () => {
+      const wanted = $("#" + id).value,
+        next = move(state, "fulcrum", wanted);
+      if (wanted === "" || Number(wanted) !== next.fulcrum)
+        notice(
+          "The fulcrum snaps to 25 mm steps and stays at least 75 mm from each object.",
+        );
+      setState(next);
+    },
+  );
+for (const b of $$("[data-scale]"))
+  b.addEventListener("click", () => {
+    const [role, kind, factor] = b.dataset.scale.split(","),
+      wanted =
+        (kind === "mass" ? state[massKey(role)] : arm(state, role)) *
+        Number(factor);
+    const next =
+        kind === "mass"
+          ? setMass(state, role, wanted)
+          : setDistance(state, role, wanted),
+      actual = kind === "mass" ? next[massKey(role)] : arm(next, role);
+    if (actual !== wanted)
+      notice(
+        `The result snaps to ${actual} ${kind === "mass" ? "g" : "mm"} within the available steps and range.`,
+      );
+    setState(next);
+  });
+$("#swap").addEventListener("click", () => {
+  if (learning?.allowSwap() === false) return;
+  scene?.finishDrag();
+  setState(swapPositions(state));
+  $("#announcement").textContent =
+    `Positions and control panels exchanged. ${state.load < state.effort ? "Load controls left; Effort controls right" : "Effort controls left; Load controls right"}. Load keeps ${state.loadMass} grams; Effort keeps its ${state.effortMass} g-equivalent push.`;
+});
+$("#hold").addEventListener("click", () => {
+  if (held && learning?.beforeRelease() === false) return;
+  held = !held;
+  holdScene();
+  render();
+  save();
+  if (held) learning?.held(); else learning?.released();
+});
+$("#math-toggle").addEventListener("click", () => {
+  if (!showMath && learning?.allowMath() === false) return;
+  if (compactViewport.matches && !$("#controls-panel").hidden) {
+    showControls(false);
+    $("#math-toggle").focus();
+    showMath = true;
+  } else showMath = !showMath;
+  if (showMath) learning?.supportViewed('math', 'Workbench Math');
+  render();
+  save();
+});
+function switchTab(name) {
+  hideTip();
+  for (const tab of ["balance", "force"]) {
+    const active = tab === name,
+      b = $("#tab-" + tab);
+    b.setAttribute("aria-selected", String(active));
+    b.tabIndex = active ? 0 : -1;
+    $("#" + tab + "-math").hidden = !active;
+  }
+  if (ready) scene.dirty = true;
+}
+for (const name of ["balance", "force"]) {
+  $("#tab-" + name).addEventListener("click", () => switchTab(name));
+  $("#tab-" + name).addEventListener("keydown", (e) => {
+    if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
+      e.preventDefault();
+      const other = name === "balance" ? "force" : "balance";
+      switchTab(other);
+      $("#tab-" + other).focus();
+    }
+  });
+}
+$("#preset").addEventListener("change", () => {
+  if (PRESETS[$("#preset").value]) setState(PRESETS[$("#preset").value]);
+});
+$("#reset").addEventListener("click", () => {
+  learning?.resetting();
+  held = true;
+  holdScene();
+  setState(DEFAULT);
+  select("load");
+  if (ready) scene.resetCamera();
+});
+$("#controls-toggle").addEventListener("click", () =>
+  showControls($("#controls-panel").hidden),
+);
+$("#close-controls").addEventListener("click", () => {
+  showControls(false);
+});
+for (const [id, method] of [
+  ["side", "sideCamera"],
+  ["fit", "resetCamera"],
+  ["orbit", "turn"],
+])
+  $("#" + id).addEventListener("click", () => {
+    if (ready) scene[method]();
+    if (id === 'side') learning?.recordAction('side-view-used');
+  });
+$('#controls-toggle').addEventListener('click', () => {
+  if (!$('#controls-panel').hidden) learning?.recordAction('controls-opened');
+});
+$("#help").addEventListener("click", () => {
+  learning?.supportViewed('help', 'General Help');
+  hideTip();
+  $("#help-dialog").showModal();
+  holdScene();
+});
+for (const b of $$(".dialog-close"))
+  b.addEventListener("click", () => {
+    $("#help-dialog").close();
+    // Some browsers queue the native close event after the next animation
+    // task. Resume immediately for button closes; the close listener below
+    // still handles Escape and other native dialog dismissal paths.
+    holdScene();
+  });
+$("#help-dialog").addEventListener("close", holdScene);
+$("#reduced").checked = reduced;
+$('#app').dataset.reducedMotion=String(reduced);
+$("#reduced").addEventListener("change", () => {
+  reduced = $("#reduced").checked;
+  $('#app').dataset.reducedMotion=String(reduced);
+  if (ready) scene.reduced = reduced;
+  save();
+});
+$("#fullscreen").addEventListener("click", async () => {
+  try {
+    if (document.fullscreenElement) await document.exitFullscreen();
+    else await document.documentElement.requestFullscreen();
+  } catch {
+    notice("Full screen is unavailable in this browser.");
+  }
+});
+if (!document.fullscreenEnabled) $("#fullscreen").hidden = true;
+document.addEventListener("keydown", (e) => {
+  if (
+    e.key === "Escape" &&
+    !$("#controls-panel").hidden &&
+    !$("dialog[open]") &&
+    $("#tooltip").hidden
+  ) {
+    showControls(false);
+  }
+});
+new ResizeObserver(scheduleLayout).observe($('#top'));
+new ResizeObserver(scheduleLayout).observe($('#math-panel'));
+window.addEventListener('resize',scheduleLayout);
+const hideTip = installTooltips(resource => learning?.supportViewed('tooltip', resource));
+function unavailable() {
+  if (fallback) return;
+  ready = false;
+  fallback = true;
+  if (scene) {
+    scene.active = false;
+    fallbackMotion = { ...scene.motion };
+  }
+  $("#scene").hidden = true;
+  $("#tags").hidden = true;
+  $("#leaders").hidden = true;
+  $("#fallback").hidden = false;
+  $$(".camera-controls button").forEach((b) => (b.disabled = true));
+  $("#app").dataset.ready = "fallback";
+  drawFallback();
+  requestAnimationFrame(fallbackFrame);
+}
+render();
+try {
+  scene = new LeverScene($("#scene"), {
+    onChange: setState,
+    onIdentify: role => learning?.identifyPart(role) ?? false,
+    onSelect: (role) => {
+      selected = role;
+      renderSelection();
+    },
+    onFrame,
+    viewBounds,
+    onNotice: notice,
+    onUnavailable: unavailable,
+    onStep: keyboardStep,
+  });
+  await scene.init();
+  ready = true;
+  $("#app").dataset.roomSource=scene.roomInventory.source;
+  $("#app").dataset.roomPropsPreserved=String(JSON.stringify(scene.roomInventory.before)===JSON.stringify(scene.roomInventory.after));
+  $("#app").dataset.roomPosters=String(scene.room.groups.Decor.children.filter(o=>o.name.startsWith("QuotePoster_")).length);
+  scene.reduced = reduced;
+  scene.setHeld(held);
+  scene.setState(state);
+  scene.select(selected);
+  await document.fonts.ready;
+  scene.resetCamera();
+  $("#app").dataset.ready = "true";
+} catch (error) {
+  console.warn("3D unavailable; using diagram.", error.message);
+  unavailable();
+}
+learning = mountLearning({
+  layout:scheduleLayout,
+  pauseCue: message => { $('#beam-status').title=message; },
+  identify: (active, feedback) => { const changed=feedback&&feedback!==identifyFeedback;identifying=active;identifyFeedback=feedback;scene?.setIdentification(active,feedback);render();if(changed)setTimeout(()=>{if(identifyFeedback===feedback)document.querySelectorAll('.identify-candidate.right,.identify-candidate.wrong,.fallback-cue.right,.fallback-cue.wrong').forEach(el=>el.classList.remove('right','wrong'));},1050); },
+  get: () => ({ state: { ...state }, held }),
+  motion: () => ({ ...(ready ? scene.motion : fallbackMotion) }),
+  change: next => setState(next),
+  load: value => { held = value.held; holdScene(); setState(value.state, true); },
+  hold: () => { held = true; holdScene(); render(); save(); },
+  toggleHold: () => $('#hold').click(),
+  math: visible => { showMath = visible; render(); save(); },
+  mathVisible: () => showMath,
+  swap: () => $('#swap').click(),
+  side: () => { if (fallback) learning?.recordAction('side-view-used'); else $('#side').click(); },
+  notice,
+});
+
+if(ready)scene.resetCamera();

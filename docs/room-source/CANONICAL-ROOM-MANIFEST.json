@@ -1,0 +1,95 @@
+{
+  "repository": "AbbyUsesAIThatCodes/ClassroomVirtualization",
+  "sourceRevision": "28e31ff0fbf06ee5fd9fe58cb499f0ef0d757f9a",
+  "testedBuild": "0.1.1_First-Light_pr-3_build-004_20261001T014014Z_g28e31ff0fbf0_web-glb-godot-source",
+  "buildFingerprint": "b34f499c62d392106756baef86b5151e744e1deede47728a64cabd12c726ad4a",
+  "units": "metres",
+  "orientation": {
+    "north": "-Z",
+    "south": "+Z",
+    "west": "-X",
+    "east": "+X"
+  },
+  "posterCounts": {
+    "north": 5,
+    "east": 12,
+    "south": 8,
+    "west": 13
+  },
+  "rearDoor": [
+    -2.85,
+    0,
+    6.96
+  ],
+  "northDoor": [
+    -2.15,
+    0,
+    -6.96
+  ],
+  "files": [
+    {
+      "path": "src/classroom.js",
+      "bytes": 24154,
+      "gitBlob": "98b390f2b18da6a6e2a08ede4e53dcd3b6a7584a",
+      "sha256": "3be0a8960579a1fe27fa9c7e5d9d347357f3e557f0e289931ab993996361200f",
+      "testedWorkspaceBytes": 24154,
+      "testedWorkspaceSha256": "3be0a8960579a1fe27fa9c7e5d9d347357f3e557f0e289931ab993996361200f"
+    },
+    {
+      "path": "src/layout.js",
+      "bytes": 3059,
+      "gitBlob": "ec39e2d21f129ef3819390cb4b2a1f13f330b9db",
+      "sha256": "500da5115118f1a622e29d30e3d17df71e583c88509b45de0b362b861920447b",
+      "testedWorkspaceBytes": 3059,
+      "testedWorkspaceSha256": "500da5115118f1a622e29d30e3d17df71e583c88509b45de0b362b861920447b"
+    },
+    {
+      "path": "src/textures.js",
+      "bytes": 4656,
+      "gitBlob": "92f80d7c3c2d1d5d84c70b21762a49ab76ee7d08",
+      "sha256": "fa9d59b69c18504a9f8fd847fe07cd0ff2b09618c02de54df2d4f699d0514941",
+      "testedWorkspaceBytes": 4656,
+      "testedWorkspaceSha256": "fa9d59b69c18504a9f8fd847fe07cd0ff2b09618c02de54df2d4f699d0514941"
+    },
+    {
+      "path": "src/posters.js",
+      "bytes": 1083,
+      "gitBlob": "a50292301cdbf9637399eb261dfad26d4f14e0b8",
+      "sha256": "9cb584bd180956533f85bdd24a9ca2665d16a41801207387754a9fd6f7be3775",
+      "testedWorkspaceBytes": 1083,
+      "testedWorkspaceSha256": "9cb584bd180956533f85bdd24a9ca2665d16a41801207387754a9fd6f7be3775"
+    },
+    {
+      "path": "src/assets/quote-posters-atlas.jpg",
+      "bytes": 1054803,
+      "gitBlob": "87e3fb72168b4274a5b2d5c10973c58285b63d76",
+      "sha256": "710da79b2a3424ee8bad13637c1df18bb9cbf040c2510247f5e124fe776f9e70",
+      "testedWorkspaceBytes": 1054803,
+      "testedWorkspaceSha256": "710da79b2a3424ee8bad13637c1df18bb9cbf040c2510247f5e124fe776f9e70"
+    },
+    {
+      "path": "src/assets/quote-posters-data.js",
+      "bytes": 1406446,
+      "gitBlob": "4a87f6bd32fc886d3ac9f91de5f0023cc5c41d07",
+      "sha256": "7f382a77f55762c207936d72b128b20da53cd5188cd1edc287db4ecedf9f62ff",
+      "testedWorkspaceBytes": 1406447,
+      "testedWorkspaceSha256": "71637ee4249658fde348643c04f7d359ffc88785ba778cfef87a55b6c4411d37"
+    },
+    {
+      "path": "src/assets/quote-posters.json",
+      "bytes": 4308,
+      "gitBlob": "1e3632d34f0d5cf052b3e43948becddce6c8bb1a",
+      "sha256": "3745f0f1e61b28a74bffc29fce5abe5c8552daae44e324802aff25db91a8692e",
+      "testedWorkspaceBytes": 4592,
+      "testedWorkspaceSha256": "c9ced724e075f8e5ee88ae269455fcdb9d95e34ada4c86c07865df2d0449e22f"
+    },
+    {
+      "path": "release.json",
+      "bytes": 264,
+      "gitBlob": "05b2a2f54a532bbb297b3d8210580e3eaeefef89",
+      "sha256": "cccf12954cb3170d8692781f2f8e1417e196555e6adbd47d2e0d7ce46a703bd7",
+      "testedWorkspaceBytes": 264,
+      "testedWorkspaceSha256": "cccf12954cb3170d8692781f2f8e1417e196555e6adbd47d2e0d7ce46a703bd7"
+    }
+  ]
+}

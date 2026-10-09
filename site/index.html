@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#dfe6d9" />
+    <title>Lever Lab: Partners In Balance</title>
+    <link rel="icon" href="./favicon.svg" />
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./notebook.css" />
+    <link rel="stylesheet" href="./layout.css" />
+  </head>
+  <body>
+    <main id="app">
+      <div id="top">
+        <header>
+          <div class="brand">
+            <span aria-hidden="true">⚖</span>
+            <div>
+              <b>Lever Lab: Partners In Balance</b
+              ><small>Predict. Release. Explain.</small><strong id="build-summary">0.1.0 Local Review</strong>
+            </div>
+          </div>
+          <div class="header-controls">
+          <div class="actions">
+            <button
+              id="controls-toggle"
+              aria-expanded="false"
+              aria-controls="controls-panel"
+            >
+              Controls</button
+            ><button
+              id="math-toggle"
+              aria-expanded="true"
+              aria-controls="math-panel"
+            >
+              Hide Math</button
+            ><button id="help">Help</button
+            ><button id="fullscreen">Full Screen</button>
+          </div>
+
+        <nav class="tools" aria-label="Workbench Controls">
+          <output id="beam-status" aria-live="polite">Held Level</output
+          ><button id="hold" aria-pressed="true">Release</button
+          ><button id="swap">Swap Positions</button
+          ><button id="reset">Reset</button
+          ><label for="preset"
+            >Try
+            <select id="preset">
+              <option value="double">2× Effort Arm</option>
+              <option value="equal">Equal Arms</option>
+              <option value="offset">Off-Center Fulcrum</option>
+              <option value="custom" disabled>Your Arrangement</option>
+            </select></label
+          >
+          <div class="camera-controls">
+            <button id="side">Side View</button
+            ><button id="orbit">Orbit ↻</button
+            ><button id="fit">Fit View</button>
+          </div>
+          <button id="workbench-help" class="help-tip" type="button" aria-label="Move and Adjust Help">?</button>
+        </nav>
+          </div>
+        </header>
+        <div id="build-identity" aria-label="Build Identifier" hidden>0.1.0_Partners-In-Balance_local-1e3bd62e_build-023_20261001T124833Z_g380fe0ba3313_web</div>
+      </div>
+      <div id="stage">
+        <div id="scene"><p class="loading">Setting up your workbench…</p></div>
+        <div id="fallback" hidden>
+          <svg
+            id="fallback-svg"
+            viewBox="0 0 800 430"
+            role="img"
+            aria-label="Lever diagram showing the hanging load and contacting hand effort"
+          ></svg>
+          <p>Diagram View · use Controls to change load mass, effort push, and distances.</p>
+        </div>
+        <svg id="leaders" aria-hidden="true"></svg>
+        <div id="tags"></div>
+      </div>
+      <aside
+        id="controls-panel"
+        aria-label="Lever Controls"
+        hidden
+      >
+        <div id="object-controls">
+          <section
+            id="panel-load"
+            class="control-card glass load"
+            aria-labelledby="heading-load"
+          ></section>
+          <section
+            id="panel-effort"
+            class="control-card glass effort"
+            aria-labelledby="heading-effort"
+          ></section>
+        </div>
+        <section
+          id="panel-fulcrum"
+          class="control-card glass fulcrum"
+          aria-labelledby="heading-fulcrum"
+        >
+          <div class="panel-heading">
+            <h2 id="heading-fulcrum">Fulcrum</h2>
+            <button id="fulcrum-help" class="help-tip" type="button" aria-label="Fulcrum Position Help" aria-describedby="fulcrum-note">?</button>
+            <button id="close-controls" aria-label="Close All Controls">×</button>
+          </div>
+          <div class="fulcrum-value">
+            <label for="fulcrum-position">Beam Position (mm)</label>
+            <input
+              id="fulcrum-position"
+              type="number"
+              step="25"
+              aria-describedby="fulcrum-note"
+            />
+          </div>
+          <input
+            id="fulcrum-slider"
+            type="range"
+            step="25"
+            aria-label="Fulcrum Beam Coordinate"
+            aria-describedby="fulcrum-note"
+          />
+          <p id="fulcrum-note" class="sr-only">
+            Negative is toward the beam’s marked left end. The fulcrum stays
+            between the two objects, at least 75 mm from each.
+          </p>
+          <p id="coordinates" class="sr-only"></p>
+        </section>
+      </aside>
+      <footer>
+        <section id="math-panel" aria-label="Live Lever Math">
+          <div class="math-topline">
+            <div class="math-tabs" role="tablist" aria-label="Math View">
+              <button
+                id="tab-balance"
+                role="tab"
+                aria-selected="true"
+                aria-controls="balance-math"
+              >
+                Balance & Advantage</button
+              ><button
+                id="tab-force"
+                role="tab"
+                aria-selected="false"
+                aria-controls="force-math"
+                tabindex="-1"
+              >
+                Grams → Newtons
+              </button>
+            </div>
+            <div class="math-notes">
+              <button id="forces-help" class="model-note" type="button" aria-label="Forces and Motion Help">Forces &amp; Motion ?</button>
+              <button id="model-help" class="model-note" type="button" aria-label="Ideal Lever Help">Ideal Lever ?</button>
+            </div>
+          </div>
+          <div
+            id="balance-math"
+            role="tabpanel"
+            aria-labelledby="tab-balance"
+          ></div>
+          <div
+            id="force-math"
+            role="tabpanel"
+            aria-labelledby="tab-force"
+            hidden
+          ></div>
+        </section>
+      </footer>
+    </main>
+    <dialog id="help-dialog" aria-labelledby="help-title">
+      <button class="dialog-close corner" aria-label="Close Help">×</button>
+      <h2 id="help-title">More Distance. Less Effort.</h2>
+      <p><b>Quick Help:</b> hover or focus a dotted term or ? button to read
+        its explanation. Click or tap to keep it open; click or tap again,
+        tap elsewhere, or press Escape to dismiss it.</p>
+      <ol><li><b>Set Up:</b> All controls stay usable. The beam pauses while you change load mass, effort push, or distances. Drag sideways to move a part; drag down to increase its setting, or up to decrease it.</li>
+      <li><b>Predict And Test:</b> Record a prediction to begin the test automatically. After changing the arrangement, record a new prediction. Earlier predictions and trials stay in your work.</li>
+      <li><b>Observe:</b> Wait for the recorded result. A moving beam passing through level is not yet balanced. Write what you actually saw.</li></ol>
+      <p><b>Load And Effort:</b> Gravity pulls the hanging load downward. The constant-size hand supplies a downward push. A setting of 100 g-equivalent means a force equal to the weight of a 100 g object (0.981 N), not the mass of the hand. No manual conversion is required.</p>
+      <p><b>Keyboard:</b> Tab to a part label. Left/right arrows move it; down/up increases/decreases load mass or effort push. Number boxes, sliders, and halve/double buttons are also available. Drag the background to orbit; scroll or pinch to zoom.</p>
+      <p><b>Swap Positions:</b> Exchanges application coordinates while keeping load mass, effort push, and roles. Swap twice to return. The fulcrum stays between both points, with arms at least 75 mm. Coordinates and settings snap to 25-unit steps.</p>
+      <p><b>Ideal Model:</b> Both applied forces point down through the labeled application points. The massless beam, cord, and pointer rod turn on an ideal pivot. A 250 g balance-pointer bob 125 mm below the axle supplies restoring torque when tilted. The hand supplies force without adding modeled mass or inertia. Motion uses illustrative damping and 12-degree stops, not a calibrated acceleration simulation.</p>
+      <p><b>Balance And Advantage:</b> Compare load grams times load arm with effort g-equivalent times effort arm; these products are not SI torque. IMA is effort arm divided by load arm. At ideal balance only, load weight divided by required effort force equals IMA.</p>
+      <p><b>Your Work:</b> Autosave belongs to this browser profile and address. Use Question Index, then Recover Saved Work, to download or restore a portable copy. Your completed report includes reasoning and sketches for teacher review. Physical building and testing remain separate.</p>
+      <label class="check-label"
+        ><input id="reduced" type="checkbox" /> Reduce Animation</label
+      ><button class="primary dialog-close">Back to the Workbench</button>
+    </dialog>
+    <div id="tooltip" role="tooltip" hidden></div>
+    <div id="toast" role="status"></div>
+    <div id="announcement" class="sr-only" aria-live="polite"></div>
+    <noscript>This game needs JavaScript enabled.</noscript>
+    <script type="module" src="./assets/app.js"></script>
+  </body>
+</html>

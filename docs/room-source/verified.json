@@ -1,0 +1,15 @@
+{
+  "source": "28e31ff0fbf06ee5fd9fe58cb499f0ef0d757f9a",
+  "manifestSource": "a4676fdbfbfb3005e688b8c944e59b7a71078369",
+  "files": {
+    "src/classroom.js": "3be0a8960579a1fe27fa9c7e5d9d347357f3e557f0e289931ab993996361200f",
+    "src/layout.js": "500da5115118f1a622e29d30e3d17df71e583c88509b45de0b362b861920447b",
+    "src/textures.js": "fa9d59b69c18504a9f8fd847fe07cd0ff2b09618c02de54df2d4f699d0514941",
+    "src/posters.js": "9cb584bd180956533f85bdd24a9ca2665d16a41801207387754a9fd6f7be3775",
+    "src/assets/quote-posters-atlas.jpg": "710da79b2a3424ee8bad13637c1df18bb9cbf040c2510247f5e124fe776f9e70",
+    "src/assets/quote-posters-data.js": "7f382a77f55762c207936d72b128b20da53cd5188cd1edc287db4ecedf9f62ff",
+    "src/assets/quote-posters.json": "3745f0f1e61b28a74bffc29fce5abe5c8552daae44e324802aff25db91a8692e",
+    "release.json": "cccf12954cb3170d8692781f2f8e1417e196555e6adbd47d2e0d7ce46a703bd7"
+  },
+  "libraryMaterializationError": "Windows os.setxattr unavailable; exact public Git blobs used instead"
+}
