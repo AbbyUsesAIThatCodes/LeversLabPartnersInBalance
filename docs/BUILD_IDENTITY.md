@@ -32,3 +32,7 @@ The inherited remote allocator is dormant; no workflow is authorized to invoke i
 The user explicitly requested compact version plus Local Review in the upper left,
 or version-PRnumber once an actual PR exists. The full identity stays in the
 console, build manifest, exports, artifact filenames, and review documentation.
+
+## October 9 Pages Promotion
+
+The current deployment record is [Verified Pages Release](../deployment/RELEASE.md) and its hash inventory. `site/` contains the existing identified artifact. The workflow verifies and copies it without a build, so no new ordinal or timestamp is allocated. The source SHA in the embedded manifest remains the original runtime source; the publication commit is separate provenance.

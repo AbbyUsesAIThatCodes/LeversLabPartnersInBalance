@@ -1,3 +1,7 @@
+# October 9 Pages Publication
+
+The owner now explicitly authorizes source updates, necessary merges, Pages deployment, and README/sidebar Play links. Earlier local-only publication restrictions below are preserved history. Follow [Verified Pages Release](deployment/RELEASE.md); reuse the exact inventoried artifact, preserve its original identity, and deploy only after fresh payload/model/browser checks pass. No visibility changes or new credentials.
+
 # Contributor Instructions
 
 Keep one implementation draft PR at a time. No merges, deployment, email,

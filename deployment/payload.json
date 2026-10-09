@@ -1,0 +1,82 @@
+{
+  "schema": 1,
+  "repo": "LeversLabPartnersInBalance",
+  "buildId": "0.1.0_Partners-In-Balance_local-1e3bd62e_build-023_20261001T124833Z_g380fe0ba3313_web",
+  "runtimeRevision": "380fe0ba33133d36cfe7c465963cd8f19a6240c1",
+  "policy": "Reuse exact runtime bytes and existing identity. No compilation, dependency installation, or new artifact ordinal. Exclude review exports and teacher material.",
+  "files": [
+    {
+      "path": "build-manifest.json",
+      "bytes": 665,
+      "sha256": "540e36c452c3a24303b1b2005191df5d28f0937adf1ffd308454ae8b65f917fc",
+      "origin": "unchanged reviewed artifact"
+    },
+    {
+      "path": "favicon.svg",
+      "bytes": 334,
+      "sha256": "277a2a7d665f47875b18cb6b7c90f3f5a3e3bfadc44b718f0d7569648fb1abe1",
+      "origin": "unchanged reviewed artifact"
+    },
+    {
+      "path": "index.html",
+      "bytes": 9655,
+      "sha256": "48b5c6bb4368bf8388932f7a2b62909e6192602c7cb8625647e5af977e130f99",
+      "origin": "unchanged reviewed artifact"
+    },
+    {
+      "path": "layout.css",
+      "bytes": 7722,
+      "sha256": "a68ae1167f330fabb463dfb72aa3066e96c18a4cfc7d37c51b1fdffeafe5aa3c",
+      "origin": "unchanged reviewed artifact"
+    },
+    {
+      "path": "notebook.css",
+      "bytes": 8013,
+      "sha256": "4af9abfbd5f7c479c72c60a4836e3853910ee70d9742985de0bb26ef6148e29c",
+      "origin": "unchanged reviewed artifact"
+    },
+    {
+      "path": "style.css",
+      "bytes": 23353,
+      "sha256": "4e0c1a453bbe531c29c07f184efa8ed6497e5deb51fd656797c962a2196cad98",
+      "origin": "unchanged reviewed artifact"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "bytes": 2472,
+      "sha256": "63058d6f4c0dc566331440df0822452c462db3c8f81a4aad9b8f877264cd9db8",
+      "origin": "unchanged reviewed artifact"
+    },
+    {
+      "path": "assets/app.js",
+      "bytes": 2143398,
+      "sha256": "e8d1d058febe67a7821d27bfcab5042ab23c28d289e74c0da94fcf89a7de069e",
+      "origin": "unchanged reviewed artifact"
+    },
+    {
+      "path": "assets/comic-neue-bold.woff2",
+      "bytes": 18772,
+      "sha256": "0c1d3e1eaa4f7b42cd9db94b4dd66ad552f827b2fe008956cbea53775448ba82",
+      "origin": "unchanged reviewed artifact"
+    },
+    {
+      "path": "assets/comic-neue-regular.woff2",
+      "bytes": 19136,
+      "sha256": "30032375de9172d3d74f03e435544f19b40f09dce208204ee9b9e92b29ef36b3",
+      "origin": "unchanged reviewed artifact"
+    },
+    {
+      "path": "licenses/comic-neue-LICENSE.txt",
+      "bytes": 4407,
+      "sha256": "1efbdc9cb2d98aaa844574b5123f8d5233532c214ba259e1536e1d5702d058a1",
+      "origin": "unchanged reviewed artifact"
+    },
+    {
+      "path": "licenses/three-LICENSE.txt",
+      "bytes": 1102,
+      "sha256": "df2a91696186fe58c92518a25d48bc59c8ee2edc7cac9ca6d19a5a0d599a2a05",
+      "origin": "unchanged reviewed artifact"
+    }
+  ],
+  "manifest": "build-manifest.json"
+}

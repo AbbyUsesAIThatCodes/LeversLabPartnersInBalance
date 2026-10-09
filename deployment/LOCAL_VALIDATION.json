@@ -1,0 +1,32 @@
+{
+  "status": "passed",
+  "checkedAt": "2026-10-09T01:16:19.731266+00:00",
+  "buildId": "0.1.0_Partners-In-Balance_local-1e3bd62e_build-023_20261001T124833Z_g380fe0ba3313_web",
+  "runtimeRevision": "380fe0ba33133d36cfe7c465963cd8f19a6240c1",
+  "artifactReused": true,
+  "environment": "Abigail; installed Edge; isolated temporary profiles; software WebGL where applicable",
+  "checks": {
+    "modelTests": 58,
+    "fullGuidedRuns": 2,
+    "rowsPerRun": 68,
+    "renderers": [
+      "WebGL",
+      "Diagram"
+    ],
+    "evidence": [
+      {
+        "file": "LeverLab-unit.txt",
+        "sha256": "3991daa87132edc0e65e96c761f6a3a12104674bac2afbc2d15fcf253e3dc95b"
+      },
+      {
+        "file": "LeverLab-guided.txt",
+        "sha256": "fce0fc7b17e37e07bf912184bffd5200b4fb824483cc9744d2238e329b6a9b7a"
+      }
+    ],
+    "notes": "Preserved Build 023, exact staged runtime copied from the digest-verified original archive. Original guided test adapted only to installed Edge instead of the old Chrome executable path."
+  },
+  "limits": [
+    "No managed school-device or physical apparatus acceptance claimed.",
+    "Source/artifact identities are preserved; publication commit is separate provenance."
+  ]
+}

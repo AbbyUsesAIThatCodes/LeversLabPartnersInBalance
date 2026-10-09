@@ -1,3 +1,9 @@
+# Play Online
+
+**[Play LeversLabPartnersInBalance Online](https://abbyusesaithatcodes.github.io/LeversLabPartnersInBalance/)**
+
+The October 9 publication promotes the existing tested runtime. See [Verified Pages Release](deployment/RELEASE.md) for identity, checks, and retained limitations. Earlier local-only status below is historical.
+
 # Lever Lab: Partners In Balance
 
 Separate local-first development game based on the unchanged
